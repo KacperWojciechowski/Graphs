@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="inc\Coord.h" />
+    <ClInclude Include="inc\Examples.h" />
     <ClInclude Include="inc\Generator.h" />
     <ClInclude Include="inc\Graph.h" />
     <ClInclude Include="inc\Algorithms.h" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="inc\Graph_matrix.cpp" />
     <ClCompile Include="src\Coord.cpp" />
+    <ClCompile Include="src\Examples.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

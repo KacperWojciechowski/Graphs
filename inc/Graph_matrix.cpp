@@ -104,7 +104,7 @@ void Graph::Matrix::print()
 	
 	switch (this->type)
 	{
-	case Type::undefined:
+	case Type::undirected:
 		std::cout << "undirected ";
 		break;
 

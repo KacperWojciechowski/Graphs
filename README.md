@@ -1,12 +1,24 @@
 # Graphs
 Implementation of basic graph software made for university classes.
 
+Overview:
+-------------------------------------------------------------
 The implementation provides adjacency matrix and adjacency list representations compatibile with the House of Graphs portal data formats, and GraphML format.
 Each graph representation provides implementation of basic graph coloring and path searching algorithms. 
 
 The implementation is suited for weighted and non-weighted undirected and directed graphs. It does support graphs with loops, however it does not support multigraphs and will treat them as weighted graphs instead.
 
-Along with the raw implementation, this project provides additional features, such as:
-- PixelMap class which allows to represent a 2D terrain map by binary values. This class can be used to build a graph representation of the terrain, which can be later used for tasks such as finding the shortest path.
-- Benchmarking class allowing users to check the time and results of execution of different implemented algorithms, such as coloring algorithms.
-- Examples class showing via static methods the way of using various features of the project, and exemplary results.
+Features:
+-------------------------------------------------------------
+Each of the representation implements following algorithms:
+- Greedy coloring with optional permutations
+- LF coloring with optional permutations
+- SL coloring with optional permutations
+- Belman-Ford one-to-all path search
+- Modified Belman-Ford one-to-all path search including throughtput requirement
+
+The project provides additional features such as:
+- PixelMap class allowing for representation of a terrain map via binary values. Can be used with the graph representations to create a graph of the terrain for tasks such as path searching.
+- Benchmark class generating the raports of time efficiency and results of various algorithms implemented by the graph representations.
+- Data generation class allowing user to generate sample weighted graphs, pixel maps and throughput matrices.
+- Examples library containing static methods to demonstrate the use and results of certain features.

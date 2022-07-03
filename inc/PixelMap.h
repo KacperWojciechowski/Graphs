@@ -7,17 +7,6 @@
 namespace Data
 {
 	/*
-		Structure of coordinates of each field on the pixel map.
-	*/
-	struct coord
-	{
-		uint32_t x;
-		uint32_t y;
-	};
-
-	uint32_t find_index(std::vector<coord>& nodes, uint32_t x, uint32_t y);
-
-	/*
 		Class representing a map of binary pixels. Zeros indicate the fields,
 		while ones indicate the walls.
 

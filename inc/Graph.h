@@ -1,11 +1,20 @@
 #pragma once
 
 #include <cstdint>
-#include <map>
-#include <vector>
+#include <string>
 
 namespace Graph
 {
+	/*
+		Enum class representing the available graph classes
+	*/
+	enum class Type
+	{
+		undirected = 0,
+		directed,
+		undefined
+	};
+
 	/*
 		Abstract class stating the commmon interface for each of the graph representations.
 	*/
@@ -25,5 +34,7 @@ namespace Graph
 		virtual const uint32_t get_nodes_amount() = 0;
 		virtual const uint32_t get_node_degree() = 0;
 		virtual const uint8_t get_edge(uint32_t source, uint32_t destination) = 0;
+
+		virtual void save_graphml(std::string output_file_path);
 	};
 }

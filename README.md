@@ -15,7 +15,9 @@ Each of the representation implements following algorithms:
 - LF coloring with optional permutations
 - SL coloring with optional permutations
 - Belman-Ford one-to-all path search
-- Modified Belman-Ford one-to-all path search including throughtput requirement
+
+Additionally matrix representation implements:
+- modified Belman-Ford algorithm one-to-all path search with throughtput requirements
 
 The project provides additional features such as:
 - PixelMap class allowing for representation of a terrain map via binary values. Can be used with the graph representations to create a graph of the terrain for tasks such as path searching.

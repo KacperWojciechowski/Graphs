@@ -6,6 +6,7 @@
 #include <fstream>
 
 #include "Graph.h"
+#include "Algorithms.h"
 
 namespace Graph
 {
@@ -37,6 +38,12 @@ namespace Graph
 
 		void load_throughtput(std::string file_path);
 
+		// algorithmic interface
+
+
+		Roadmap throughtput_belman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, bool log);
+	
+	
 	private:
 		/* Load functions for specific file formats */
 		void load_mat_file(std::fstream& file);

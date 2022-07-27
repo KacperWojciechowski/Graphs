@@ -28,7 +28,6 @@ namespace Graph
 		virtual int32_t lf_coloring(bool log) = 0;
 		virtual int32_t sl_coloring(bool log) = 0;
 		virtual Roadmap belman_ford(uint32_t start_vertex, bool log) = 0;
-		virtual Roadmap throughtput_belman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, bool log) = 0;
 
 	protected:
 

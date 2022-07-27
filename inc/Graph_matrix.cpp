@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <iomanip>
 
 /*
 	Constructor loading the graph from file. Works with .mat and .GRAPHML files. 
@@ -129,10 +130,11 @@ void Graph::Matrix::print()
 	{
 		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
 		{
-			std::cout << *itr2 << ", ";
+			std::cout << std::setw(3) << std::right << *itr2 << ", ";
 		}
 		std::cout << std::endl;
 	}
+
 	std::cout << "]" << std::endl;
 }
 
@@ -388,6 +390,82 @@ const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destinati
 
 
 /*
+	Function generating a .GRAPHML file containing current graph information.
+	The format does contain the weights of the graph connections.
+
+	Params:
+	output_file_path - path to the output file
+
+	Return:
+	None
+*/
+void Graph::Matrix::save_graphml(std::string output_file_path)
+{
+	// opening output file
+	std::ofstream file(output_file_path);
+
+	// header
+	file << "<?xml version=\"1,0\"";
+	file << " encoding=\"UTF-8\"?>\n";
+
+	// xml schema
+	file << "<graphml xmlns=";
+	file << "\"http://graphml.graphdrawing.org/xmlns\"\n";
+	file << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+	file << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns\n";
+	file << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n";
+
+	// weight data info
+	file << "<key id=\"d0\" for=\"edge\"\n";
+	file << "	attr.name=\"weight\" attr.type=\"integer\"/>\n";
+
+	// graph type data
+	file << " <graph id=";
+	file << "\"" + this->name + "\"";
+	file << " edgedefault=";
+	switch (this->type)
+	{
+	case Type::directed:
+		file << "\"directed\">\n";
+		break;
+	case Type::undirected:
+		file << "\"undirected\">\n";
+		break;
+	// in case of undefined type, directed type is assumed
+	case Type::undefined:
+		file << "\"directed\">\n";
+		break;
+	}
+
+	// vertices data
+	for (std::size_t i = 0; i < this->matrix.size(); i++)
+	{
+		file << "	<node id=\"n" << i;
+		file << "\"/>\n";
+	}
+
+	// edge data
+	for (std::size_t i = 0; i < this->matrix.size(); i++)
+	{
+		for (std::size_t j = i; j < this->matrix[i].size(); j++)
+		{
+			if (this->matrix[i][j] > 0)
+			{
+				file << "	<edge source=\"n" << i;
+				file << "\" target=\"n" << j;
+				file << "\">\n";
+				file << "		<data key=\"d0\">" + std::to_string(this->matrix[i][j]) + "</data>\n";
+				file << "	</edge>\n";
+			}
+		}
+	}
+	
+}
+
+
+
+
+/*
 	Function loads the data from .mat file into the matrix object.
 
 	Params:
@@ -464,19 +542,42 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
 void Graph::Matrix::load_graphml_file(std::fstream& file)
 {
 	std::string line;
+	std::string line2;
 
 	// set the default position of graph ID
 	std::size_t pos = std::string::npos;
+	std::size_t pos2 = std::string::npos;
 
-	// search for graph ID
+	std::string weight_id;
+
+	// search for graph ID and weight marker ID
 	while (pos == std::string::npos)
 	{
 		std::getline(file, line);
-		pos = line.find("graph id=");
+		line2 = line;
+		// search for the key marker
+		pos = line.find("key");
+		if (pos != std::string::npos)
+		{
+			// search for the weight keyword
+			pos2 = line.find("weight");
+			// if the keyword was not found, check the next line
+			if (pos2 == std::string::npos)
+			{
+				std::getline(file, line2);
+				pos2 = line2.find("weight");
+			}
+			// if the keyword was found, save the ID, else skip
+			if (pos2 != std::string::npos)
+			{
+				weight_id = line.substr(pos + 8, 2);
+			}
+		}
+		pos = line2.find("graph id=");
 	}
 
 	// search for the edge type
-	std::size_t pos2 = line.find("edgedefault=");
+	pos2 = line.find("edgedefault=");
 
 	// save ID
 	this->name = line.substr(pos + 10, pos2 - 2 - (pos + 10));
@@ -530,6 +631,9 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 	std::string id1;
 	std::string id2;
 
+	int weight;
+	std::string weight_str;
+
 	// extract edge info
 	while (pos != std::string::npos)
 	{
@@ -538,20 +642,53 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 		pos2 = line.find("\" target=");
 
 		id1 = line.substr(pos + 9, pos2 - (pos + 9));
-		pos = line.find("\"/>");
-		id2 = line.substr(pos2 + 11, pos - (pos2 + 11));
+		pos = line.find("\">");
+		id2 = line.substr(pos2 + 11, pos - (pos2 + 11) - 1);
+
+		// if the weight is specified, look for it
+		if (!weight_id.empty())
+		{
+			pos = line.find("data");
+			pos2 = line.find(weight_id);
+			// search this and next line for the right data tag
+			do {
+				std::getline(file, line);
+				pos = line.find("data");
+				pos2 = line.find(weight_id);
+			} while (pos != std::string::npos && pos2 == std::string::npos);
+
+			// if data tags ended, assume the weight as 1
+			if (pos == std::string::npos)
+			{
+				weight = 1;
+			}
+			// else extract the right weight
+			else
+			{
+				pos = line.find("<", pos2);
+				weight = atoi(line.substr(pos2 + 4, pos - (pos2 + 4)).c_str());
+			}
+		}
+		// if no weight data ID was given, assume all weights as 1
+		else
+		{
+			weight = 1;
+		}
 
 		// input the connection into matrix
-		this->matrix[atoi(id1.c_str())][atoi(id2.c_str())] = 1;
+		this->matrix[atoi(id1.c_str())][atoi(id2.c_str())] = weight;
 
 		// if graph is undirected, make the connection both ways
 		if (this->type == Type::undirected)
 		{
-			this->matrix[atoi(id2.c_str())][atoi(id1.c_str())] = 1;
+			this->matrix[atoi(id2.c_str())][atoi(id1.c_str())] = weight;
 		}
 
 		// search for next edge marker
-		std::getline(file, line);
+		if (line.find("edge") == std::string::npos)
+		{
+			std::getline(file, line);
+		}
 		pos = line.find("edge");
 	}
 }

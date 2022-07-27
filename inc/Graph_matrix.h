@@ -51,7 +51,7 @@ namespace Graph
 		void calculate_degrees();
 
 		/* Objects containing the graph */
-		std::vector<std::vector<uint32_t>> matrix;
+		std::vector<std::vector<int32_t>> matrix;
 		std::vector<std::vector<uint32_t>> throughtput;
 		std::vector<std::size_t> degrees;
 

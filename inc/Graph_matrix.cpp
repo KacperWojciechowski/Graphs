@@ -7,6 +7,7 @@
 /*
 	Constructor loading the graph from file. Works with .mat and .GRAPHML files. 
 	Detects missing file and unsupported file format, returning by default an empty graph.
+	The class works only with integer weights.
 	
 	Params:
 	file_path	- string containing the path to the graph file
@@ -215,7 +216,7 @@ void Graph::Matrix::add_node()
 
 	// create the vector representing the neighbours of the new vertex
 	std::size_t size = this->matrix[0].size();
-	std::vector<uint32_t> v;
+	std::vector<int32_t> v;
 
 	for (std::size_t i = 0; i < size; i++)
 	{
@@ -444,7 +445,7 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 		file << "\"/>\n";
 	}
 
-	// edge data
+	// edge data including weight
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
 		for (std::size_t j = i; j < this->matrix[i].size(); j++)
@@ -459,6 +460,11 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 			}
 		}
 	}
+
+	// close the tags and the file
+	file << "	</graph>\n";
+	file << "</graphml>";
+	file.close();
 	
 }
 
@@ -512,7 +518,7 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
 
 	// load the matrix
 	uint32_t temp;
-	std::vector<uint32_t> v;
+	std::vector<int32_t> v;
 
 	for (std::size_t i = 0; i < vertices; i++)
 	{
@@ -613,7 +619,7 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 	}
 
 	// create adjacency matrix and fill it with zeros
-	std::vector<uint32_t> v;
+	std::vector<int32_t> v;
 
 	for (std::size_t j = 0; j < vertices; j++)
 	{
@@ -643,7 +649,7 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 
 		id1 = line.substr(pos + 9, pos2 - (pos + 9));
 		pos = line.find("\">");
-		id2 = line.substr(pos2 + 11, pos - (pos2 + 11) - 1);
+		id2 = line.substr(pos2 + 11, pos - (pos2 + 11));
 
 		// if the weight is specified, look for it
 		if (!weight_id.empty())
@@ -667,6 +673,9 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 			{
 				pos = line.find("<", pos2);
 				weight = atoi(line.substr(pos2 + 4, pos - (pos2 + 4)).c_str());
+				// skip the </edge> closing tag and load the next edge tag
+				std::getline(file, line);
+				std::getline(file, line);
 			}
 		}
 		// if no weight data ID was given, assume all weights as 1
@@ -685,7 +694,8 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 		}
 
 		// search for next edge marker
-		if (line.find("edge") == std::string::npos)
+		pos = line.find("edge");
+		if (pos == std::string::npos || line[pos - 1] == '/')
 		{
 			std::getline(file, line);
 		}

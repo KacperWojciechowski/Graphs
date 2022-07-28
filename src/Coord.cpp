@@ -16,11 +16,11 @@
 			  upper numeric limit of unsigned int is returned.
 */
 
-uint32_t Data::find_index(std::vector<Data::coord>& nodes, Data::coord _coord)
+std::size_t Data::find_index(std::vector<Data::coord>& nodes, Data::coord _coord)
 {
 	size_t size = nodes.size();
 
-	uint32_t ret = std::numeric_limits<uint32_t>::max();
+	std::size_t ret = std::numeric_limits<std::size_t>::max();
 
 	for (auto itr = nodes.begin(); itr != nodes.end(); itr++)
 	{

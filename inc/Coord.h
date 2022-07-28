@@ -10,9 +10,9 @@ namespace Data
 	*/
 	struct coord
 	{
-		uint32_t x;
-		uint32_t y;
+		std::size_t x;
+		std::size_t y;
 	};
 
-	uint32_t find_index(std::vector<coord>& nodes, coord _coord);
+	std::size_t find_index(std::vector<coord>& nodes, coord _coord);
 }

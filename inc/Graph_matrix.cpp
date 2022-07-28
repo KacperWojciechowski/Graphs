@@ -4,6 +4,8 @@
 #include <iostream>
 #include <iomanip>
 
+#include "../inc/Coord.h"
+
 /*
 	Constructor loading the graph from file. Works with .mat and .GRAPHML files. 
 	Detects missing file and unsupported file format, returning by default an empty graph.
@@ -32,7 +34,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 		}
 		else
 		{
-			throw std::invalid_argument("File missing");
+			throw std::runtime_error("Could not open file");
 		}
 		file.close();
 		
@@ -48,7 +50,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 		}
 		else
 		{
-			throw std::invalid_argument("File missing");
+			throw std::runtime_error("Could not open file");
 		}
 		file.close();
 
@@ -59,6 +61,27 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 	{
 		throw std::invalid_argument("File not supported");
 	}
+}
+
+
+
+
+/*
+	Constructor creating a graph based on the given matrix made up of vectors.
+
+	Params:
+	mat		- vector of vectors containing the matrix values
+	name	- name of the graph
+	type	- type of the graph
+
+	Return:
+	None
+*/
+Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type)
+{
+	this->matrix = mat;
+	this->name = name;
+	this->type = type;
 }
 
 
@@ -466,6 +489,147 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 	file << "</graphml>";
 	file.close();
 	
+}
+
+
+
+
+/*
+	Function creating a line graph of an existing graph. The resulting
+	line graph is returned as a different object. Resulting line graph
+	is undirected and does not contain any weights.
+
+	Params:
+	None
+
+	Return:
+	return - line graph object
+*/
+Graph::Matrix Graph::Matrix::change_to_line_graph()
+{
+	std::vector<Data::coord> edges;
+
+	// gather all the edges from the adjacency matrix of initial graph
+	for (std::size_t i = 0; i < this->matrix.size(); i++)
+	{
+		for (std::size_t j = i; j < this->matrix[i].size(); j++)
+		{
+			if (this->matrix[i][j] > 0)
+			{
+				edges.push_back({ i, j });
+			}
+		}
+	}
+
+	// create sufficient matrix for the line graph and fill it with zeros
+	std::vector<std::vector<int32_t>> mat;
+	std::vector<int32_t> v;
+
+	std::size_t size = edges.size();
+	for (std::size_t i = 0; i < size; i++)
+	{
+		v.clear();
+		for (std::size_t j = 0; j < size; j++)
+		{
+			v.push_back(0);
+		}
+		mat.push_back(v);
+	}
+
+	Data::coord coordinates;
+	std::size_t index;
+
+	// fill the line graph
+	for (std::size_t i = 0; i < size; i++)
+	{
+		// load coordinates of the edge
+		coordinates = edges[i];
+
+		// search through the matrix for common vertices between edges
+		// in the same row of the initial adjacency matrix
+		for (std::size_t k = coordinates.x; k < this->matrix.size(); k++)
+		{
+			if (this->matrix[coordinates.x][k] > 0 && k != coordinates.y)
+			{
+				index = Data::find_index(edges, { coordinates.x, k });
+				mat[i][index] = 1;
+				mat[index][i] = 1;
+			}
+		}
+
+		// search through the matrix for common vertices between edges
+		// in the same column of the initial adjacency matrix
+		for (std::size_t k = coordinates.x; k < coordinates.y; k++)
+		{
+			if (this->matrix[k][coordinates.y] > 0 && k != coordinates.x)
+			{
+				index = Data::find_index(edges, { k, coordinates.y });
+				mat[i][index] = 1;
+				mat[index][i] = 1;
+			}
+		}
+	}
+
+	// create and return the line graph object based on created matrix
+	return Matrix(mat, this->name, this->type);
+}
+
+
+
+
+/*
+	Function loading the throughtput matrix for the modified
+	Belman-Ford algorithm, and stores it within the matrix object. 
+	The throughtput matrix ought to be in a .mat format. The user
+	must make sure that the throughtput matrix dimentions are the same
+	as the adjacency matrix. This function can be used multiple times
+	to update the throughtput matrix for the same graph, without need of
+	creating a separate object.
+
+	Params:
+	file_path - path to the throughtput matrix file
+
+	Return:
+	none
+*/
+void Graph::Matrix::load_throughtput(std::string file_path)
+{
+	int32_t value;
+	std::vector<int32_t> v;
+
+	// check for the right file format
+	if (file_path.find(".mat") != std::string::npos)
+	{
+		// if the file is in correct format, open it
+		std::ifstream file(file_path);
+
+		if (file.good())
+		{
+			// read each value from the throughtput matrix
+			for (std::size_t i = 0; i < this->matrix.size(); i++)
+			{
+				v.clear();
+				for (std::size_t j = 0; j < this->matrix[i].size(); j++)
+				{
+					file >> value;
+					v.push_back(value);
+				}
+				// save the row of the throughtput matrix to the object
+				this->throughtput.push_back(v);
+			}
+		}
+		// if file could not be opened
+		else
+		{
+			throw std::runtime_error("Could not open file");
+		}
+		file.close();
+	}
+	// if file is in incorrect format
+	else
+	{
+		throw std::invalid_argument("File not supported");
+	}
 }
 
 

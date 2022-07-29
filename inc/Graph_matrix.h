@@ -10,6 +10,12 @@
 
 namespace Graph
 {
+	/**
+	 * @brief This class provides an adjacency matrix graph representation.
+	 * 
+	 * The representation is based on the STL vector class. It does provide a
+	 * standard graph interface stated by the Graph virtual class. 
+	 */
 	class Matrix : public Graph
 	{
 	public:

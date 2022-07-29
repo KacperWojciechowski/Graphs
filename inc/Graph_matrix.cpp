@@ -415,7 +415,8 @@ const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destinati
 
 /*
 	Function generating a .GRAPHML file containing current graph information.
-	The format does contain the weights of the graph connections.
+	The format does contain the weights of the graph connections. In case of
+	undefined graph type, function assumes the graph is directed.
 
 	Params:
 	output_file_path - path to the output file
@@ -471,10 +472,14 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 	// edge data including weight
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
-		for (std::size_t j = i; j < this->matrix[i].size(); j++)
+		for (std::size_t j = 0; j < this->matrix[i].size(); j++)
 		{
 			if (this->matrix[i][j] > 0)
 			{
+				if (this->type == Type::undirected && j < i)
+				{
+					continue;
+				}
 				file << "	<edge source=\"n" << i;
 				file << "\" target=\"n" << j;
 				file << "\">\n";

@@ -8,10 +8,15 @@ namespace Graph
 	/*
 		Enum class representing the available graph classes
 	*/
+
+	/**
+	 * \brief Enum class stating the type of the graph.
+	 */
 	enum class Type
 	{
-		undirected = 0,
-		directed,
+		undirected = 0, /**< The graph is undirected, which means that the weights of the connections are automatically 
+						mirrored */
+		directed, /**< The graph is directed, which means that the weights are not automatically mirrored */
 		undefined
 	};
 

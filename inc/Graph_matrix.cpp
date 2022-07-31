@@ -20,6 +20,23 @@
 	object of matrix class containing the loaded data. If unsupported file type was given,
 	the object contains an empty matrix.
 */
+
+/**
+ * \brief Constructor loading the graph from file.
+ * 
+ * The constructor accepts the path to a file in supported format. If format is incorrect
+ * or the file cannot be accessed, an exception is returned. 
+ * 
+ * \param file_path Path of the data source file.
+ * \param name Name of the graph (user-given).
+ * \param type Type of the graph (from the Graph::Type enum).
+ * 
+ * \warning Exceptions to guard against:
+ *		- std::invalid_argument - when given file extension is not supported.
+ *		- std::runtime_error	- when given file cannot be accessed.
+ * \attention Supported formats are .mat and .GRAPHML. 
+ * \see House of Graphs for .mat adjacency matrix file reference.
+ */
 Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 	: name(name),
 	  type(type)

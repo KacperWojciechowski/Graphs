@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>My Project: Data Namespace Reference</title>
+<title>My Project: Graphs</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -73,7 +73,7 @@ var searchBox = new SearchBox("searchBox", "search",'Search','.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('namespace_data.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('md__e___repozytoria__c____graphs__r_e_a_d_m_e.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -91,65 +91,38 @@ $(document).ready(function(){initNavTree('namespace_data.html',''); initResizabl
 </iframe>
 </div>
 
-<div class="header">
-  <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">Data Namespace Reference</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Graphs </div></div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_data_1_1coord.html">coord</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure containing coordinates of the vertex or edge.  <a href="struct_data_1_1coord.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_1_1_generator.html">Generator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class responsible for generating various data sources supported by this library.  <a href="class_data_1_1_generator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_1_1_pixel_map.html">PixelMap</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a3fc0992ca23fde8bb88cc31a41eb5d14"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_data.html#a3fc0992ca23fde8bb88cc31a41eb5d14">find_index</a> (std::vector&lt; <a class="el" href="struct_data_1_1coord.html">coord</a> &gt; &amp;nodes, <a class="el" href="struct_data_1_1coord.html">coord</a> _coord)</td></tr>
-<tr class="separator:a3fc0992ca23fde8bb88cc31a41eb5d14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a3fc0992ca23fde8bb88cc31a41eb5d14" name="a3fc0992ca23fde8bb88cc31a41eb5d14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3fc0992ca23fde8bb88cc31a41eb5d14">&#9670;&nbsp;</a></span>find_index()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::size_t Data::find_index </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="struct_data_1_1coord.html">coord</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>nodes</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_data_1_1coord.html">coord</a>&#160;</td>
-          <td class="paramname"><em>_coord</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-</div><!-- contents -->
+<div class="textblock"><p >Implementation of basic graph software made for university classes.</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Overview:</h1>
+<p >The implementation provides adjacency matrix and adjacency list representations compatibile with the House of Graphs portal data formats, and GraphML format. Each graph representation provides implementation of basic graph coloring and path searching algorithms. The adjacency list representation however, unlike adjacency matrix representation, does not provide weighted graphs support.</p>
+<p >The implementation is suited for weighted and non-weighted undirected and directed graphs. It does support graphs with loops, however it does not support multigraphs and will treat them as weighted graphs instead.</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Features:</h1>
+<p ><b>Each of the representation implements following algorithms:</b></p><ul>
+<li>Greedy coloring with optional permutations</li>
+<li>LF coloring with optional permutations</li>
+<li>SL coloring with optional permutations</li>
+<li>Belman-Ford one-to-all path search</li>
+</ul>
+<p ><b>Matrix representation also implements:</b></p><ul>
+<li>modified Belman-Ford algorithm one-to-all path search with throughtput requirements</li>
+</ul>
+<p ><b>The project provides additional features such as:</b></p><ul>
+<li><a class="el" href="class_data_1_1_pixel_map.html">Data::PixelMap</a> class allowing for representation of a terrain map via binary values. Can be used with the graph representations to create a graph of the terrain for tasks such as path searching.</li>
+<li>Data::Benchmark class generating the raports of time efficiency and results of various algorithms implemented by the graph representations.</li>
+<li><a class="el" href="class_data_1_1_generator.html" title="Class responsible for generating various data sources supported by this library.">Data::Generator</a> class allowing user to generate sample weighted graphs, pixel maps and throughput matrices.</li>
+<li><a class="el" href="class_graph_1_1_examples.html" title="Class containing various examples in form of static functions.">Graph::Examples</a> library containing static methods to demonstrate the use and results of certain features. </li>
+</ul>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_data.html">Data</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>

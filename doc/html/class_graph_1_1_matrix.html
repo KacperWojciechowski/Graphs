@@ -30,8 +30,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">My Project
+   <div id="projectname">My Project<span id="projectnumber">&#160;1.0</span>
    </div>
+   <div id="projectbrief">Simple House of Graphs compliant graph software</div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -115,6 +116,7 @@ Inheritance diagram for Graph::Matrix:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0b33f8ee83b683a46cb39e5eb0761771"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_graph_1_1_matrix.html#a0b33f8ee83b683a46cb39e5eb0761771">Matrix</a> (std::string file_path, std::string name, <a class="el" href="namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a> type)</td></tr>
+<tr class="memdesc:a0b33f8ee83b683a46cb39e5eb0761771"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor loading the graph from file.  <a href="class_graph_1_1_matrix.html#a0b33f8ee83b683a46cb39e5eb0761771">More...</a><br /></td></tr>
 <tr class="separator:a0b33f8ee83b683a46cb39e5eb0761771"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cc939b1936aa42eec68586e83cca903"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_graph_1_1_matrix.html#a1cc939b1936aa42eec68586e83cca903">Matrix</a> (std::vector&lt; std::vector&lt; int32_t &gt; &gt; &amp;mat, std::string name, <a class="el" href="namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a> type)</td></tr>
 <tr class="separator:a1cc939b1936aa42eec68586e83cca903"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,6 +230,24 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructor loading the graph from file. </p>
+<p >The constructor accepts the path to a file in supported format. If format is incorrect or the file cannot be accessed, an exception is returned.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file_path</td><td>Path of the data source file. </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the graph (user-given). </td></tr>
+    <tr><td class="paramname">type</td><td>Type of the graph (from the <a class="el" href="namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0" title="Enum class stating the type of the graph.">Graph::Type</a> enum).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>Exceptions to guard against:<ul>
+<li>std::invalid_argument - when given file extension is not supported.</li>
+<li>std::runtime_error - when given file cannot be accessed. </li>
+</ul>
+</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Supported formats are .mat and .GRAPHML. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>House of Graphs for .mat adjacency matrix file reference. </dd></dl>
+
 </div>
 </div>
 <a id="a1cc939b1936aa42eec68586e83cca903" name="a1cc939b1936aa42eec68586e83cca903"></a>
@@ -305,6 +325,7 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section warning"><dt>Warning</dt><dd>Deleted constructor. </dd></dl>
 
 </div>
 </div>

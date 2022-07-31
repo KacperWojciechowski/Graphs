@@ -12,7 +12,7 @@ var searchData=
   ['graph_2eh_9',['Graph.h',['../_graph_8h.html',1,'']]],
   ['graph_5fmatrix_2ecpp_10',['Graph_matrix.cpp',['../_graph__matrix_8cpp.html',1,'']]],
   ['graph_5fmatrix_2eh_11',['Graph_matrix.h',['../_graph__matrix_8h.html',1,'']]],
-  ['graphs_12',['Graphs',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['graphs_12',['Graphs',['../md__e___repozytoria__c____graphs__r_e_a_d_m_e.html',1,'']]],
   ['greedy_5fcoloring_13',['greedy_coloring',['../class_graph_1_1_algorithms.html#ab10d156d989f0c8146e1f1da0f3808b3',1,'Graph::Algorithms']]],
   ['greedy_5fcoloring_5fcore_14',['greedy_coloring_core',['../class_graph_1_1_algorithms.html#a524ce283f710b2bc34e92e4a6d875877',1,'Graph::Algorithms']]]
 ];

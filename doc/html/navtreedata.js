@@ -24,11 +24,12 @@
 */
 var NAVTREE =
 [
-  [ "My Project", "index.html", [
-    [ "Graphs", "md__e___repozytoria__c____graphs__r_e_a_d_m_e.html", [
-      [ "Overview:", "md__e___repozytoria__c____graphs__r_e_a_d_m_e.html#autotoc_md1", null ],
-      [ "Features:", "md__e___repozytoria__c____graphs__r_e_a_d_m_e.html#autotoc_md2", null ]
+  [ "Graphs", "index.html", [
+    [ "Graphs", "d3/dcc/md__r_e_a_d_m_e.html", [
+      [ "Overview:", "d3/dcc/md__r_e_a_d_m_e.html#autotoc_md1", null ],
+      [ "Features:", "d3/dcc/md__r_e_a_d_m_e.html#autotoc_md2", null ]
     ] ],
+    [ "Todo List", "dd/da0/todo.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -59,7 +60,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_algorithms_8h.html"
+"annotated.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

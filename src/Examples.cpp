@@ -41,3 +41,4 @@ void Graph::Examples::save_matrix_to_graphml_file()
 	Matrix matrix("samples\\graphML.GRAPHML", "Name", Type::undirected);
 	matrix.save_graphml("samples\\saved_graphML.GRAPHML");
 }
+	

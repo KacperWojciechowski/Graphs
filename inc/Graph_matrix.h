@@ -24,6 +24,10 @@ namespace Graph
 		Matrix(std::string file_path, std::string name, Type type);
 		Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type);
 		Matrix(Matrix& m);
+
+		/**
+		 * \warning Deleted constructor.
+		 */
 		Matrix(Matrix&& m) = delete;
 
 		/* Interface */

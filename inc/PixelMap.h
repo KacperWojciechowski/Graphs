@@ -6,12 +6,12 @@
 
 namespace Data
 {
-	/*
-		Class representing a map of binary pixels. Zeros indicate the fields,
-		while ones indicate the walls.
-
-		Used to create a graph of pathways between adjacent pixels.
-	*/
+	/**
+	 * \brief Class representing a map of binary pixels.
+	 * 
+	 * Zeros indicate the fields while ones indicate the walls. Used to create an
+	 * adjacency list representation of a graph of pathways between adjacent pixels.
+	 */
 	class PixelMap
 	{
 	public:

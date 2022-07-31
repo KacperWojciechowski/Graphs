@@ -6,20 +6,22 @@
 
 #include "../inc/Coord.h"
 
-/*
-	Constructor loading the graph from file. Works with .mat and .GRAPHML files. 
-	Detects missing file and unsupported file format, returning by default an empty graph.
-	The class works only with integer weights.
-	
-	Params:
-	file_path	- string containing the path to the graph file
-	name		- user-given name of the graph. Overwritten if loading .GRAPHML file
-	type		- selected type of the graph. Overwritten if loading .GRAPHML file
-
-	Return:
-	object of matrix class containing the loaded data. If unsupported file type was given,
-	the object contains an empty matrix.
-*/
+/**
+ * \brief Constructor loading the graph from file.
+ * 
+ * The constructor accepts the path to a file in supported format. If format is incorrect
+ * or the file cannot be accessed, an exception is returned. 
+ * 
+ * \param file_path Path of the data source file.
+ * \param name Name of the graph (user-given).
+ * \param type Type of the graph (from the Graph::Type enum).
+ * 
+ * \warning Exceptions to guard against:
+ *		- std::invalid_argument - when given file extension is not supported.
+ *		- std::runtime_error	- when given file cannot be accessed.
+ * \attention Supported formats are .mat and .GRAPHML. 
+ * \see House of Graphs for .mat adjacency matrix file reference.
+ */
 Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 	: name(name),
 	  type(type)
@@ -66,17 +68,13 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 
 
 
-/*
-	Constructor creating a graph based on the given matrix made up of vectors.
-
-	Params:
-	mat		- vector of vectors containing the matrix values
-	name	- name of the graph
-	type	- type of the graph
-
-	Return:
-	None
-*/
+/**
+ * \brief Constructor creating a graph based on the given matrix made up of vectors.
+ * 
+ * \param mat Vector of vectors containing the adjacency matrix values (weights of the connections).
+ * \param name Name of the graph (user-given).
+ * \param type Type of the graph (from the Graph::Type enum).
+ */
 Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type)
 {
 	this->matrix = mat;
@@ -87,18 +85,13 @@ Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, 
 
 
 
-/*
-	Simple copy constructor allowing for creating a deep copy
-	of each of the private class fields.
-
-	Params:
-	m - reference to the copied matrix object
-
-	Return:
-	object of the matrix class containing the copy of each
-	of private fields from the source object.
-*/
-
+/**
+ * \brief Simple copy constructor allowing for creating a deep copy.
+ * 
+ * The constructor performs a deep copy of each of the private class members.
+ * 
+ * \param m Reference to the copied Graph::Matrix object.
+ */
 Graph::Matrix::Matrix(Matrix& m)
 {
 	this->matrix = m.matrix;
@@ -109,18 +102,14 @@ Graph::Matrix::Matrix(Matrix& m)
 
 
 
-/*
-	Function printing the information regarding current graph
-	such as graph name, graph type, number of vertices and
-	full adjacency matrix
-
-	Params:
-	None
-
-	Return:
-	None
-*/
-
+/**
+ * \brief Function displaying the information regarding current graph on standard output.
+ * 
+ * The function displays following information:
+ * - name of the graph
+ * - type of the graph
+ * - graph structure along with weights in form of adjacency matrix
+ */
 void Graph::Matrix::print()
 {
 	// display name and type information
@@ -165,18 +154,17 @@ void Graph::Matrix::print()
 
 
 
-/*
-	Function adds a connection between source and destination vertices.
-
-	Params:
-	source		- source vertex
-	destination	- destination vertex
-	weight		- weight of inserted connection
-
-	Return:
-	None
-*/
-
+/**
+ * \brief Function for adding a weighted edge between the source and destination vertices.
+ * 
+ * \param source ID of the source vertex of the edge.
+ * \param destination ID of the end vertex of the edge.
+ * \param weight Weight of inserted edge.
+ * 
+ * \warning Exceptions to guard against:
+ *		- std::out_of_range - when either of the IDs exceed the count of vertices.
+ *		- std::invalid_argument - when the weight value is equal to 0.
+ */
 void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, uint32_t weight)
 {
 	// validate the vertices indexes
@@ -218,17 +206,10 @@ void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, uint32
 
 
 
-
-/*
-	Add a node with no connections to the graph.
-
-	Params:
-	None
-
-	Return:
-	None
-*/
-
+/**
+ * \brief Function adding an isolated vertex to the graph structure.
+ * 
+ */
 void Graph::Matrix::add_node()
 {
 	// add zeros at the end of each row to mark the new vertex to be added
@@ -254,17 +235,15 @@ void Graph::Matrix::add_node()
 
 
 
-/*
-	Remove a connection between two given vertices
-
-	Params:
-	source		- source vertex of the connection
-	destination	- destination vertex of the connection
-
-	Return:
-	None
-*/
-
+/**
+ * \brief Function for removing an edge between two given vertices.
+ * 
+ * \param source ID of the source vertex of the edge (counting from 0).
+ * \param destination ID of the destination vertex of the edge (counting from 0).
+ * 
+ * \warning Exception to guard against:
+ *		- std::out_of_range - when either of the IDs exceed the count of vertices.
+ */
 void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
 {
 	// validate the vertices indexes
@@ -303,16 +282,14 @@ void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
 
 
 
-/*
-	Remove a vertex along with all its connections from the graph.
-
-	Params:
-	node_id - id of the node to remove
-
-	Return:
-	None
-*/
-
+/**
+ * \brief Function for removing a vertex along with all its connections from the graph structure.
+ * 
+ * \param node_id ID of the removed vertex (counting from 0).
+ * 
+ * \warning Exception to guard against:
+ *		- std::out_of_range - when given ID exceeds the count of vertices.
+ */
 void Graph::Matrix::remove_node(std::size_t node_id)
 {
 	// validate the vertex ID
@@ -344,16 +321,11 @@ void Graph::Matrix::remove_node(std::size_t node_id)
 
 
 
-/*
-	Getter for vertices count.
-
-	Params:
-	None
-
-	Return:
-	return - amount of vertices as const value
-*/
-
+/**
+ * \brief Getter for vertices count.
+ * 
+ * \return Amount of vertices in the graph structure.
+ */
 const std::size_t Graph::Matrix::get_nodes_amount()
 {
 	return this->matrix.size();
@@ -362,16 +334,15 @@ const std::size_t Graph::Matrix::get_nodes_amount()
 
 
 
-/*
-	Getter for vertex degree.
-
-	Params:
-	node_id - ID of the vertex which degree is to be fetched.
-
-	Return:
-	return - const value of the degree of given vertex
-	
-*/
+/**
+ * \brief Getter for the degree of given vertex.
+ * 
+ * \param node_id ID of the vertex which degree should be returned.
+ * \return Degree of the given vertex
+ * 
+ * \warning Exception to guard against:
+ *		- std::out_of_range - when given ID exceeds the count of vertices.
+ */
 const std::size_t Graph::Matrix::get_node_degree(std::size_t node_id)
 {
 	if (node_id >= this->matrix.size())
@@ -387,17 +358,18 @@ const std::size_t Graph::Matrix::get_node_degree(std::size_t node_id)
 
 
 
-/*
-	Getter for the edge value between given vertices.
-
-	Params:
-	source		- source vertex of the edge
-	destination - destination vertex of the edge
-
-	Return:
-	return - const value of the edge weight between given vertices. Zero
-			 means no connection.
-*/
+/**
+ * \brief Getter for the weight of a connection between given vertices.
+ * 
+ * \param source ID of the source vertex of the edge (counting from 0).
+ * \param destination ID of the end vertex of the edge (counting from 0).
+ * \return Value of the weight of the edge.
+ * 
+ * \note Return value of zero means no connection is present.
+ * 
+ * \warning Exception to guard against:
+ *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
+ */
 const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
 {
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
@@ -413,24 +385,22 @@ const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destinati
 
 
 
-/*
-	Function generating a .GRAPHML file containing current graph information.
-	The format does contain the weights of the graph connections. In case of
-	undefined graph type, function assumes the graph is directed.
-
-	Params:
-	output_file_path - path to the output file
-
-	Return:
-	None
-*/
+/**
+ * \brief Function generating a .GRAPHML file containing the graph information.
+ * 
+ * This format does contain the weights of the graph's edges.
+ * 
+ * \note In case of undefined graph type, function assumes the graph is directed.
+ * 
+ * \param output_file_path Path to the output file
+ */
 void Graph::Matrix::save_graphml(std::string output_file_path)
 {
 	// opening output file
 	std::ofstream file(output_file_path);
 
 	// header
-	file << "<?xml version=\"1,0\"";
+	file << "<?xml version=\"1.0\"";
 	file << " encoding=\"UTF-8\"?>\n";
 
 	// xml schema
@@ -499,17 +469,18 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 
 
 
-/*
-	Function creating a line graph of an existing graph. The resulting
-	line graph is returned as a different object. Resulting line graph
-	is undirected and does not contain any weights.
-
-	Params:
-	None
-
-	Return:
-	return - line graph object
-*/
+/**
+ * \brief Function for creating a line graph of the current graph.
+ * 
+ * The resulting line graph is returned as a separate object. 
+ * 
+ * \warning Resulting line graph is undirected and does not contain any weights (all weights
+ * are defaulted to 1). As such, the functionality currently does not support digraphs. 
+ * 
+ * \return Graph::Matrix object containing the line graph.
+ * 
+ * \todo Modify the function to support directed graphs.
+ */
 Graph::Matrix Graph::Matrix::change_to_line_graph()
 {
 	std::vector<Data::coord> edges;
@@ -582,21 +553,22 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 
 
 
-/*
-	Function loading the throughtput matrix for the modified
-	Belman-Ford algorithm, and stores it within the matrix object. 
-	The throughtput matrix ought to be in a .mat format. The user
-	must make sure that the throughtput matrix dimentions are the same
-	as the adjacency matrix. This function can be used multiple times
-	to update the throughtput matrix for the same graph, without need of
-	creating a separate object.
-
-	Params:
-	file_path - path to the throughtput matrix file
-
-	Return:
-	none
-*/
+/**
+ * \brief Function loading the throughtput matrix for the modified Belman-Ford algorithm.
+ * 
+ * The loaded throughtput matrix ought to be in a .mat format, and is stored within the current 
+ * object. This function can be called multiple times to update the throughtput matrix for the
+ * same graph, without need of creating a separate object.
+ * 
+ * \param file_path Path to the throughtput matrix .mat file.
+ * 
+ * \attention The user has to make sure that the throughtput matrix is just as big as
+ * the adjacency matrix.
+ * 
+ * \warning Exceptions to guard against:
+ *		- std::invalid_argument - when the file has an unsupported extension.
+ *		- std::runtime_error - when the file could not be accessed.
+ */
 void Graph::Matrix::load_throughtput(std::string file_path)
 {
 	int32_t value;
@@ -640,16 +612,13 @@ void Graph::Matrix::load_throughtput(std::string file_path)
 
 
 
-/*
-	Function loads the data from .mat file into the matrix object.
-
-	Params:
-	file - reference to the .mat to read data from
-
-	Return:
-	None
-*/
-
+/**
+ * \brief Function loads the data from .mat file into the matrix object.
+ * 
+ * This function is an internal function and is not to be called directly by the user.
+ * 
+ * \param file Reference to the std::fstream data source file object.
+ */
 void Graph::Matrix::load_mat_file(std::fstream& file)
 {
 	std::string line;
@@ -704,16 +673,14 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
 
 
 
-/*
-	Function loads the data from .GRAPHML file. Does not support weighted graphs
-
-	Params:
-	file	- reference to the data source file
-
-	Return:
-	None
-*/
-
+/**
+ * \brief Function loads the data from .GRAPHML file.
+ * 
+ * This function is an internal function and is not to be called directly by the user.
+ * 
+ * \param file Reference to the std::fstream data source file object.
+ * 
+ */
 void Graph::Matrix::load_graphml_file(std::fstream& file)
 {
 	std::string line;
@@ -875,16 +842,12 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 
 
 
-/*
-	Calculate the degrees of each vertex.
-
-	Params:
-	None
-
-	Return:
-	None
-*/
-
+/**
+ * \brief Function calculating the degrees of each vertex in the graph structure.
+ * 
+ * This function is for internal purpose and is not to be called directly by the user.
+ * 
+ */
 void Graph::Matrix::calculate_degrees()
 {
 	std::size_t deg;

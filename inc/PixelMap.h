@@ -6,21 +6,21 @@
 
 namespace Data
 {
-	/*
-		Class representing a map of binary pixels. Zeros indicate the fields,
-		while ones indicate the walls.
-
-		Used to create a graph of pathways between adjacent pixels.
-	*/
-	class Pixel_map
+	/**
+	 * \brief Class representing a map of binary pixels.
+	 * 
+	 * Zeros indicate the fields while ones indicate the walls. Used to create an
+	 * adjacency list representation of a graph of pathways between adjacent pixels.
+	 */
+	class PixelMap
 	{
 	public:
 
 		// constructors
-		Pixel_map(std::string file_path);
+		PixelMap(std::string file_path);
 
-		Pixel_map(Pixel_map& p) = delete;
-		Pixel_map(Pixel_map&& p) = delete;
+		PixelMap(PixelMap& p) = delete;
+		PixelMap(PixelMap&& p) = delete;
 
 		// interface
 		void print();

@@ -10,6 +10,12 @@
 
 namespace Graph
 {
+	/**
+	 * @brief This class provides an adjacency matrix graph representation.
+	 * 
+	 * The representation is based on the STL vector class. It does provide a
+	 * standard graph interface stated by the Graph virtual class. 
+	 */
 	class Matrix : public Graph
 	{
 	public:
@@ -18,6 +24,10 @@ namespace Graph
 		Matrix(std::string file_path, std::string name, Type type);
 		Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type);
 		Matrix(Matrix& m);
+
+		/**
+		 * \warning Deleted constructor.
+		 */
 		Matrix(Matrix&& m) = delete;
 
 		/* Interface */

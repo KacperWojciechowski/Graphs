@@ -23,4 +23,4 @@ Features:
 - Data::PixelMap class allowing for representation of a terrain map via binary values. Can be used with the graph representations to create a graph of the terrain for tasks such as path searching.
 - Data::Benchmark class generating the raports of time efficiency and results of various algorithms implemented by the graph representations.
 - Data::Generator class allowing user to generate sample weighted graphs, pixel maps and throughput matrices.
-- Examples library containing static methods to demonstrate the use and results of certain features.
+- Graph::Examples library containing static methods to demonstrate the use and results of certain features.

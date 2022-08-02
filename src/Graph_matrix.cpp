@@ -1,4 +1,4 @@
-#include "Graph_matrix.h"
+#include "../inc/Graph_matrix.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -24,7 +24,8 @@
  */
 Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 	: name(name),
-	  type(type)
+	  type(type),
+	  next_index(0)
 {
 	// loading the .mat file
 	if (file_path.find(".mat", 0) != std::string::npos)
@@ -41,6 +42,12 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 		file.close();
 		
 		this->calculate_degrees();
+
+		// create enumeration map
+		for (auto i = 0; i < this->matrix.size(); i++)
+		{
+			this->numeration.insert(std::pair<std::size_t, std::size_t>(this->next_index++, i));
+		}
 	}
 	// loading the .GRAPHML file
 	else if (file_path.find(".GRAPHML", 0) != std::string::npos)
@@ -57,6 +64,12 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 		file.close();
 
 		this->calculate_degrees();
+
+		// create enumeration map
+		for (auto i = 0; i < this->matrix.size(); i++)
+		{
+			this->numeration.insert(std::pair<std::size_t, std::size_t>(this->next_index++, i));
+		}
 	}
 	// signalizing the unsupported file format 
 	else
@@ -76,27 +89,35 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
  * \param type Type of the graph (from the Graph::Type enum).
  */
 Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type)
+	: matrix(mat),
+	name(name),
+	type(type),
+	next_index(0)
 {
-	this->matrix = mat;
-	this->name = name;
-	this->type = type;
+	// create enumeration map
+	for (auto i = 0; i < this->matrix.size(); i++)
+	{
+		this->numeration.insert(std::pair<std::size_t, std::size_t>(this->next_index++, i));
+	}
 }
 
 
 
 
 /**
- * \brief Simple copy constructor allowing for creating a deep copy.
+ * \brief Simple copy constructor allowing for creating a deep copy from rvalue reference.
  * 
  * The constructor performs a deep copy of each of the private class members.
  * 
- * \param m Reference to the copied Graph::Matrix object.
+ * \param m rvalue reference to the copied Graph::Matrix object.
  */
-Graph::Matrix::Matrix(Matrix& m)
+Graph::Matrix::Matrix(Matrix&& m) noexcept
+	: matrix(m.matrix),
+	name(m.name),
+	type(m.type),
+	next_index(m.next_index),
+	numeration(m.numeration)
 {
-	this->matrix = m.matrix;
-	this->name = m.name;
-	this->type = m.type;
 }
 
 
@@ -547,7 +568,8 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 	}
 
 	// create and return the line graph object based on created matrix
-	return Matrix(mat, this->name, this->type);
+	Matrix matrix(mat, this->name, this->type);
+	return matrix;
 }
 
 

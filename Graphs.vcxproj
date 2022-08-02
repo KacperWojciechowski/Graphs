@@ -144,13 +144,14 @@
     <ClInclude Include="inc\Generator.h" />
     <ClInclude Include="inc\Graph.h" />
     <ClInclude Include="inc\Algorithms.h" />
+    <ClInclude Include="inc\Graph_list.h" />
     <ClInclude Include="inc\Graph_matrix.h" />
     <ClInclude Include="inc\PixelMap.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="inc\Graph_matrix.cpp" />
     <ClCompile Include="src\Coord.cpp" />
     <ClCompile Include="src\Examples.cpp" />
+    <ClCompile Include="src\Graph_matrix.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

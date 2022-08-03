@@ -118,6 +118,7 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
 	next_index(m.next_index),
 	numeration(m.numeration)
 {
+	
 }
 
 

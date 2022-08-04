@@ -149,6 +149,7 @@
     <ClInclude Include="inc\PixelMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="inc\Graph_list.cpp" />
     <ClCompile Include="src\Coord.cpp" />
     <ClCompile Include="src\Examples.cpp" />
     <ClCompile Include="src\Graph_matrix.cpp" />

@@ -24,7 +24,7 @@
  */
 Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 	: name(name),
-	  type(type),
+	  type(type)
 {
 	// loading the .mat file
 	if (file_path.find(".mat", 0) != std::string::npos)
@@ -123,6 +123,7 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  * - name of the graph
  * - type of the graph
  * - graph structure along with weights in form of adjacency matrix
+ * - degrees of each of the vertices
  */
 void Graph::Matrix::print()
 {
@@ -159,7 +160,7 @@ void Graph::Matrix::print()
 		{
 			std::cout << std::setw(3) << std::right << *itr2 << ", ";
 		}
-		std::cout << std::endl;
+		std::cout << "  degree: " << this->degrees[std::distance(this->matrix.begin(), itr)] <<  std::endl;
 	}
 
 	std::cout << "]" << std::endl;
@@ -876,7 +877,7 @@ void Graph::Matrix::calculate_degrees()
 		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
 		{
 			// if connection was found, increase the degree
-			if (*itr2 == 1)
+			if (*itr2 > 0)
 			{
 				// if a loop was found, increase the degree by 2
 				if (std::distance(itr->begin(), itr2) == std::distance(this->matrix.begin(), itr))
@@ -890,5 +891,6 @@ void Graph::Matrix::calculate_degrees()
 				}
 			}
 		}
+		this->degrees.push_back(deg);
 	}
 }

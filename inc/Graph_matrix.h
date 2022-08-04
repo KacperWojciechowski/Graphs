@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <map>
+
+#include <iostream>
 
 #include "Graph.h"
 #include "Algorithms.h"
@@ -23,12 +26,9 @@ namespace Graph
 		/* Constructors */
 		Matrix(std::string file_path, std::string name, Type type);
 		Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type);
+		
 		Matrix(Matrix& m);
-
-		/**
-		 * \warning Deleted constructor.
-		 */
-		Matrix(Matrix&& m) = delete;
+		Matrix(Matrix&& m) noexcept;
 
 		/* Interface */
 		void print();

@@ -1,4 +1,4 @@
-#include "Graph_matrix.h"
+#include "../inc/Graph_matrix.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -24,7 +24,7 @@
  */
 Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 	: name(name),
-	  type(type)
+	  type(type),
 {
 	// loading the .mat file
 	if (file_path.find(".mat", 0) != std::string::npos)
@@ -76,27 +76,41 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
  * \param type Type of the graph (from the Graph::Type enum).
  */
 Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type)
+	: matrix(mat),
+	name(name),
+	type(type)
 {
-	this->matrix = mat;
-	this->name = name;
-	this->type = type;
 }
 
 
 
 
 /**
- * \brief Simple copy constructor allowing for creating a deep copy.
+ * \brief Simple copy constructor allowing for creating a deep copy from lvalue reference.
  * 
- * The constructor performs a deep copy of each of the private class members.
- * 
- * \param m Reference to the copied Graph::Matrix object.
+ * \param m lvalue reference to the copied Graph::Matrix object.
  */
 Graph::Matrix::Matrix(Matrix& m)
+	: matrix(m.matrix),
+	name(m.name),
+	type(m.type)
 {
-	this->matrix = m.matrix;
-	this->name = m.name;
-	this->type = m.type;
+}
+
+/**
+ * \brief Simple move constructor allowing for creating a deep copy from rvalue reference.
+ * 
+ * The move constructor causes the rvalue referenced object to be emptied after the copy is performed.
+ * 
+ * \param m rvalue reference to the copied Graph::Matrix object.
+ */
+Graph::Matrix::Matrix(Matrix&& m) noexcept
+	: matrix(m.matrix),
+	name(m.name),
+	type(m.type)
+{
+	m.matrix.clear();
+	m.name.clear();
 }
 
 
@@ -286,6 +300,8 @@ void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
  * \brief Function for removing a vertex along with all its connections from the graph structure.
  * 
  * \param node_id ID of the removed vertex (counting from 0).
+ * 
+ * \warning Removing a vertex causes re-enumeration of each subsequent vertex in the graph.
  * 
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.
@@ -547,7 +563,8 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 	}
 
 	// create and return the line graph object based on created matrix
-	return Matrix(mat, this->name, this->type);
+	Matrix matrix(mat, this->name, this->type);
+	return matrix;
 }
 
 

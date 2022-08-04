@@ -6,6 +6,8 @@
 #include <fstream>
 #include <map>
 
+#include <iostream>
+
 #include "Graph.h"
 #include "Algorithms.h"
 
@@ -25,6 +27,7 @@ namespace Graph
 		Matrix(std::string file_path, std::string name, Type type);
 		Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type);
 		
+		Matrix(Matrix& m);
 		Matrix(Matrix&& m) noexcept;
 
 		/* Interface */
@@ -62,10 +65,6 @@ namespace Graph
 		std::vector<std::vector<int32_t>> matrix;
 		std::vector<std::vector<int32_t>> throughtput;
 		std::vector<std::size_t> degrees;
-
-		/* Vertex enumeration structure */
-		std::size_t next_index;
-		std::map<std::size_t, std::size_t> numeration;
 
 		/* GraphML format information */
 		std::string name;

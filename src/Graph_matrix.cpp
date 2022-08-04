@@ -25,7 +25,6 @@
 Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 	: name(name),
 	  type(type),
-	  next_index(0)
 {
 	// loading the .mat file
 	if (file_path.find(".mat", 0) != std::string::npos)
@@ -42,12 +41,6 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 		file.close();
 		
 		this->calculate_degrees();
-
-		// create enumeration map
-		for (auto i = 0; i < this->matrix.size(); i++)
-		{
-			this->numeration.insert(std::pair<std::size_t, std::size_t>(this->next_index++, i));
-		}
 	}
 	// loading the .GRAPHML file
 	else if (file_path.find(".GRAPHML", 0) != std::string::npos)
@@ -64,12 +57,6 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 		file.close();
 
 		this->calculate_degrees();
-
-		// create enumeration map
-		for (auto i = 0; i < this->matrix.size(); i++)
-		{
-			this->numeration.insert(std::pair<std::size_t, std::size_t>(this->next_index++, i));
-		}
 	}
 	// signalizing the unsupported file format 
 	else
@@ -91,34 +78,39 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type)
 	: matrix(mat),
 	name(name),
-	type(type),
-	next_index(0)
+	type(type)
 {
-	// create enumeration map
-	for (auto i = 0; i < this->matrix.size(); i++)
-	{
-		this->numeration.insert(std::pair<std::size_t, std::size_t>(this->next_index++, i));
-	}
 }
 
 
 
 
 /**
- * \brief Simple copy constructor allowing for creating a deep copy from rvalue reference.
+ * \brief Simple copy constructor allowing for creating a deep copy from lvalue reference.
  * 
- * The constructor performs a deep copy of each of the private class members.
+ * \param m lvalue reference to the copied Graph::Matrix object.
+ */
+Graph::Matrix::Matrix(Matrix& m)
+	: matrix(m.matrix),
+	name(m.name),
+	type(m.type)
+{
+}
+
+/**
+ * \brief Simple move constructor allowing for creating a deep copy from rvalue reference.
+ * 
+ * The move constructor causes the rvalue referenced object to be emptied after the copy is performed.
  * 
  * \param m rvalue reference to the copied Graph::Matrix object.
  */
 Graph::Matrix::Matrix(Matrix&& m) noexcept
 	: matrix(m.matrix),
 	name(m.name),
-	type(m.type),
-	next_index(m.next_index),
-	numeration(m.numeration)
+	type(m.type)
 {
-	
+	m.matrix.clear();
+	m.name.clear();
 }
 
 
@@ -308,6 +300,8 @@ void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
  * \brief Function for removing a vertex along with all its connections from the graph structure.
  * 
  * \param node_id ID of the removed vertex (counting from 0).
+ * 
+ * \warning Removing a vertex causes re-enumeration of each subsequent vertex in the graph.
  * 
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.

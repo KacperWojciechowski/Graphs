@@ -1,14 +1,11 @@
 #include "../inc/Graph_matrix.h"
 #include "../inc/Examples.h"
+#include "../inc/Graph_list.h"
 
 int main()
 {
-	Graph::Matrix matrix("samples\\graphML.GRAPHML", "Name", Graph::Type::undirected);
+	Graph::List list("samples\\list.lst", "Name", Graph::Type::undirected);
 
-	matrix.print();
-
-	matrix.remove_node(4);
-
-	matrix.print();
+	list.print();
 	return 0;
 }

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pixelmap_0',['PixelMap',['../d3/d20/class_data_1_1_pixel_map.html',1,'Data']]]
+  ['matrix_0',['Matrix',['../dc/de1/class_graph_1_1_matrix.html',1,'Graph']]]
 ];

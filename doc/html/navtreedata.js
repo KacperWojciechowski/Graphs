@@ -25,9 +25,9 @@
 var NAVTREE =
 [
   [ "Graphs", "index.html", [
-    [ "Graphs", "d3/dcc/md__r_e_a_d_m_e.html", [
-      [ "Overview:", "d3/dcc/md__r_e_a_d_m_e.html#autotoc_md1", null ],
-      [ "Features:", "d3/dcc/md__r_e_a_d_m_e.html#autotoc_md2", null ]
+    [ "Graphs", "d8/de8/md__e___repozytoria__c____graphs__r_e_a_d_m_e.html", [
+      [ "Overview:", "d8/de8/md__e___repozytoria__c____graphs__r_e_a_d_m_e.html#autotoc_md1", null ],
+      [ "Features:", "d8/de8/md__e___repozytoria__c____graphs__r_e_a_d_m_e.html#autotoc_md2", null ]
     ] ],
     [ "Todo List", "dd/da0/todo.html", null ],
     [ "Namespaces", "namespaces.html", [

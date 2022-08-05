@@ -19,7 +19,7 @@ namespace Graph
 	 * The representation is based on the STL list and vector classes. It does provide a
 	 * standard graph interface stated by the Graph virtual class.
 	 */
-	class List : public Graph
+	class List /* : public Graph*/
 	{
 	public:
 		/* Constructors */

@@ -320,12 +320,18 @@ void Graph::Matrix::remove_node(std::size_t node_id)
 		// remove the column of the deleted vertex and update degree of each vertex
 		for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
 		{
-			if (*(std::next(itr->begin(), node_id)) == 1)
+			if (*(std::next(itr->begin(), node_id)) > 0)
 			{
-				this->degrees[std::distance(this->matrix.begin(), itr)]--;
+				if (std::distance(this->matrix.begin(), itr) == node_id)
+				{
+					this->degrees[std::distance(this->matrix.begin(), itr)] -= 2;
+				}
+				else
+				{
+					this->degrees[std::distance(this->matrix.begin(), itr)]--;
+				}
 			}
 			itr->erase(std::next(itr->begin(), node_id));
-			
 		}
 
 		// remove the row of the deleted vertex and remove the degree counter
@@ -387,7 +393,7 @@ const std::size_t Graph::Matrix::get_node_degree(std::size_t node_id)
  * \warning Exception to guard against:
  *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
  */
-const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
+const int32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
 {
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
 	{

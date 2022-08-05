@@ -42,6 +42,8 @@ namespace Graph
 		const std::size_t get_nodes_amount();
 		const std::size_t get_node_degree(std::size_t node_id);
 		const int32_t get_edge(std::size_t source, std::size_t destination);
+		const std::string get_name();
+		const Type get_type();
 
 		void save_graphml(std::string output_file_path);
 

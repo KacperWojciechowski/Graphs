@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <list>
 
 #include "PixelMap.h"
 #include "Graph_matrix.h"
@@ -27,9 +29,9 @@ namespace Graph
 		List(Data::PixelMap& map);
 
 		List(List& l);
+		List(List&& l);
 
-		List(List&& l) = delete;
-
+		/* Interface */
 		void print();
 		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);
 		void add_node();
@@ -43,10 +45,28 @@ namespace Graph
 
 		void save_graphml(std::string output_file_path);
 
+		List change_to_line_graph();
+
 	private:
 
+		/* Adjacent vertex structure */
+		struct Node
+		{
+			std::size_t ID;
+			int32_t weight;
+		};
+
+		/* Load functions for specific file formats */
+		void load_lst_file(std::fstream& file);
 		void load_graphml_file(std::fstream& file);
 		void calculate_degrees();
 
+		/* Objects containing the graph */
+		std::vector<std::list<Node>> list;
+		std::vector<std::size_t> degrees;
+
+		/* GRAPHML format information */
+		std::string name;
+		Type type;
 	};
 }

@@ -23,7 +23,7 @@ namespace Graph
 	{
 	public:
 		/* Constructors */
-		List(std::string file_path);
+		List(std::string file_path, std::string name, Type type);
 
 		List(Matrix& matrix);
 		List(Data::PixelMap& map);
@@ -42,6 +42,8 @@ namespace Graph
 		const std::size_t get_nodes_amount();
 		const std::size_t get_node_degree(std::size_t node_id);
 		const int32_t get_edge(std::size_t source, std::size_t destination);
+		const std::string get_name();
+		const Type get_type();
 
 		void save_graphml(std::string output_file_path);
 
@@ -50,10 +52,15 @@ namespace Graph
 	private:
 
 		/* Adjacent vertex structure */
+
+		/**
+		 * \brief Structure containing the information regarding the connection
+		 * between a given vertex and its adjacent vertex.
+		 */
 		struct Node
 		{
-			std::size_t ID;
-			int32_t weight;
+			std::size_t ID; /**< Adjacent vertex ID */
+			int32_t weight; /**< Weight of the connection */
 		};
 
 		/* Load functions for specific file formats */

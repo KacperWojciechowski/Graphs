@@ -110,6 +110,22 @@ namespace Graph
 
 
 
+		/**
+		 * \brief Common function definition for name getter.
+		 */
+		virtual const std::string get_name() = 0;
+
+
+
+
+		/**
+		 * \brief Common function definition for type getter.
+		 */
+		virtual const Type get_type() = 0;
+
+
+
+
 		// output operations interface ------------------------------------------------------------------------------------------
 		
 		/**

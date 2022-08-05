@@ -403,6 +403,32 @@ const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destinati
 
 
 /**
+ * \brief Getter for the name of the graph.
+ * 
+ * \return Const string containing the name of the graph.
+ */
+const std::string Graph::Matrix::get_name()
+{
+	return this->name;
+}
+
+
+
+
+/**
+ * \brief Getter for the type of the graph.
+ * 
+ * \return Graph::Type enum defining the type of the graph.
+ */
+const Graph::Type Graph::Matrix::get_type()
+{
+	return this->type;
+}
+
+
+
+
+/**
  * \brief Function generating a .GRAPHML file containing the graph information.
  * 
  * This format does contain the weights of the graph's edges.

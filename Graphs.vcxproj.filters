@@ -53,7 +53,7 @@
     <ClCompile Include="src\Graph_matrix.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="inc\Graph_list.cpp">
+    <ClCompile Include="src\Graph_list.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>

@@ -32,7 +32,21 @@ namespace Graph
 
 		void print();
 		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);
+		void add_node();
 
+		void remove_edge(std::size_t source, std::size_t destination);
+		void remove_node(std::size_t node_id);
+
+		const std::size_t get_nodes_amount();
+		const std::size_t get_node_degree(std::size_t node_id);
+		const int32_t get_edge(std::size_t source, std::size_t destination);
+
+		void save_graphml(std::string output_file_path);
+
+	private:
+
+		void load_graphml_file(std::fstream& file);
+		void calculate_degrees();
 
 	};
 }

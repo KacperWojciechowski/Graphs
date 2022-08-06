@@ -187,7 +187,7 @@ void Graph::Matrix::print()
  *		- std::out_of_range - when either of the IDs exceed the count of vertices.
  *		- std::invalid_argument - when the weight value is equal to 0.
  */
-void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, uint32_t weight)
+void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, int32_t weight)
 {
 	// validate the vertices indexes
 	if (source >= this->matrix.size() || destination >= this->matrix.size())

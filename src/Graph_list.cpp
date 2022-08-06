@@ -90,7 +90,7 @@ Graph::List::List(Matrix& matrix)
 		{
 			if (matrix.get_edge(i, j) != 0)
 			{
-				this->list[i].push_back({j, matrix.get_edge(i, j)})
+				this->list[i].push_back({ j, matrix.get_edge(i, j) });
 			}
 		}
 	}
@@ -443,6 +443,33 @@ void Graph::List::print()
 	}
 
 	std::cout << "}" << std::endl;
+}
+
+
+
+
+/**
+ * \brief Function adding a connection between two given vertices.
+ * 
+ * \param source ID of the source vertex.
+ * \param destination ID of the end vertex.
+ * \param weight Weight of the connection.
+ */
+void Graph::List::add_edge(std::size_t source, std::size_t destination, int32_t weight)
+{
+	if (source >= this->list.size() || destination >= this->list.size())
+	{
+		throw std::out_of_range("Index out of bounds");
+	}
+	if (weight == 0)
+	{
+		throw std::invalid_argument("Weight equal to zero");
+	}
+	this->list[source].push_back({ destination, weight });
+	if (this->type == Type::undirected)
+	{
+		this->list[destination].push_back({ source, weight });
+	}
 }
 
 

@@ -251,7 +251,7 @@ void Graph::List::load_graphml_file(std::fstream& file)
 	std::string id1;
 	std::string id2;
 
-	int weight;
+	uint32_t weight;
 	std::string weight_str;
 
 	// extract edge info
@@ -455,7 +455,7 @@ void Graph::List::print()
  * \param destination ID of the end vertex.
  * \param weight Weight of the connection.
  */
-void Graph::List::add_edge(std::size_t source, std::size_t destination, int32_t weight)
+void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t weight)
 {
 	// validate arguments
 	if (source >= this->list.size() || destination >= this->list.size())

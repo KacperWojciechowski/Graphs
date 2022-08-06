@@ -75,7 +75,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
  */
-Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type)
+Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, std::string name, Type type)
 	: matrix(mat),
 	name(name),
 	type(type)
@@ -187,7 +187,7 @@ void Graph::Matrix::print()
  *		- std::out_of_range - when either of the IDs exceed the count of vertices.
  *		- std::invalid_argument - when the weight value is equal to 0.
  */
-void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, int32_t weight)
+void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, uint32_t weight)
 {
 	// validate the parameters
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
@@ -245,15 +245,19 @@ void Graph::Matrix::add_node()
 
 	// create the vector representing the neighbours of the new vertex
 	std::size_t size = this->matrix[0].size();
-	std::vector<int32_t> v;
+
+	// add new row to the matrix
+	this->matrix.push_back({});
+
+	// fill the new row with zeros
+	std::size_t index = this->matrix.size() - 1;
 
 	for (std::size_t i = 0; i < size; i++)
 	{
-		v.push_back(0);
+		this->matrix[index].push_back(0);
 	}
 
-	// add new vertex row to the matrix
-	this->matrix.push_back(v);
+	// add new vertex to the degrees vector
 	this->degrees.push_back(0);
 }
 
@@ -403,7 +407,7 @@ const std::size_t Graph::Matrix::get_node_degree(std::size_t node_id)
  * \warning Exception to guard against:
  *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
  */
-const int32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
+const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
 {
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
 	{
@@ -556,22 +560,22 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 	}
 
 	// create sufficient matrix for the line graph and fill it with zeros
-	std::vector<std::vector<int32_t>> mat;
-	std::vector<int32_t> v;
+	std::vector<std::vector<uint32_t>> mat;
 
 	std::size_t size = edges.size();
+	std::size_t index;
+
 	for (std::size_t i = 0; i < size; i++)
 	{
-		v.clear();
+		mat.push_back({});
+		index = mat.size() - 1;
 		for (std::size_t j = 0; j < size; j++)
 		{
-			v.push_back(0);
+			mat[index].push_back(0);
 		}
-		mat.push_back(v);
 	}
 
 	Data::coord coordinates;
-	std::size_t index;
 
 	// fill the line graph
 	for (std::size_t i = 0; i < size; i++)
@@ -631,7 +635,8 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 void Graph::Matrix::load_throughtput(std::string file_path)
 {
 	int32_t value;
-	std::vector<int32_t> v;
+	//std::vector<int32_t> v;
+	std::size_t index;
 
 	// check for the right file format
 	if (file_path.find(".mat") != std::string::npos)
@@ -644,14 +649,16 @@ void Graph::Matrix::load_throughtput(std::string file_path)
 			// read each value from the throughtput matrix
 			for (std::size_t i = 0; i < this->matrix.size(); i++)
 			{
-				v.clear();
+				// add a row to the throughtput matrix
+				this->throughtput.push_back({});
+				index = this->throughtput.size() - 1;
+
+				// load each value to the added row
 				for (std::size_t j = 0; j < this->matrix[i].size(); j++)
 				{
 					file >> value;
-					v.push_back(value);
+					this->throughtput[index].push_back(value);
 				}
-				// save the row of the throughtput matrix to the object
-				this->throughtput.push_back(v);
 			}
 		}
 		// if file could not be opened
@@ -677,6 +684,9 @@ void Graph::Matrix::load_throughtput(std::string file_path)
  * This function is an internal function and is not to be called directly by the user.
  * 
  * \param file Reference to the std::fstream data source file object.
+ * 
+ * \warning Exception to guard against:
+ *		- std::runtime_error - when loaded weight of the connection is less or equal to 0.
  */
 void Graph::Matrix::load_mat_file(std::fstream& file)
 {
@@ -714,18 +724,22 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
 	file.seekg(std::ios_base::beg);
 
 	// load the matrix
-	uint32_t temp;
-	std::vector<int32_t> v;
+	int32_t temp;
+	std::size_t index;
 
 	for (std::size_t i = 0; i < vertices; i++)
 	{
-		v.clear();
+		this->matrix.push_back({});
+		index = this->matrix.size();
 		for (std::size_t j = 0; j < vertices; j++)
 		{
 			file >> temp;
-			v.push_back(temp);
+			if (temp <= 0)
+			{
+				throw std::runtime_error("Weight less or equal to zero");
+			}
+			this->matrix[index].push_back(static_cast<uint32_t>(temp));
 		}
-		this->matrix.push_back(v);
 	}
 }
 
@@ -738,6 +752,9 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
  * This function is an internal function and is not to be called directly by the user.
  * 
  * \param file Reference to the std::fstream data source file object.
+ * 
+ * \warning Exception to guard against:
+ *		- std::runtime_error - When loaded weight of the connection is less or equal to 0.
  * 
  */
 void Graph::Matrix::load_graphml_file(std::fstream& file)
@@ -814,7 +831,7 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 	}
 
 	// create adjacency matrix and fill it with zeros
-	std::vector<int32_t> v;
+	std::vector<uint32_t> v;
 
 	for (std::size_t j = 0; j < vertices; j++)
 	{
@@ -832,7 +849,7 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 	std::string id1;
 	std::string id2;
 
-	int weight;
+	int32_t weight;
 	std::string weight_str;
 
 	// extract edge info
@@ -868,6 +885,11 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 			{
 				pos = line.find("<", pos2);
 				weight = atoi(line.substr(pos2 + 4, pos - (pos2 + 4)).c_str());
+				if (weight <= 0)
+				{
+					throw std::runtime_error("Weight less or equal to zero");
+				}
+
 				// skip the </edge> closing tag and load the next edge tag
 				std::getline(file, line);
 				std::getline(file, line);
@@ -880,12 +902,12 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 		}
 
 		// input the connection into matrix
-		this->matrix[atoi(id1.c_str())][atoi(id2.c_str())] = weight;
+		this->matrix[atoi(id1.c_str())][atoi(id2.c_str())] = static_cast<uint32_t>(weight);
 
 		// if graph is undirected, make the connection both ways
 		if (this->type == Type::undirected)
 		{
-			this->matrix[atoi(id2.c_str())][atoi(id1.c_str())] = weight;
+			this->matrix[atoi(id2.c_str())][atoi(id1.c_str())] = static_cast<uint32_t>(weight);
 		}
 
 		// search for next edge marker

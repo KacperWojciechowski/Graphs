@@ -105,7 +105,7 @@ namespace Graph
 		 * \param destination End vertex of an edge.
 		 * \return Weight value of the connection.
 		 */
-		virtual const int32_t get_edge(std::size_t source, std::size_t destination) = 0;
+		virtual const uint32_t get_edge(std::size_t source, std::size_t destination) = 0;
 
 
 

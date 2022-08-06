@@ -457,6 +457,7 @@ void Graph::List::print()
  */
 void Graph::List::add_edge(std::size_t source, std::size_t destination, int32_t weight)
 {
+	// validate arguments
 	if (source >= this->list.size() || destination >= this->list.size())
 	{
 		throw std::out_of_range("Index out of bounds");
@@ -465,10 +466,53 @@ void Graph::List::add_edge(std::size_t source, std::size_t destination, int32_t 
 	{
 		throw std::invalid_argument("Weight equal to zero");
 	}
-	this->list[source].push_back({ destination, weight });
+
+	// search for the iterator of connection, if added edge already exists
+	auto edge_itr = this->list[source].end();
+	for (auto itr = this->list[source].begin(); itr != this->list[source].end(); itr++)
+	{
+		if (itr->ID == destination)
+		{
+			edge_itr = itr;
+			break;
+		}
+	}
+
+	// if iterator was found, override the weight of the connection
+	if (edge_itr != this->list[source].end())
+	{
+		edge_itr->weight = weight;
+	}
+	// else insert the connection to the structure
+	else
+	{
+		this->list[source].push_back({ destination, weight });
+	}
+
+	// if the graph type is undirected
 	if (this->type == Type::undirected)
 	{
-		this->list[destination].push_back({ source, weight });
+		// search for the iterator of mirrored connection 
+		edge_itr = this->list[destination].end();
+		for (auto itr = this->list[destination].begin(); itr != this->list[destination].end(); itr++)
+		{
+			if (itr->ID == source)
+			{
+				edge_itr = itr;
+				break;
+			}
+		}
+
+		// if iterator was found, override the weight of the connection
+		if (edge_itr != this->list[destination].end())
+		{
+			edge_itr->weight = weight;
+		}
+		// else insert the mirrored connection to the structure
+		else
+		{
+			this->list[destination].push_back({ source, weight });
+		}
 	}
 }
 

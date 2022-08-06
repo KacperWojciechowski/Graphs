@@ -42,7 +42,7 @@ namespace Graph
 		 * \param Destination end vertex of an edge.
 		 * \param Weight weight of the connection.
 		 */
-		virtual void add_edge(std::size_t source, std::size_t destination, int32_t weight) = 0;
+		virtual void add_edge(std::size_t source, std::size_t destination, uint32_t weight) = 0;
 
 
 

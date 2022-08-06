@@ -189,27 +189,30 @@ void Graph::Matrix::print()
  */
 void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, int32_t weight)
 {
-	// validate the vertices indexes
+	// validate the parameters
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
-	else if (weight == 0)
+	if (weight == 0)
 	{
 		throw std::invalid_argument("Weight equal to zero");
 	}
-	// if indexes are correct, mark the connection
-	else
+	// save the previous weight for degree calculation
+	int32_t previous_weight = this->matrix[source][destination];
+	
+	// update the weight of the connection
+	this->matrix[source][destination] = weight;
+
+	// if graph type is undirected, mark the connection both ways
+	if (this->type == Type::undirected)
 	{
-		this->matrix[source][destination] = weight;
+		this->matrix[destination][source] = weight;
+	}
 
-		// if graph type is undirected, mark the connection both ways
-		if (this->type == Type::undirected)
-		{
-			this->matrix[destination][source] = weight;
-		}
-
-		// update the degrees of given vertices
+	// update the degrees of given vertices
+	if (previous_weight == 0)
+	{
 		if (source == destination)
 		{
 			this->degrees[source] += 2;

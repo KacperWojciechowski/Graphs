@@ -33,7 +33,7 @@ namespace Graph
 		/* Interface */
 		void print();
 
-		void add_edge(std::size_t source, std::size_t destination, int32_t weight);
+		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);
 		void add_node();
 
 		void remove_edge(std::size_t source, std::size_t destination);
@@ -64,8 +64,8 @@ namespace Graph
 		void calculate_degrees();
 
 		/* Objects containing the graph */
-		std::vector<std::vector<int32_t>> matrix;
-		std::vector<std::vector<int32_t>> throughtput;
+		std::vector<std::vector<uint32_t>> matrix;
+		std::vector<std::vector<uint32_t>> throughtput;
 		std::vector<std::size_t> degrees;
 
 		/* GraphML format information */

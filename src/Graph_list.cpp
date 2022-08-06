@@ -652,6 +652,98 @@ void Graph::List::remove_node(std::size_t node_id)
 
 
 /**
+ * \brief Getter for vertices amount.
+ * 
+ * \return Amount of vertices as const.
+ */
+const std::size_t Graph::List::get_nodes_amount()
+{
+	return this->list.size();
+}
+
+
+
+
+/**
+ * \brief Getter for vertex degree.
+ * 
+ * \param node_id ID of the vertex which degree should be returned.
+ * \return Degree of the vertex as const.
+ */
+const std::size_t Graph::List::get_node_degree(std::size_t node_id)
+{
+	// validate the parameter
+	if (node_id >= this->list.size())
+	{
+		throw std::out_of_range("Index out of bounds");
+	}
+
+	// return the degree value
+	return this->degrees[node_id];
+}
+
+
+
+
+/**
+ * \brief Getter for the weight of the edge between two given vertices.
+ * 
+ * \note A return value of zero means there is no edge between given vertices.
+ * 
+ * \param source ID of the beginning vertex of the edge.
+ * \param destination ID of the end vertex of the edge.
+ * \return Weight of the connection.
+ */
+const uint32_t Graph::List::get_edge(std::size_t source, std::size_t destination)
+{
+	uint32_t ret = 0;
+
+	if (source >= this->list.size() || destination >= this->list.size())
+	{
+		throw std::out_of_range("Index out of bounds");
+	}
+	for (auto itr = this->list[source].begin(); itr != this->list[source].end(); itr++)
+	{
+		if (itr->ID == destination)
+		{
+			ret = itr->weight;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+
+
+
+/**
+ * \brief Getter for the name of the graph.
+ * 
+ * \return The name of the graph.
+ */
+const std::string Graph::List::get_name()
+{
+	return this->name;
+}
+
+
+
+
+/**
+ * \brief Getter for the type of the graph.
+ * 
+ * \return The type of the graph.
+ */
+const Graph::Type Graph::List::get_type()
+{
+	return this->type;
+}
+
+
+
+
+/**
  * \brief Function saving current graph structure  into a .GRAPHML format file.
  * 
  * \param output_file_path Path to the output file.

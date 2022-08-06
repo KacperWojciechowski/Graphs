@@ -7,5 +7,9 @@ int main()
 	Graph::List list("samples\\graphML.GRAPHML", "Name", Graph::Type::undirected);
 
 	list.print();
+
+	list.remove_node(1);
+
+	list.print();
 	return 0;
 }

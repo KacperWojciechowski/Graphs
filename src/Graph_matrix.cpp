@@ -316,7 +316,8 @@ void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
  * 
  * \param node_id ID of the removed vertex (counting from 0).
  * 
- * \warning Removing a vertex causes re-enumeration of each subsequent vertex in the graph.
+ * \warning Removing a vertex causes re-enumeration of each subsequent vertex in the graph, by decreasing
+ *			their indexes by 1.
  * 
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.

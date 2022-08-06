@@ -555,10 +555,13 @@ void Graph::List::add_node()
  */
 void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 {
+	// validate the parameter
 	if (source >= this->list.size() || destination >= this->list.size())
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
+
+	// erase the edge
 	for (auto itr = this->list[source].begin(); itr != this->list[source].end(); itr++)
 	{
 		if (itr->ID == destination)
@@ -566,6 +569,8 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 			this->list[source].erase(itr);
 		}
 	}
+
+	// if the graph is undirected, remove the mirrored edge 
 	if (this->type == Type::undirected)
 	{
 		for (auto itr = this->list[destination].begin(); itr != this->list[destination].end(); itr++)
@@ -573,6 +578,71 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 			if (itr->ID == source)
 			{
 				this->list[destination].erase(itr);
+			}
+		}
+	}
+}
+
+
+
+
+/**
+ * \brief Function for removing a vertex from the graph structure.
+ * 
+ * \param node_id ID of the vertex to be removed from the graph structure.
+ * 
+ * \warning Removal of a vertex causes the re-enumeration of each subsequent vertex,
+ *			by decreasing their indexes by 1.
+ * 
+ * \warning Exception to guard against:
+ *			- std::out_of_range - when given vertex ID is out of bounds for the list.
+ */
+void Graph::List::remove_node(std::size_t node_id)
+{
+	// validate parameter
+	if (node_id >= this->list.size())
+	{
+		throw std::out_of_range("Index out of bounds");
+	}
+
+	// variables for vertex removal
+	bool removed = false;
+	std::list<Node>::iterator itr_tmp;
+	std::size_t count = this->list.size();
+
+	// search through the list
+	for (std::size_t i = 0; i < count; i++)
+	{
+		// remove the part of the list where the given vertex is the source of an edge
+		if (!removed && i == node_id)
+		{
+			removed = true;
+			this->list.erase(std::next(this->list.begin(), i));
+			count = this->list.size();
+			i--;
+		}
+		// remove the parts of the list where the given vertex is the end of an edge
+		else
+		{
+			for (auto itr2 = this->list[i].begin(); itr2 != this->list[i].end();)
+			{
+				// if given vertex was found
+				if (itr2->ID == node_id)
+				{
+					// erase the vertex
+					itr_tmp = itr2;
+					itr2++;
+					this->list[i].erase(itr_tmp);
+					continue;
+				}
+				// if vertex of higher ID than the given one was found
+				else if (itr2->ID > node_id)
+				{
+					itr2->ID--;
+					
+				}
+				// move to the next vertex
+				itr2++;
 			}
 		}
 	}

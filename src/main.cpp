@@ -4,7 +4,7 @@
 
 int main()
 {
-	Graph::List list("samples\\list.lst", "Name", Graph::Type::undirected);
+	Graph::List list("samples\\graphML.GRAPHML", "Name", Graph::Type::undirected);
 
 	list.print();
 	return 0;

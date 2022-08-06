@@ -512,7 +512,6 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 	file << "	</graph>\n";
 	file << "</graphml>";
 	file.close();
-	
 }
 
 

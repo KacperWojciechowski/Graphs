@@ -1,7 +1,7 @@
 var class_graph_1_1_matrix =
 [
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#a0b33f8ee83b683a46cb39e5eb0761771", null ],
-    [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#a1cc939b1936aa42eec68586e83cca903", null ],
+    [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#ae8ee1620bf1c7a468569c94e7a41d6f4", null ],
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#a90f6a138050588337b37c494dae7dc6d", null ],
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#a3ca91a0f18813b6cf0a8cbec8f118e76", null ],
     [ "add_edge", "dc/de1/class_graph_1_1_matrix.html#ad139277cb4fe5f39dda0675f5768abad", null ],

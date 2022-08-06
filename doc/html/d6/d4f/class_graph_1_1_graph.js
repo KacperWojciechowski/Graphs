@@ -3,7 +3,7 @@ var class_graph_1_1_graph =
     [ "add_edge", "d6/d4f/class_graph_1_1_graph.html#a7a587d9faf53c1c7ef2ab777286ad3b2", null ],
     [ "add_node", "d6/d4f/class_graph_1_1_graph.html#a2c914910e897be9b2e54666c7fdfe5d2", null ],
     [ "calculate_degrees", "d6/d4f/class_graph_1_1_graph.html#af45f12a165802f94bf05d57be96cfb09", null ],
-    [ "get_edge", "d6/d4f/class_graph_1_1_graph.html#adda318748003cea4cfd700092a685379", null ],
+    [ "get_edge", "d6/d4f/class_graph_1_1_graph.html#a395f577e2cadf0b567eab81d4f862cd5", null ],
     [ "get_name", "d6/d4f/class_graph_1_1_graph.html#a16c4f61031af5a7d2e6741f4b1482337", null ],
     [ "get_node_degree", "d6/d4f/class_graph_1_1_graph.html#a9b4a80eb13b0f3c779680ea1aebc5623", null ],
     [ "get_nodes_amount", "d6/d4f/class_graph_1_1_graph.html#ae1e7b616909df5e5dba8b59af3a79e31", null ],

@@ -139,9 +139,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9b4a80eb13b0f3c779680ea1aebc5623"><td class="memItemLeft" align="right" valign="top">virtual const std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a9b4a80eb13b0f3c779680ea1aebc5623">get_node_degree</a> (std::size_t node_id)=0</td></tr>
 <tr class="memdesc:a9b4a80eb13b0f3c779680ea1aebc5623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for acquiring the degree of given vertex.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a9b4a80eb13b0f3c779680ea1aebc5623">More...</a><br /></td></tr>
 <tr class="separator:a9b4a80eb13b0f3c779680ea1aebc5623"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adda318748003cea4cfd700092a685379"><td class="memItemLeft" align="right" valign="top">virtual const int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#adda318748003cea4cfd700092a685379">get_edge</a> (std::size_t source, std::size_t destination)=0</td></tr>
-<tr class="memdesc:adda318748003cea4cfd700092a685379"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for acquiring the weight of an edge between two vertices.  <a href="../../d6/d4f/class_graph_1_1_graph.html#adda318748003cea4cfd700092a685379">More...</a><br /></td></tr>
-<tr class="separator:adda318748003cea4cfd700092a685379"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a395f577e2cadf0b567eab81d4f862cd5"><td class="memItemLeft" align="right" valign="top">virtual const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a395f577e2cadf0b567eab81d4f862cd5">get_edge</a> (std::size_t source, std::size_t destination)=0</td></tr>
+<tr class="memdesc:a395f577e2cadf0b567eab81d4f862cd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for acquiring the weight of an edge between two vertices.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a395f577e2cadf0b567eab81d4f862cd5">More...</a><br /></td></tr>
+<tr class="separator:a395f577e2cadf0b567eab81d4f862cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16c4f61031af5a7d2e6741f4b1482337"><td class="memItemLeft" align="right" valign="top">virtual const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a16c4f61031af5a7d2e6741f4b1482337">get_name</a> ()=0</td></tr>
 <tr class="memdesc:a16c4f61031af5a7d2e6741f4b1482337"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for name getter.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a16c4f61031af5a7d2e6741f4b1482337">More...</a><br /></td></tr>
 <tr class="separator:a16c4f61031af5a7d2e6741f4b1482337"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -274,8 +274,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="adda318748003cea4cfd700092a685379" name="adda318748003cea4cfd700092a685379"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adda318748003cea4cfd700092a685379">&#9670;&nbsp;</a></span>get_edge()</h2>
+<a id="a395f577e2cadf0b567eab81d4f862cd5" name="a395f577e2cadf0b567eab81d4f862cd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a395f577e2cadf0b567eab81d4f862cd5">&#9670;&nbsp;</a></span>get_edge()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -284,7 +284,7 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual const int32_t Graph::Graph::get_edge </td>
+          <td class="memname">virtual const uint32_t Graph::Graph::get_edge </td>
           <td>(</td>
           <td class="paramtype">std::size_t&#160;</td>
           <td class="paramname"><em>source</em>, </td>
@@ -318,7 +318,7 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Weight value of the connection. </dd></dl>
 
-<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#a4eaeede740690cbd8b25232670ec4331">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a74e4fcea8469cfbe3dc6caf33dce62c4">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#a1a5ea23d4a4b2f4b18bbc6e0da6af8de">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a74e4fcea8469cfbe3dc6caf33dce62c4">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -443,7 +443,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Common function definition for type getter. </p>
 
-<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#ada87a0f1457b37aca67218e3dfb9df74">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a6fc72fa87ab4dd231e21b83c6abaad78">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#a3be578b82ffcc1136e4c9d5976bb22a3">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a6fc72fa87ab4dd231e21b83c6abaad78">Graph::Matrix</a>.</p>
 
 </div>
 </div>

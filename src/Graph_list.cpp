@@ -82,7 +82,7 @@ Graph::List::List(Matrix& matrix)
 	{
 		this->list.push_back({});
 	}
-
+	
 	// build list based on the matrix
 	for (std::size_t i = 0; i < matrix.get_nodes_amount(); i++)
 	{
@@ -733,7 +733,7 @@ const std::string Graph::List::get_name()
 /**
  * \brief Getter for the type of the graph.
  * 
- * \return The type of the graph.
+ * \return The type of the graph as const.
  */
 const Graph::Type Graph::List::get_type()
 {

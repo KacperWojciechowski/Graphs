@@ -125,7 +125,7 @@ Protected Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Virtual class providing the algorithmic interface. </p>
 <p >The class provides common algorithmic interface for each of its inheriting classes. Its main purpose is to provide the Data::Benchmark class with an ability to use those functions without the knowledge of which graph representation was received as a parameter.</p>
-<dl class="section attention"><dt>Attention</dt><dd>Each of the coloring algorithms public function provide permutation functionality for randomized trials of efficiency. As such, to get optimal results for the algorithm, it is recommended to run the function several times, as does the Data::Benchmark class. </dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Each of the coloring algorithms public function provide permutation functionality for randomized trials of efficiency. This functionality is triggered via a parameter to the chosen coloring function. As such, user might try to get an average result by running the function once, or try to get optimal results for the algorithm by running it multiple times with permutations, as does the Data::Benchmark class. For the latter purpose, the use of Data::Benchmark class is recommended, as it provides API to automate the process. </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a85e605279cb6dff8351222e6303c28b5" name="a85e605279cb6dff8351222e6303c28b5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a85e605279cb6dff8351222e6303c28b5">&#9670;&nbsp;</a></span>belman_ford()</h2>

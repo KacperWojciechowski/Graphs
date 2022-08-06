@@ -320,6 +320,41 @@ void Graph::List::calculate_degrees()
 
 
 /**
+ * \brief Simple copy constructor.
+ * 
+ * \param l lvalue reference to the data source object.
+ */
+Graph::List::List(List& l)
+	: list(l.list),
+	name(l.name),
+	type(l.type),
+	degrees(l.degrees)
+{
+}
+
+
+
+
+/**
+ * \brief Simple move constructor.
+ * 
+ * \param l rvalue reference to the data source object
+ */
+Graph::List::List(List&& l)
+	: list(l.list),
+	name(l.name),
+	type(l.type),
+	degrees(l.degrees)
+{
+	l.list.clear();
+	l.name.clear();
+	l.degrees.clear();
+}
+
+
+
+
+/**
  * \brief Function printing information regarding the graph.
  * 
  * Information displayed are such as:

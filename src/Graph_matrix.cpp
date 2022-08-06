@@ -93,7 +93,9 @@ Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, 
 Graph::Matrix::Matrix(Matrix& m)
 	: matrix(m.matrix),
 	name(m.name),
-	type(m.type)
+	type(m.type),
+	degrees(m.degrees),
+	throughtput(m.throughtput)
 {
 }
 
@@ -107,10 +109,14 @@ Graph::Matrix::Matrix(Matrix& m)
 Graph::Matrix::Matrix(Matrix&& m) noexcept
 	: matrix(m.matrix),
 	name(m.name),
-	type(m.type)
+	type(m.type),
+	degrees(m.degrees),
+	throughtput(m.throughtput)
 {
 	m.matrix.clear();
 	m.name.clear();
+	m.degrees.clear();
+	m.throughtput.clear();
 }
 
 

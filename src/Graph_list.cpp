@@ -108,6 +108,7 @@ Graph::List::List(Matrix& matrix)
  * \see List::List(std::string file_path, std::string name, Graph::Type type)
  * 
  * \param file Reference to the file object of the data source.
+ * 
  */
 void Graph::List::load_lst_file(std::fstream& file)
 {
@@ -164,6 +165,9 @@ void Graph::List::load_lst_file(std::fstream& file)
  * \brief Function loading the data from .GRAPHML file.
  * 
  * \param file Reference to the file object of the data source.
+ * 
+ * \warning Exceptions to guard against:
+ *		- std::runtime_error When weight is less or equal to 0.
  */
 void Graph::List::load_graphml_file(std::fstream& file)
 {
@@ -251,7 +255,7 @@ void Graph::List::load_graphml_file(std::fstream& file)
 	std::string id1;
 	std::string id2;
 
-	uint32_t weight;
+	int32_t weight;
 	std::string weight_str;
 
 	// extract edge info
@@ -287,6 +291,12 @@ void Graph::List::load_graphml_file(std::fstream& file)
 			{
 				pos = line.find("<", pos2);
 				weight = atoi(line.substr(pos2 + 4, pos - (pos2 + 4)).c_str());
+
+				if (weight <= 0)
+				{
+					throw std::runtime_error("Weight less or equal to zero");
+				}
+
 				// skip the </edge> closing tag and load the next edge tag
 				std::getline(file, line);
 				std::getline(file, line);
@@ -299,12 +309,12 @@ void Graph::List::load_graphml_file(std::fstream& file)
 		}
 
 		// input the connection into the list
-		this->list[atoi(id1.c_str())].push_back({ static_cast<std::size_t>(atoi(id2.c_str())), weight });
+		this->list[atoi(id1.c_str())].push_back({ static_cast<std::size_t>(atoi(id2.c_str())), static_cast<uint32_t>(weight) });
 
 		// if graph is undirected, make the connection both ways
 		if (this->type == Type::undirected)
 		{
-			this->list[atoi(id2.c_str())].push_back({ static_cast<std::size_t>(atoi(id1.c_str())), weight });
+			this->list[atoi(id2.c_str())].push_back({ static_cast<std::size_t>(atoi(id1.c_str())), static_cast<uint32_t>(weight) });
 		}
 
 		// search for next edge marker
@@ -512,6 +522,58 @@ void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t
 		else
 		{
 			this->list[destination].push_back({ source, weight });
+		}
+	}
+}
+
+
+
+
+/**
+ * \brief Function adding a new vertex to the graph structure.
+ * 
+ * Added vertex is initially isolated, so any connections to it need
+ * to be added manually.
+ * 
+ */
+void Graph::List::add_node()
+{
+	this->list.push_back({});
+}
+
+
+
+
+/**
+ * \brief Function removing a connection between two given adjacency vertices.
+ * 
+ * \param source ID of the beginning vertex.
+ * \param destination ID of the end vertex.
+ * 
+ * \warning Exceptions to guard against:
+ *		- std::out_of_range - When any of the given IDs is out of bounds for the adjacency list.
+ */
+void Graph::List::remove_edge(std::size_t source, std::size_t destination)
+{
+	if (source >= this->list.size() || destination >= this->list.size())
+	{
+		throw std::out_of_range("Index out of bounds");
+	}
+	for (auto itr = this->list[source].begin(); itr != this->list[source].end(); itr++)
+	{
+		if (itr->ID == destination)
+		{
+			this->list[source].erase(itr);
+		}
+	}
+	if (this->type == Type::undirected)
+	{
+		for (auto itr = this->list[destination].begin(); itr != this->list[destination].end(); itr++)
+		{
+			if (itr->ID == source)
+			{
+				this->list[destination].erase(itr);
+			}
 		}
 	}
 }

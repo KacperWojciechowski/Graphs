@@ -24,7 +24,7 @@
  */
 Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
 	: name(name),
-	  type(type),
+	  type(type)
 {
 	// loading the .mat file
 	if (file_path.find(".mat", 0) != std::string::npos)
@@ -75,11 +75,12 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
  */
-Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, Type type)
+Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, std::string name, Type type)
 	: matrix(mat),
 	name(name),
 	type(type)
 {
+	this->calculate_degrees();
 }
 
 
@@ -93,7 +94,9 @@ Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, 
 Graph::Matrix::Matrix(Matrix& m)
 	: matrix(m.matrix),
 	name(m.name),
-	type(m.type)
+	type(m.type),
+	degrees(m.degrees),
+	throughtput(m.throughtput)
 {
 }
 
@@ -107,10 +110,14 @@ Graph::Matrix::Matrix(Matrix& m)
 Graph::Matrix::Matrix(Matrix&& m) noexcept
 	: matrix(m.matrix),
 	name(m.name),
-	type(m.type)
+	type(m.type),
+	degrees(m.degrees),
+	throughtput(m.throughtput)
 {
 	m.matrix.clear();
 	m.name.clear();
+	m.degrees.clear();
+	m.throughtput.clear();
 }
 
 
@@ -123,6 +130,7 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  * - name of the graph
  * - type of the graph
  * - graph structure along with weights in form of adjacency matrix
+ * - degrees of each of the vertices
  */
 void Graph::Matrix::print()
 {
@@ -159,7 +167,7 @@ void Graph::Matrix::print()
 		{
 			std::cout << std::setw(3) << std::right << *itr2 << ", ";
 		}
-		std::cout << std::endl;
+		std::cout << "  degree: " << this->degrees[std::distance(this->matrix.begin(), itr)] <<  std::endl;
 	}
 
 	std::cout << "]" << std::endl;
@@ -181,27 +189,30 @@ void Graph::Matrix::print()
  */
 void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, uint32_t weight)
 {
-	// validate the vertices indexes
+	// validate the parameters
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
-	else if (weight == 0)
+	if (weight == 0)
 	{
 		throw std::invalid_argument("Weight equal to zero");
 	}
-	// if indexes are correct, mark the connection
-	else
+	// save the previous weight for degree calculation
+	int32_t previous_weight = this->matrix[source][destination];
+	
+	// update the weight of the connection
+	this->matrix[source][destination] = weight;
+
+	// if graph type is undirected, mark the connection both ways
+	if (this->type == Type::undirected)
 	{
-		this->matrix[source][destination] = weight;
+		this->matrix[destination][source] = weight;
+	}
 
-		// if graph type is undirected, mark the connection both ways
-		if (this->type == Type::undirected)
-		{
-			this->matrix[destination][source] = weight;
-		}
-
-		// update the degrees of given vertices
+	// update the degrees of given vertices
+	if (previous_weight == 0)
+	{
 		if (source == destination)
 		{
 			this->degrees[source] += 2;
@@ -234,15 +245,19 @@ void Graph::Matrix::add_node()
 
 	// create the vector representing the neighbours of the new vertex
 	std::size_t size = this->matrix[0].size();
-	std::vector<int32_t> v;
+
+	// add new row to the matrix
+	this->matrix.push_back({});
+
+	// fill the new row with zeros
+	std::size_t index = this->matrix.size() - 1;
 
 	for (std::size_t i = 0; i < size; i++)
 	{
-		v.push_back(0);
+		this->matrix[index].push_back(0);
 	}
 
-	// add new vertex row to the matrix
-	this->matrix.push_back(v);
+	// add new vertex to the degrees vector
 	this->degrees.push_back(0);
 }
 
@@ -301,7 +316,8 @@ void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
  * 
  * \param node_id ID of the removed vertex (counting from 0).
  * 
- * \warning Removing a vertex causes re-enumeration of each subsequent vertex in the graph.
+ * \warning Removing a vertex causes re-enumeration of each subsequent vertex in the graph, by decreasing
+ *			their indexes by 1.
  * 
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.
@@ -319,12 +335,18 @@ void Graph::Matrix::remove_node(std::size_t node_id)
 		// remove the column of the deleted vertex and update degree of each vertex
 		for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
 		{
-			if (*(std::next(itr->begin(), node_id)) == 1)
+			if (*(std::next(itr->begin(), node_id)) != 0)
 			{
-				this->degrees[std::distance(this->matrix.begin(), itr)]--;
+				if (std::distance(this->matrix.begin(), itr) == node_id)
+				{
+					this->degrees[std::distance(this->matrix.begin(), itr)] -= 2;
+				}
+				else
+				{
+					this->degrees[std::distance(this->matrix.begin(), itr)]--;
+				}
 			}
 			itr->erase(std::next(itr->begin(), node_id));
-			
 		}
 
 		// remove the row of the deleted vertex and remove the degree counter
@@ -402,6 +424,32 @@ const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destinati
 
 
 /**
+ * \brief Getter for the name of the graph.
+ * 
+ * \return Const string containing the name of the graph.
+ */
+const std::string Graph::Matrix::get_name()
+{
+	return this->name;
+}
+
+
+
+
+/**
+ * \brief Getter for the type of the graph.
+ * 
+ * \return Graph::Type enum defining the type of the graph.
+ */
+const Graph::Type Graph::Matrix::get_type()
+{
+	return this->type;
+}
+
+
+
+
+/**
  * \brief Function generating a .GRAPHML file containing the graph information.
  * 
  * This format does contain the weights of the graph's edges.
@@ -460,7 +508,7 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 	{
 		for (std::size_t j = 0; j < this->matrix[i].size(); j++)
 		{
-			if (this->matrix[i][j] > 0)
+			if (this->matrix[i][j] != 0)
 			{
 				if (this->type == Type::undirected && j < i)
 				{
@@ -479,7 +527,6 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 	file << "	</graph>\n";
 	file << "</graphml>";
 	file.close();
-	
 }
 
 
@@ -506,7 +553,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 	{
 		for (std::size_t j = i; j < this->matrix[i].size(); j++)
 		{
-			if (this->matrix[i][j] > 0)
+			if (this->matrix[i][j] != 0)
 			{
 				edges.push_back({ i, j });
 			}
@@ -514,22 +561,22 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 	}
 
 	// create sufficient matrix for the line graph and fill it with zeros
-	std::vector<std::vector<int32_t>> mat;
-	std::vector<int32_t> v;
+	std::vector<std::vector<uint32_t>> mat;
 
 	std::size_t size = edges.size();
+	std::size_t index;
+
 	for (std::size_t i = 0; i < size; i++)
 	{
-		v.clear();
+		mat.push_back({});
+		index = mat.size() - 1;
 		for (std::size_t j = 0; j < size; j++)
 		{
-			v.push_back(0);
+			mat[index].push_back(0);
 		}
-		mat.push_back(v);
 	}
 
 	Data::coord coordinates;
-	std::size_t index;
 
 	// fill the line graph
 	for (std::size_t i = 0; i < size; i++)
@@ -541,7 +588,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 		// in the same row of the initial adjacency matrix
 		for (std::size_t k = coordinates.x; k < this->matrix.size(); k++)
 		{
-			if (this->matrix[coordinates.x][k] > 0 && k != coordinates.y)
+			if (this->matrix[coordinates.x][k] != 0 && k != coordinates.y)
 			{
 				index = Data::find_index(edges, { coordinates.x, k });
 				mat[i][index] = 1;
@@ -553,7 +600,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 		// in the same column of the initial adjacency matrix
 		for (std::size_t k = coordinates.x; k < coordinates.y; k++)
 		{
-			if (this->matrix[k][coordinates.y] > 0 && k != coordinates.x)
+			if (this->matrix[k][coordinates.y] != 0 && k != coordinates.x)
 			{
 				index = Data::find_index(edges, { k, coordinates.y });
 				mat[i][index] = 1;
@@ -589,7 +636,8 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 void Graph::Matrix::load_throughtput(std::string file_path)
 {
 	int32_t value;
-	std::vector<int32_t> v;
+	//std::vector<int32_t> v;
+	std::size_t index;
 
 	// check for the right file format
 	if (file_path.find(".mat") != std::string::npos)
@@ -602,14 +650,16 @@ void Graph::Matrix::load_throughtput(std::string file_path)
 			// read each value from the throughtput matrix
 			for (std::size_t i = 0; i < this->matrix.size(); i++)
 			{
-				v.clear();
+				// add a row to the throughtput matrix
+				this->throughtput.push_back({});
+				index = this->throughtput.size() - 1;
+
+				// load each value to the added row
 				for (std::size_t j = 0; j < this->matrix[i].size(); j++)
 				{
 					file >> value;
-					v.push_back(value);
+					this->throughtput[index].push_back(value);
 				}
-				// save the row of the throughtput matrix to the object
-				this->throughtput.push_back(v);
 			}
 		}
 		// if file could not be opened
@@ -635,6 +685,9 @@ void Graph::Matrix::load_throughtput(std::string file_path)
  * This function is an internal function and is not to be called directly by the user.
  * 
  * \param file Reference to the std::fstream data source file object.
+ * 
+ * \warning Exception to guard against:
+ *		- std::runtime_error - when loaded weight of the connection is less or equal to 0.
  */
 void Graph::Matrix::load_mat_file(std::fstream& file)
 {
@@ -672,18 +725,22 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
 	file.seekg(std::ios_base::beg);
 
 	// load the matrix
-	uint32_t temp;
-	std::vector<int32_t> v;
+	int32_t temp;
+	std::size_t index;
 
 	for (std::size_t i = 0; i < vertices; i++)
 	{
-		v.clear();
+		this->matrix.push_back({});
+		index = this->matrix.size();
 		for (std::size_t j = 0; j < vertices; j++)
 		{
 			file >> temp;
-			v.push_back(temp);
+			if (temp <= 0)
+			{
+				throw std::runtime_error("Weight less or equal to zero");
+			}
+			this->matrix[index].push_back(static_cast<uint32_t>(temp));
 		}
-		this->matrix.push_back(v);
 	}
 }
 
@@ -696,6 +753,9 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
  * This function is an internal function and is not to be called directly by the user.
  * 
  * \param file Reference to the std::fstream data source file object.
+ * 
+ * \warning Exception to guard against:
+ *		- std::runtime_error - When loaded weight of the connection is less or equal to 0.
  * 
  */
 void Graph::Matrix::load_graphml_file(std::fstream& file)
@@ -772,7 +832,7 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 	}
 
 	// create adjacency matrix and fill it with zeros
-	std::vector<int32_t> v;
+	std::vector<uint32_t> v;
 
 	for (std::size_t j = 0; j < vertices; j++)
 	{
@@ -790,7 +850,7 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 	std::string id1;
 	std::string id2;
 
-	int weight;
+	int32_t weight;
 	std::string weight_str;
 
 	// extract edge info
@@ -826,6 +886,11 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 			{
 				pos = line.find("<", pos2);
 				weight = atoi(line.substr(pos2 + 4, pos - (pos2 + 4)).c_str());
+				if (weight <= 0)
+				{
+					throw std::runtime_error("Weight less or equal to zero");
+				}
+
 				// skip the </edge> closing tag and load the next edge tag
 				std::getline(file, line);
 				std::getline(file, line);
@@ -838,12 +903,12 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 		}
 
 		// input the connection into matrix
-		this->matrix[atoi(id1.c_str())][atoi(id2.c_str())] = weight;
+		this->matrix[atoi(id1.c_str())][atoi(id2.c_str())] = static_cast<uint32_t>(weight);
 
 		// if graph is undirected, make the connection both ways
 		if (this->type == Type::undirected)
 		{
-			this->matrix[atoi(id2.c_str())][atoi(id1.c_str())] = weight;
+			this->matrix[atoi(id2.c_str())][atoi(id1.c_str())] = static_cast<uint32_t>(weight);
 		}
 
 		// search for next edge marker
@@ -876,7 +941,7 @@ void Graph::Matrix::calculate_degrees()
 		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
 		{
 			// if connection was found, increase the degree
-			if (*itr2 == 1)
+			if (*itr2 != 0)
 			{
 				// if a loop was found, increase the degree by 2
 				if (std::distance(itr->begin(), itr2) == std::distance(this->matrix.begin(), itr))
@@ -890,5 +955,6 @@ void Graph::Matrix::calculate_degrees()
 				}
 			}
 		}
+		this->degrees.push_back(deg);
 	}
 }

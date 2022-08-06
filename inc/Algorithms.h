@@ -30,9 +30,11 @@ namespace Graph
 	 * was received as a parameter.
 	 * 
 	 * \attention Each of the coloring algorithms public function provide permutation
-	 * functionality for randomized trials of efficiency. As such, to get optimal results
-	 * for the algorithm, it is recommended to run the function several times, as does the
-	 * Data::Benchmark class.
+	 * functionality for randomized trials of efficiency. This functionality is triggered via a parameter
+	 * to the chosen coloring function. As such, user might try to get an average result by running the function once,
+	 * or try to get optimal results for the algorithm by running it multiple times with permutations, as does the
+	 * Data::Benchmark class. For the latter purpose, the use of Data::Benchmark class is recommended, as it provides
+	 * API to automate the process.
 	 */
 	class Algorithms
 	{

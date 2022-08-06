@@ -3,6 +3,7 @@ var namespace_graph =
     [ "Algorithms", "dd/d33/class_graph_1_1_algorithms.html", "dd/d33/class_graph_1_1_algorithms" ],
     [ "Examples", "de/d21/class_graph_1_1_examples.html", null ],
     [ "Graph", "d6/d4f/class_graph_1_1_graph.html", "d6/d4f/class_graph_1_1_graph" ],
+    [ "List", "d6/de9/class_graph_1_1_list.html", "d6/de9/class_graph_1_1_list" ],
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html", "dc/de1/class_graph_1_1_matrix" ],
     [ "Roadmap", "d4/d67/struct_graph_1_1_roadmap.html", "d4/d67/struct_graph_1_1_roadmap" ],
     [ "Type", "d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0", [

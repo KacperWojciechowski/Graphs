@@ -4,7 +4,7 @@ Implementation of basic graph software made for university classes.
 Overview:
 -------------------------------------------------------------
 The implementation provides adjacency matrix and adjacency list representations compatibile with the House of Graphs portal data formats, and GraphML format.
-Each graph representation provides implementation of basic graph coloring and path searching algorithms. The adjacency list representation however, unlike adjacency matrix representation, does not provide weighted graphs support.
+Each graph representation provides implementation of basic graph coloring and path searching algorithms. Each of the representations support both directed and undirected graphs, however does not support multigraphs, and graphs with negative weights (the latter causing to raise an exception).
 
 The implementation is suited for weighted and non-weighted undirected and directed graphs. It does support graphs with loops, however it does not support multigraphs and will treat them as weighted graphs instead.
 

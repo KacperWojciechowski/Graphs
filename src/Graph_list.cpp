@@ -67,6 +67,39 @@ Graph::List::List(std::string file_path, std::string name, Type type)
 
 
 /**
+ * \brief Constructor creating the adjacency list object based on the adjacency matrix object.
+ * 
+ * \param matrix Reference to the Graph::Matrix object.
+ */
+Graph::List::List(Matrix& matrix)
+{
+	// get general graph info
+	this->name = matrix.get_name();
+	this->type = matrix.get_type();
+	
+	// build empty adjacency list
+	for (std::size_t i = 0; i < matrix.get_nodes_amount(); i++)
+	{
+		this->list.push_back({});
+	}
+
+	// build list based on the matrix
+	for (std::size_t i = 0; i < matrix.get_nodes_amount(); i++)
+	{
+		for (std::size_t j = 0; j < matrix.get_nodes_amount(); j++)
+		{
+			if (matrix.get_edge(i, j) != 0)
+			{
+				this->list[i].push_back({j, matrix.get_edge(i, j)})
+			}
+		}
+	}
+}
+
+
+
+
+/**
  * \brief Function loading the data from .lst file into the object.
  * 
  * This function is for internal use only. To create an object containig data
@@ -340,7 +373,7 @@ Graph::List::List(List& l)
  * 
  * \param l rvalue reference to the data source object
  */
-Graph::List::List(List&& l)
+Graph::List::List(List&& l) noexcept
 	: list(l.list),
 	name(l.name),
 	type(l.type),

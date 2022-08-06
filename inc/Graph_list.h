@@ -29,7 +29,7 @@ namespace Graph
 		List(Data::PixelMap& map);
 
 		List(List& l);
-		List(List&& l);
+		List(List&& l) noexcept;
 
 		/* Interface */
 		void print();

@@ -80,6 +80,7 @@ Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, std::string name, 
 	name(name),
 	type(type)
 {
+	this->calculate_degrees();
 }
 
 
@@ -326,7 +327,7 @@ void Graph::Matrix::remove_node(std::size_t node_id)
 		// remove the column of the deleted vertex and update degree of each vertex
 		for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
 		{
-			if (*(std::next(itr->begin(), node_id)) > 0)
+			if (*(std::next(itr->begin(), node_id)) != 0)
 			{
 				if (std::distance(this->matrix.begin(), itr) == node_id)
 				{
@@ -499,7 +500,7 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 	{
 		for (std::size_t j = 0; j < this->matrix[i].size(); j++)
 		{
-			if (this->matrix[i][j] > 0)
+			if (this->matrix[i][j] != 0)
 			{
 				if (this->type == Type::undirected && j < i)
 				{
@@ -544,7 +545,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 	{
 		for (std::size_t j = i; j < this->matrix[i].size(); j++)
 		{
-			if (this->matrix[i][j] > 0)
+			if (this->matrix[i][j] != 0)
 			{
 				edges.push_back({ i, j });
 			}
@@ -579,7 +580,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 		// in the same row of the initial adjacency matrix
 		for (std::size_t k = coordinates.x; k < this->matrix.size(); k++)
 		{
-			if (this->matrix[coordinates.x][k] > 0 && k != coordinates.y)
+			if (this->matrix[coordinates.x][k] != 0 && k != coordinates.y)
 			{
 				index = Data::find_index(edges, { coordinates.x, k });
 				mat[i][index] = 1;
@@ -591,7 +592,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 		// in the same column of the initial adjacency matrix
 		for (std::size_t k = coordinates.x; k < coordinates.y; k++)
 		{
-			if (this->matrix[k][coordinates.y] > 0 && k != coordinates.x)
+			if (this->matrix[k][coordinates.y] != 0 && k != coordinates.x)
 			{
 				index = Data::find_index(edges, { k, coordinates.y });
 				mat[i][index] = 1;
@@ -914,7 +915,7 @@ void Graph::Matrix::calculate_degrees()
 		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
 		{
 			// if connection was found, increase the degree
-			if (*itr2 > 0)
+			if (*itr2 != 0)
 			{
 				// if a loop was found, increase the degree by 2
 				if (std::distance(itr->begin(), itr2) == std::distance(this->matrix.begin(), itr))

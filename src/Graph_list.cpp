@@ -476,10 +476,10 @@ void Graph::List::print()
 		}
 		else
 		{
-			std::cout << "degrees: (in|out) " << std::left << std::setw(4) << this->degrees[index].in_deg << " | " << this->degrees[index].out_deg;
+			std::cout << "degrees: (in|out) " << this->degrees[index].in_deg << " | " << this->degrees[index].out_deg;
 		}
 
-		std::cout << ", " << index << ": ";
+		std::cout << ",    " << index << ": ";
 
 		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
 		{
@@ -691,7 +691,7 @@ void Graph::List::remove_node(std::size_t node_id)
 					itr2++;
 					this->list[i].erase(itr_tmp);
 					this->degrees[i].deg--;
-					this->degrees[i].in_deg--;
+					this->degrees[i].out_deg--;
 					continue;
 				}
 				// if vertex of higher ID than the given one was found

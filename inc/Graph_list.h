@@ -32,12 +32,12 @@ namespace Graph
 		List(List&& l) noexcept;
 
 		/* Interface */
-		void print();
-		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);
+		void print();																	// checked
+		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);	// checked
 		void add_node();
 
 		void remove_edge(std::size_t source, std::size_t destination);
-		void remove_node(std::size_t node_id);
+		void remove_node(std::size_t node_id);											// checked
 
 		const std::size_t get_nodes_amount();
 		const Degree get_node_degree(std::size_t node_id);
@@ -65,8 +65,8 @@ namespace Graph
 
 		/* Load functions for specific file formats */
 		void load_lst_file(std::fstream& file);
-		void load_graphml_file(std::fstream& file);
-		void calculate_degrees();
+		void load_graphml_file(std::fstream& file);			// checked
+		void calculate_degrees();							// checked
 
 		/* Objects containing the graph */
 		std::vector<std::list<Node>> list;

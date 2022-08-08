@@ -8,8 +8,5 @@ int main()
 
 	list.print();
 
-	list.remove_node(1);
-
-	list.print();
 	return 0;
 }

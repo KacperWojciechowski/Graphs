@@ -17,6 +17,21 @@ namespace Graph
 						incorrect, or the graph type is assumed as directed */
 	};
 
+
+	/**
+	 * \brief Structure containing the degree information of given vertex.
+	 * 
+	 * \note User should access the right set of member fields based on the type of the graph.
+	 *		 In case of accessing eg. deg, while having an undirected graph, the result might be incorrect,
+	 *		 hence should not be taken into an account.
+	 */
+	struct Degree
+	{
+		std::size_t in_deg; /**< Indegree for the directed graphs */
+		std::size_t out_deg; /**< Outdegree for the directed graphs */
+		std::size_t deg; /**< Degree for the undirected graphs */
+	};
+
 	/**
 	 * \brief Abstract class stating the common interface for each of the graph representation.
 	 */
@@ -93,7 +108,7 @@ namespace Graph
 		 * \param node_id ID of a vertex (counting from 0) to get the degree of.
 		 * \return The degree of a given vertex.
 		 */
-		virtual const std::size_t get_node_degree(std::size_t node_id) = 0;
+		virtual const Degree get_node_degree(std::size_t node_id) = 0;
 
 
 

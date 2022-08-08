@@ -15,6 +15,9 @@
 		<node id="n6"/>
 		<node id="n7"/>
 		<node id="n8"/>
+		<edge source "n0" target="n0">
+			<data key="d0">3</data>
+		</edge>
 		<edge source="n0" target="n1">
 			<data key="d0">7</data>
 		</edge>

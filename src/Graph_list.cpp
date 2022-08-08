@@ -77,15 +77,11 @@ Graph::List::List(Matrix& matrix)
 	this->name = matrix.get_name();
 	this->type = matrix.get_type();
 	
-	// build empty adjacency list
-	for (std::size_t i = 0; i < matrix.get_nodes_amount(); i++)
-	{
-		this->list.push_back({});
-	}
-	
 	// build list based on the matrix
 	for (std::size_t i = 0; i < matrix.get_nodes_amount(); i++)
 	{
+		this->list.push_back({});
+
 		for (std::size_t j = 0; j < matrix.get_nodes_amount(); j++)
 		{
 			if (matrix.get_edge(i, j) != 0)
@@ -94,6 +90,8 @@ Graph::List::List(Matrix& matrix)
 			}
 		}
 	}
+
+	this->calculate_degrees();
 }
 
 
@@ -338,24 +336,48 @@ void Graph::List::load_graphml_file(std::fstream& file)
  */
 void Graph::List::calculate_degrees()
 {
-	std::size_t deg;
-
 	// calculate the degree of each vertex
-	for (auto itr = this->list.begin(); itr != this->list.end(); itr++)
+	for (std::size_t i = 0; i < this->list.size(); i++)
 	{
-		deg = 0;
-		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
+		this->degrees.push_back({ 0, 0, 0 });
+		for (auto itr = this->list[i].begin(); itr != this->list[i].end(); itr++)
 		{
-			if (itr2->ID == std::distance(this->list.begin(), itr))
+			this->degrees[i].out_deg++;
+
+			if (itr->ID == i)
 			{
-				deg += 2;
+				this->degrees[i].deg += 2;
 			}
 			else
 			{
-				deg++;
+				this->degrees[i].deg++;
 			}
 		}
-		this->degrees.push_back(deg);
+	}
+
+	if (this->type == Type::undirected)
+	{
+		for (std::size_t i = 0; i < this->degrees.size(); i++)
+		{
+			this->degrees[i].in_deg = this->degrees[i].out_deg;
+		}
+	}
+	else
+	{
+		for (std::size_t i = 0; i < this->degrees.size(); i++)
+		{
+			for (std::size_t j = 0; j < this->list.size(); j++)
+			{
+				for (auto itr = this->list[j].begin(); itr != this->list[j].end(); itr++)
+				{
+					if (itr->ID == i)
+					{
+						this->degrees[i].in_deg++;
+						break;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -408,7 +430,9 @@ Graph::List::List(List&& l) noexcept
  *  - Weights of the connections
  *  - Degree of each vertex
  * 
- *	\note Data is displayed in format "degree: ___, ID: adj_vert_ID {weight}, adj_vert_ID {weight}, ..."
+ *	\note Data is displayed in format "degree: ____*, ID: adj_vert_ID {weight}, adj_vert_ID {weight}, ...",
+ *		  but the degree field varies based on the graph type. In case of undirected graph, only one value is shown.
+ *		  In case of directed graphs, indegree and outdegree is shown in format "in|out".
  * 
  */
 void Graph::List::print()
@@ -444,7 +468,19 @@ void Graph::List::print()
 	for (auto itr = this->list.begin(); itr != this->list.end(); itr++)
 	{
 		index = std::distance(this->list.begin(), itr);
-		std::cout << "degree: " << std::left << std::setw(6) << this->degrees[index] << ", " << index << ": ";
+
+		// display degrees
+		if (this->type == Type::undirected)
+		{
+			std::cout << "degree: " << std::left << std::setw(6) << this->degrees[index].deg;
+		}
+		else
+		{
+			std::cout << "degrees: (in|out) " << std::left << std::setw(4) << this->degrees[index].in_deg << " | " << this->degrees[index].out_deg;
+		}
+
+		std::cout << ", " << index << ": ";
+
 		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
 		{
 			std::cout << itr2->ID << " {" << itr2->weight << "}, ";
@@ -460,6 +496,9 @@ void Graph::List::print()
 
 /**
  * \brief Function adding a connection between two given vertices.
+ * 
+ * \warning If an edge between given vertices already exists, the weight of the 
+ *			connection will be overwritten, and second edge will not be added.
  * 
  * \param source ID of the source vertex.
  * \param destination ID of the end vertex.
@@ -497,6 +536,11 @@ void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t
 	else
 	{
 		this->list[source].push_back({ destination, weight });
+		
+		// calculate degrees
+		this->degrees[source].out_deg++;
+		this->degrees[source].deg++;
+		this->degrees[destination].in_deg++;
 	}
 
 	// if the graph type is undirected
@@ -522,6 +566,9 @@ void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t
 		else
 		{
 			this->list[destination].push_back({ source, weight });
+			this->degrees[destination].out_deg++;
+			this->degrees[destination].deg++;
+			this->degrees[source].in_deg++;
 		}
 	}
 }
@@ -539,6 +586,7 @@ void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t
 void Graph::List::add_node()
 {
 	this->list.push_back({});
+	this->degrees.push_back({ 0, 0, 0 });
 }
 
 
@@ -567,6 +615,10 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 		if (itr->ID == destination)
 		{
 			this->list[source].erase(itr);
+
+			this->degrees[source].out_deg--;
+			this->degrees[source].deg--;
+			this->degrees[destination].in_deg--;
 		}
 	}
 
@@ -578,6 +630,10 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 			if (itr->ID == source)
 			{
 				this->list[destination].erase(itr);
+
+				this->degrees[destination].out_deg--;
+				this->degrees[destination].deg--;
+				this->degrees[source].in_deg--;
 			}
 		}
 	}
@@ -618,6 +674,7 @@ void Graph::List::remove_node(std::size_t node_id)
 		{
 			removed = true;
 			this->list.erase(std::next(this->list.begin(), i));
+			this->degrees.erase(std::next(this->degrees.begin(), i));
 			count = this->list.size();
 			i--;
 		}
@@ -633,6 +690,8 @@ void Graph::List::remove_node(std::size_t node_id)
 					itr_tmp = itr2;
 					itr2++;
 					this->list[i].erase(itr_tmp);
+					this->degrees[i].deg--;
+					this->degrees[i].in_deg--;
 					continue;
 				}
 				// if vertex of higher ID than the given one was found
@@ -670,10 +729,10 @@ const std::size_t Graph::List::get_nodes_amount()
  * \param node_id ID of the vertex which degree should be returned.
  * \return Degree of the vertex as const.
  */
-const std::size_t Graph::List::get_node_degree(std::size_t node_id)
+const Graph::Degree Graph::List::get_node_degree(std::size_t node_id)
 {
 	// validate the parameter
-	if (node_id >= this->list.size())
+	if (node_id >= this->degrees.size())
 	{
 		throw std::out_of_range("Index out of bounds");
 	}

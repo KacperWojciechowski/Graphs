@@ -30,7 +30,7 @@ namespace Graph
 		Matrix(Matrix& m);
 		Matrix(Matrix&& m) noexcept;
 
-		/* Interface */
+		/* Common interface */
 		void print();
 
 		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);
@@ -40,7 +40,7 @@ namespace Graph
 		void remove_node(std::size_t node_id);
 
 		const std::size_t get_nodes_amount();
-		const std::size_t get_node_degree(std::size_t node_id);
+		const Degree get_node_degree(std::size_t node_id);
 		const uint32_t get_edge(std::size_t source, std::size_t destination);
 		const std::string get_name();
 		const Type get_type();
@@ -49,11 +49,14 @@ namespace Graph
 
 		Matrix change_to_line_graph();
 
+		/* Extended interface */
 		void load_throughtput(std::string file_path);
+		void print_throughtput();
 
-		// algorithmic interface
+		/* Algorithmic interface*/
 
 
+		/* Extended algorithmic interface */
 		Roadmap throughtput_belman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, bool log);
 	
 	
@@ -66,7 +69,7 @@ namespace Graph
 		/* Objects containing the graph */
 		std::vector<std::vector<uint32_t>> matrix;
 		std::vector<std::vector<uint32_t>> throughtput;
-		std::vector<std::size_t> degrees;
+		std::vector<Degree> degrees;
 
 		/* GraphML format information */
 		std::string name;

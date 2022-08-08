@@ -310,7 +310,7 @@ void Graph::List::load_graphml_file(std::fstream& file)
 		this->list[atoi(id1.c_str())].push_back({ static_cast<std::size_t>(atoi(id2.c_str())), static_cast<uint32_t>(weight) });
 
 		// if graph is undirected, make the connection both ways
-		if (this->type == Type::undirected)
+		if (this->type == Type::undirected && id1 != id2)
 		{
 			this->list[atoi(id2.c_str())].push_back({ static_cast<std::size_t>(atoi(id1.c_str())), static_cast<uint32_t>(weight) });
 		}

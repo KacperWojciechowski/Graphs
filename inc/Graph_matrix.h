@@ -30,7 +30,7 @@ namespace Graph
 		Matrix(Matrix& m);
 		Matrix(Matrix&& m) noexcept;
 
-		/* Interface */
+		/* Common interface */
 		void print();
 
 		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);
@@ -49,11 +49,14 @@ namespace Graph
 
 		Matrix change_to_line_graph();
 
+		/* Extended interface */
 		void load_throughtput(std::string file_path);
+		void print_throughtput();
 
-		// algorithmic interface
+		/* Algorithmic interface*/
 
 
+		/* Extended algorithmic interface */
 		Roadmap throughtput_belman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, bool log);
 	
 	

@@ -131,6 +131,9 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  * - type of the graph
  * - graph structure along with weights in form of adjacency matrix
  * - degrees of each of the vertices
+ * 
+ * \note Based on the type of the graph, the degree is presented either as a single value for undirected graph,
+ *		 or as a indegree|outdegree pair for directed graph.
  */
 void Graph::Matrix::print()
 {
@@ -167,7 +170,15 @@ void Graph::Matrix::print()
 		{
 			std::cout << std::setw(3) << std::right << *itr2 << ", ";
 		}
-		std::cout << "  degree: " << this->degrees[std::distance(this->matrix.begin(), itr)] <<  std::endl;
+		if (this->type == Type::undirected)
+		{
+			std::cout << "  degree: " << this->degrees[std::distance(this->matrix.begin(), itr)].deg << std::endl;
+		}
+		else
+		{
+			std::cout << "  degrees: (in|out) " << this->degrees[std::distance(this->matrix.begin(), itr)].in_deg
+				<< " | " << this->degrees[std::distance(this->matrix.begin(), itr)].out_deg << std::endl;
+		}
 	}
 
 	std::cout << "]" << std::endl;
@@ -213,16 +224,19 @@ void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, uint32
 	// update the degrees of given vertices
 	if (previous_weight == 0)
 	{
-		if (source == destination)
+		this->degrees[source].out_deg++;
+		this->degrees[destination].in_deg++;
+
+		if (this->type == Type::undirected)
 		{
-			this->degrees[source] += 2;
-		}
-		else
-		{
-			this->degrees[source] ++;
-			if (this->type == Type::undirected)
+			if (source == destination)
 			{
-				this->degrees[destination]++;
+				this->degrees[source].deg += 2;
+			}
+			else
+			{
+				this->degrees[source].deg++;
+				this->degrees[destination].deg++;
 			}
 		}
 	}
@@ -258,7 +272,7 @@ void Graph::Matrix::add_node()
 	}
 
 	// add new vertex to the degrees vector
-	this->degrees.push_back(0);
+	this->degrees.push_back({ 0, 0, 0 });
 }
 
 
@@ -281,31 +295,29 @@ void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
 		throw std::out_of_range("Index out of bounds");
 	}
 	// if indexes are correct, mark the connection
-	else
+	
+	this->matrix[source][destination] = 0;
+
+	// if graph type is undirected, mark the connection both ways
+	if (this->type == Type::undirected)
 	{
-		this->matrix[source][destination] = 0;
+		this->matrix[destination][source] = 0;
 
-		// if graph type is undirected, mark the connection both ways
-		if (this->type == Type::undirected)
-		{
-			this->matrix[destination][source] = 0;
-		}
-
-		// update the degrees of given vertices
+		// update the undirected degree indicator for given vertices
 		if (source == destination)
 		{
-			this->degrees[source] -= 2;
+			this->degrees[source].deg -= 2;
 		}
 		else
 		{
-			this->degrees[source] --;
-
-			if (this->type == Type::undirected)
-			{
-				this->degrees[destination] --;
-			}
+			this->degrees[source].deg--;
+			this->degrees[destination].deg--;
 		}
 	}
+
+	// update the directed degrees indicators for given vertices
+	this->degrees[source].out_deg--;
+	this->degrees[destination].in_deg--;
 }
 
 
@@ -329,31 +341,48 @@ void Graph::Matrix::remove_node(std::size_t node_id)
 	{
 		throw std::out_of_range("ID out of bounds");
 	}
-	// if vertex ID is correct, remove all the connections and the vertex itself
-	else
+
+	std::size_t index;
+
+	// remove the column of the deleted vertex and update degree of each vertex if necessary
+	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
-		// remove the column of the deleted vertex and update degree of each vertex
-		for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
+		// find and decrease all degrees of vertices that have an incoming edge from the deleted vertex
+		if (i == node_id)
 		{
-			if (*(std::next(itr->begin(), node_id)) != 0)
+			for (std::size_t j = 0; j < this->matrix[i].size(); j++)
 			{
-				if (std::distance(this->matrix.begin(), itr) == node_id)
+				if (this->matrix[i][j] != 0)
 				{
-					this->degrees[std::distance(this->matrix.begin(), itr)] -= 2;
-				}
-				else
-				{
-					this->degrees[std::distance(this->matrix.begin(), itr)]--;
+					this->degrees[j].in_deg--;
+
+					// as this vertex will be deleted, loops can be ommited
+					if (this->type == Type::undirected && i != j)
+					{
+						this->degrees[j].deg--;
+					}
 				}
 			}
-			itr->erase(std::next(itr->begin(), node_id));
 		}
-
-		// remove the row of the deleted vertex and remove the degree counter
-		// for the deleted vertex
-		this->matrix.erase(std::next(this->matrix.begin(), node_id));
-		this->degrees.erase(std::next(this->degrees.begin(), node_id));
+		// find and decrease all degrees of vertices that have an outcoming edge to the deleted vertex
+		else if (this->matrix[i][node_id] != 0)
+		{	
+			this->degrees[i].out_deg--;
+			
+			if (this->type == Type::undirected)
+			{
+				this->degrees[i].deg--;
+			}
+		}
+		
+		// remove the column and degree structure of deleted vertex
+		this->matrix[i].erase(std::next(this->matrix[i].begin(), node_id));
 	}
+
+	// remove the row of the deleted vertex and remove the degree counter
+	// for the deleted vertex
+	this->matrix.erase(std::next(this->matrix.begin(), node_id));
+	this->degrees.erase(std::next(this->degrees.begin(), node_id));
 }
 
 
@@ -932,29 +961,38 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
  */
 void Graph::Matrix::calculate_degrees()
 {
-	std::size_t deg;
+	std::size_t index1;
+	std::size_t index2;
 
 	// iterate through the whole adjacency matrix to calculate degree of each node
 	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
 	{
-		deg = 0;
+		this->degrees.push_back({ 0, 0, 0 });
+
 		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
 		{
 			// if connection was found, increase the degree
 			if (*itr2 != 0)
 			{
+				index1 = std::distance(this->matrix.begin(), itr);
+				index2 = std::distance(itr->begin(), itr2);
+
+				this->degrees[index1].out_deg++;
+				this->degrees[index2].in_deg++;
+
 				// if a loop was found, increase the degree by 2
-				if (std::distance(itr->begin(), itr2) == std::distance(this->matrix.begin(), itr))
+				if (this->type == Type::undirected)
 				{
-					deg += 2;
-				}
-				// not a loop
-				else
-				{
-					deg += 1;
+					if (index1 == index2)
+					{
+						this->degrees[index1].deg += 2;
+					}
+					else
+					{
+						this->degrees[index1].deg++;
+					}
 				}
 			}
 		}
-		this->degrees.push_back(deg);
 	}
 }

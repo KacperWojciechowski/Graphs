@@ -381,9 +381,9 @@ const std::size_t Graph::Matrix::get_nodes_amount()
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.
  */
-const std::size_t Graph::Matrix::get_node_degree(std::size_t node_id)
+const Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
 {
-	if (node_id >= this->matrix.size())
+	if (node_id >= this->degrees.size())
 	{
 		throw std::out_of_range("ID out of bounds");
 	}

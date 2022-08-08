@@ -40,7 +40,7 @@ namespace Graph
 		void remove_node(std::size_t node_id);
 
 		const std::size_t get_nodes_amount();
-		const std::size_t get_node_degree(std::size_t node_id);
+		const Degree get_node_degree(std::size_t node_id);
 		const uint32_t get_edge(std::size_t source, std::size_t destination);
 		const std::string get_name();
 		const Type get_type();
@@ -70,7 +70,7 @@ namespace Graph
 
 		/* Objects containing the graph */
 		std::vector<std::list<Node>> list;
-		std::vector<std::size_t> degrees;
+		std::vector<Degree> degrees;
 
 		/* GRAPHML format information */
 		std::string name;

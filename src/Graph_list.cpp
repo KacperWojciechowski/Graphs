@@ -127,8 +127,6 @@ void Graph::List::load_lst_file(std::fstream& file)
 
 	Node vertex;
 
-	std::cout << amount << std::endl;
-
 	// extract each of the adjacent vertices
 	for (std::size_t i = 0; i < amount; i++)
 	{
@@ -137,8 +135,6 @@ void Graph::List::load_lst_file(std::fstream& file)
 		if (line != "")
 		{
 			this->list.push_back({});
-
-			std::cout << this->list.size() << std::endl;
 
 			pos = line.find(' ');
 
@@ -150,7 +146,7 @@ void Graph::List::load_lst_file(std::fstream& file)
 				vertex.ID = static_cast<std::size_t>(atoi(line.c_str())) - 1;
 				vertex.weight = 1;
 				itr->push_back(vertex);
-				pos = line.find(' ', pos);
+				pos = line.find(' ');
 			}
 		}
 	}
@@ -619,6 +615,7 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 			this->degrees[source].out_deg--;
 			this->degrees[source].deg--;
 			this->degrees[destination].in_deg--;
+			break;
 		}
 	}
 
@@ -634,6 +631,7 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 				this->degrees[destination].out_deg--;
 				this->degrees[destination].deg--;
 				this->degrees[source].in_deg--;
+				break;
 			}
 		}
 	}

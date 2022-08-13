@@ -2,11 +2,10 @@
 #include "../inc/Examples.h"
 #include "../inc/Graph_list.h"
 
+using namespace Graph;
+
 int main()
 {
-	Graph::List list("samples\\graphML.GRAPHML", "Name", Graph::Type::undirected);
-
-	list.print();
-
+	Examples::remove_edge_list(Type::directed);
 	return 0;
 }

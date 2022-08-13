@@ -7,14 +7,17 @@
 namespace Graph
 {
 	/**
-	 * \brief Structure for path-searching algorithms. 
+	 * \brief Class for storing data from path-searching algorithms. 
 	 * 
-	 * \note The structure does allow for storing several paths of the same length.
+	 * \note The class does allow for storing several paths of the same length.
 	 */
-	struct Roadmap
+	class Roadmap
 	{
+	public:
 		std::vector<std::vector<uint32_t>> prev_node; /**< Vector of possible previous vertices with the same distance */
 		std::vector<uint32_t> distance; /**< The distance value from start vertex to any given vertex */
+	
+		void print();
 	};
 
 	/*

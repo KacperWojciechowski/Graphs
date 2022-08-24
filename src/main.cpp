@@ -6,6 +6,7 @@ using namespace Graph;
 
 int main()
 {
-	Examples::save_matrix_to_graphml_file(Type::undirected);
+	//Examples::save_matrix_to_graphml_file(Type::undirected);
+	Examples::create_list_from_graphml_file(Type::undirected);
 	return 0;
 }

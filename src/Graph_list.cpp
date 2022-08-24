@@ -1,4 +1,5 @@
 #include "..\inc\Graph_list.h"
+#include "..\lib\rapidxml\rapidxml.hpp"
 
 #include <iomanip>
 
@@ -163,7 +164,7 @@ void Graph::List::load_lst_file(std::fstream& file)
  */
 void Graph::List::load_graphml_file(std::fstream& file)
 {
-	std::string line;
+	/*std::string line;
 	std::string line2;
 
 	// set the default position of graph ID
@@ -313,6 +314,104 @@ void Graph::List::load_graphml_file(std::fstream& file)
 			std::getline(file, line);
 		}
 		pos = line.find("edge");
+	}*/
+
+	// create the document and nodes instances
+	auto document = std::make_unique< rapidxml::xml_document<>>();
+
+	// split the document into vector
+	std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	buffer.push_back('\0');
+
+	// parse the document
+	document->parse<0>(&buffer[0]);
+	
+	// save the root node and key node
+	auto root_node = document->first_node("graphml");
+	auto weight_node = root_node->first_node("key");
+	auto graph_node = root_node->first_node("graph");
+
+	std::string weight_key = "";
+
+	// acquire the weight key
+	while (weight_node && strcmp(weight_node->first_attribute("attr.name")->value(), "weight") != 0)
+	{
+		weight_node = weight_node->next_sibling("key");
+	}
+
+	if (weight_node)
+	{
+		weight_key = weight_node->first_attribute("id")->value();
+	}
+
+	// parse the graph type
+	std::string type = graph_node->first_attribute("edgedefault")->value();
+
+	if (type == "undirected")
+	{
+		this->type = Type::undirected;
+	}
+	else if (type == "directed")
+	{
+		this->type = Type::directed;
+	}
+	else
+	{
+		this->type = Type::undefined;
+	}
+
+	// obtain vertices count
+	for (rapidxml::xml_node<>* vertex = graph_node->first_node("node"); vertex; vertex = vertex->next_sibling("node"))
+	{
+		this->list.push_back({});
+	}
+
+	// obtain edges
+	std::string id1;
+	std::string id2;
+	uint32_t weight;
+
+	for (rapidxml::xml_node<>* edge = graph_node->first_node("edge"); edge; edge = edge->next_sibling("edge"))
+	{
+		// get the IDs
+		id1 = edge->first_attribute("source")->value();
+		id2 = edge->first_attribute("target")->value();
+
+		// stip any letters at the beginning of IDs
+		for (std::size_t i = 0; i < id1.size(); i++)
+		{
+			if (id1[i] >= '0' && id1[i] <= '9')
+			{
+				id1 = id1.substr(i);
+				break;
+			}
+		}
+
+		for (std::size_t i = 0; i < id2.size(); i++)
+		{
+			if (id2[i] >= '0' && id2[i] <= '9')
+			{
+				id2 = id2.substr(i);
+			}
+		}
+
+		// obtain weight
+		weight = 1;
+
+		for (rapidxml::xml_node<>* key = edge->first_node("data"); key; key = key->next_sibling())
+		{
+			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
+			{
+				weight = atoi(key->value());
+			}
+		}
+
+		this->list[static_cast<std::size_t>(atoi(id1.c_str()))].push_back({static_cast<std::size_t>(atoi(id2.c_str())), weight});
+
+		if (this->type == Type::undirected && id1 != id2)
+		{
+			this->list[static_cast<std::size_t>(atoi(id2.c_str()))].push_back({ static_cast<std::size_t>(atoi(id1.c_str())), weight });
+		}
 	}
 }
 

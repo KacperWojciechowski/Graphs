@@ -22,9 +22,8 @@
  * \attention Supported formats are .mat and .GRAPHML. 
  * \see House of Graphs for .mat adjacency matrix file reference.
  */
-Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
-	: name(name),
-	  type(type)
+Graph::Matrix::Matrix(std::string file_path, Type type)
+	: type(type)
 {
 	// loading the .mat file
 	if (file_path.find(".mat", 0) != std::string::npos)
@@ -75,9 +74,8 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
  */
-Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, std::string name, Type type)
+Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, Type type)
 	: matrix(mat),
-	name(name),
 	type(type)
 {
 	this->calculate_degrees();
@@ -93,7 +91,6 @@ Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, std::string name,
  */
 Graph::Matrix::Matrix(Matrix& m)
 	: matrix(m.matrix),
-	name(m.name),
 	type(m.type),
 	degrees(m.degrees),
 	throughtput(m.throughtput)
@@ -109,13 +106,11 @@ Graph::Matrix::Matrix(Matrix& m)
  */
 Graph::Matrix::Matrix(Matrix&& m) noexcept
 	: matrix(m.matrix),
-	name(m.name),
 	type(m.type),
 	degrees(m.degrees),
 	throughtput(m.throughtput)
 {
 	m.matrix.clear();
-	m.name.clear();
 	m.degrees.clear();
 	m.throughtput.clear();
 }
@@ -127,7 +122,6 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  * \brief Function displaying the information regarding current graph on standard output.
  * 
  * The function displays following information:
- * - name of the graph
  * - type of the graph
  * - graph structure along with weights in form of adjacency matrix
  * - degrees of each of the vertices
@@ -137,8 +131,7 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  */
 void Graph::Matrix::print()
 {
-	// display name and type information
-	std::cout << "Name = " << this->name << std::endl;
+	// display type information
 	std::cout << "Type = ";
 	
 	switch (this->type)
@@ -342,8 +335,6 @@ void Graph::Matrix::remove_node(std::size_t node_id)
 		throw std::out_of_range("ID out of bounds");
 	}
 
-	std::size_t index;
-
 	// remove the column of the deleted vertex and update degree of each vertex if necessary
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
@@ -453,19 +444,6 @@ const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destinati
 
 
 /**
- * \brief Getter for the name of the graph.
- * 
- * \return Const string containing the name of the graph.
- */
-const std::string Graph::Matrix::get_name()
-{
-	return this->name;
-}
-
-
-
-
-/**
  * \brief Getter for the type of the graph.
  * 
  * \return Graph::Type enum defining the type of the graph.
@@ -487,49 +465,46 @@ const Graph::Type Graph::Matrix::get_type()
  * 
  * \param output_file_path Path to the output file
  */
-void Graph::Matrix::save_graphml(std::string output_file_path)
+void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 {
-	// opening output file
-	std::ofstream file(output_file_path);
-
 	// header
-	file << "<?xml version=\"1.0\"";
-	file << " encoding=\"UTF-8\"?>\n";
+	stream << "<?xml version=\"1.0\"";
+	stream << " encoding=\"UTF-8\"?>" << std::endl;
 
 	// xml schema
-	file << "<graphml xmlns=";
-	file << "\"http://graphml.graphdrawing.org/xmlns\"\n";
-	file << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
-	file << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns\n";
-	file << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n";
+	stream << "<graphml xmlns=";
+	stream << "\"http://graphml.graphdrawing.org/xmlns\"" << std::endl;
+	stream << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" << std::endl;
+	stream << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns" << std::endl;
+	stream << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">" << std::endl;
 
 	// weight data info
-	file << "<key id=\"d0\" for=\"edge\"\n";
-	file << "	attr.name=\"weight\" attr.type=\"integer\"/>\n";
+	stream << "\t<key id=\"d0\" for=\"edge\"" << std::endl;
+	stream << "\t\tattr.name=\"weight\" attr.type=\"integer\"/>" << std::endl;
 
 	// graph type data
-	file << " <graph id=";
-	file << "\"" + this->name + "\"";
-	file << " edgedefault=";
+	stream << "\t<graph id=";
+	stream << "\"" + name + "\"";
+	stream << " edgedefault=";
 	switch (this->type)
 	{
 	case Type::directed:
-		file << "\"directed\">\n";
+		stream << "\"directed\">" << std::endl;
 		break;
 	case Type::undirected:
-		file << "\"undirected\">\n";
+		stream << "\"undirected\">" << std::endl;
 		break;
 	// in case of undefined type, directed type is assumed
 	case Type::undefined:
-		file << "\"directed\">\n";
+		stream << "\"directed\">" << std::endl;
 		break;
 	}
 
 	// vertices data
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
-		file << "	<node id=\"n" << i;
-		file << "\"/>\n";
+		stream << "\t\t<node id=\"n" << i;
+		stream << "\"/>" << std::endl;
 	}
 
 	// edge data including weight
@@ -543,19 +518,18 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 				{
 					continue;
 				}
-				file << "	<edge source=\"n" << i;
-				file << "\" target=\"n" << j;
-				file << "\">\n";
-				file << "		<data key=\"d0\">" + std::to_string(this->matrix[i][j]) + "</data>\n";
-				file << "	</edge>\n";
+				stream << "\t\t<edge source=\"n" << i;
+				stream << "\" target=\"n" << j;
+				stream << "\">" << std::endl;
+				stream << "\t\t\t<data key=\"d0\">" + std::to_string(this->matrix[i][j]) + "</data>" << std::endl;
+				stream << "\t\t</edge>" << std::endl;
 			}
 		}
 	}
 
 	// close the tags and the file
-	file << "	</graph>\n";
-	file << "</graphml>";
-	file.close();
+	stream << "\t</graph>" << std::endl;
+	stream << "</graphml>";
 }
 
 
@@ -639,7 +613,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 	}
 
 	// create and return the line graph object based on created matrix
-	Matrix matrix(mat, this->name, this->type);
+	Matrix matrix(mat, this->type);
 	return matrix;
 }
 
@@ -826,9 +800,6 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 
 	// search for the edge type
 	pos2 = line.find("edgedefault=");
-
-	// save ID
-	this->name = line.substr(pos + 10, pos2 - 2 - (pos + 10));
 
 	// search for the end of the marker and save graph type
 	pos = line.find("\">");

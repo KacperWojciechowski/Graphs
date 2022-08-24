@@ -16,12 +16,12 @@ void Graph::Examples::create_list_from_lst_file(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		list = std::make_unique<List>("samples\\listUndirected.lst", "Name", graph_type);
+		list = std::make_unique<List>("samples\\listUndirected.lst", graph_type);
 		list->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		list = std::make_unique<List>("samples\\listDirected.lst", "Name", graph_type);
+		list = std::make_unique<List>("samples\\listDirected.lst", graph_type);
 		list->print();
 	}
 	else
@@ -44,12 +44,12 @@ void Graph::Examples::create_list_from_graphml_file(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		list = std::make_unique<List>("samples\\graphML.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphML.GRAPHML", graph_type);
 		list->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", graph_type);
 		list->print();
 	}
 	else
@@ -73,23 +73,28 @@ void Graph::Examples::save_list_to_graphml_file(Type graph_type)
 {
 	std::unique_ptr<List> list;
 
+	std::ofstream file("samples\\saved_graphML.GRAPHML");
+
 	if (graph_type == Type::undirected)
 	{
-		list = std::make_unique<List>("samples\\graphML.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphML.GRAPHML", graph_type);
 		list->print();
-		list->save_graphml("samples\\saved_graphML.GRAPHML");
+		list->save_graphml(file, "Graph");
+
+		std::cout << "The graph structure has been saved to the \"saved_graphML.GRAPHML\" file in the samples library" << std::endl;
 	}
 	else if (graph_type == Type::directed)
 	{
-		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", graph_type);
 		list->print();
-		list->save_graphml("samples\\saved_graphML.GRAPHML");
+		list->save_graphml(file, "Graph");
+
+		std::cout << "The graph structure has been saved to the \"saved_graphML.GRAPHML\" file in the samples library" << std::endl;
 	}
 	else
 	{
 		std::cout << "Choose either Graph::directed or Graph::undirected" << std::endl;
 	}
-
 }
 
 
@@ -108,7 +113,7 @@ void Graph::Examples::add_edge_list(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		list = std::make_unique<List>("samples\\graphML.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphML.GRAPHML", graph_type);
 		list->print();
 		list->add_edge(0, 1, 2);
 		list->print();
@@ -117,7 +122,7 @@ void Graph::Examples::add_edge_list(Type graph_type)
 	}
 	else if (graph_type == Type::directed)
 	{
-		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", graph_type);
 		list->print();
 		list->add_edge(0, 1, 2);
 		list->print();
@@ -144,14 +149,14 @@ void Graph::Examples::add_node_list(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		list = std::make_unique<List>("samples\\graphML.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphML.GRAPHML", graph_type);
 		list->print();
 		list->add_node();
 		list->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", graph_type);
 		list->print();
 		list->add_node();
 		list->print();
@@ -176,14 +181,14 @@ void Graph::Examples::remove_edge_list(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		list = std::make_unique<List>("samples\\graphML.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphML.GRAPHML", graph_type);
 		list->print();
 		list->remove_edge(0, 1);
 		list->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", graph_type);
 		list->print();
 		list->remove_edge(0, 1);
 		list->print();
@@ -208,14 +213,14 @@ void Graph::Examples::remove_node_list(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		list = std::make_unique<List>("samples\\graphML.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphML.GRAPHML", graph_type);
 		list->print();
 		list->remove_node(0);
 		list->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		list = std::make_unique<List>("samples\\graphMLdirected.GRAPHML", graph_type);
 		list->print();
 		list->remove_node(0);
 		list->print();
@@ -240,12 +245,12 @@ void Graph::Examples::create_matrix_from_mat_file(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		matrix = std::make_unique<Matrix>("samples\\matrixUndirected.mat", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\matrixUndirected.mat", graph_type);
 		matrix->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		matrix = std::make_unique<Matrix>("samples\\matrixDirected.mat", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\matrixDirected.mat", graph_type);
 		matrix->print();
 	}
 	else
@@ -269,12 +274,12 @@ void Graph::Examples::create_matrix_from_graphml_file(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", graph_type);
 		matrix->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", graph_type);
 		matrix->print();
 	}
 	else
@@ -298,17 +303,23 @@ void Graph::Examples::save_matrix_to_graphml_file(Type graph_type)
 {
 	std::unique_ptr<Matrix> matrix;
 
+	std::ofstream file("samples\\saved_graphML.GRAPHML");
+
 	if (graph_type == Type::undirected)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", graph_type);
 		matrix->print();
-		matrix->save_graphml("saved_graphML.GRAPHML");
+		matrix->save_graphml(file, "Graph");
+	
+		std::cout << "The graph structure has been saved to the \"saved_graphML.GRAPHML\" file in the samples library" << std::endl;
 	}
 	else if (graph_type == Type::directed)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", graph_type);
 		matrix->print();
-		matrix->save_graphml("saved_graphML.GRAPHML");
+		matrix->save_graphml(file, "Graph");
+
+		std::cout << "The graph structure has been saved to the \"saved_graphML.GRAPHML\" file in the samples library" << std::endl;
 	}
 	else
 	{
@@ -330,7 +341,7 @@ void Graph::Examples::add_edge_matrix(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", graph_type);
 		matrix->print();
 		matrix->add_edge(0, 1, 2);
 		matrix->print();
@@ -339,7 +350,7 @@ void Graph::Examples::add_edge_matrix(Type graph_type)
 	}
 	else if (graph_type == Type::directed)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", graph_type);
 		matrix->print();
 		matrix->add_edge(0, 1, 2);
 		matrix->print();
@@ -366,14 +377,14 @@ void Graph::Examples::add_node_matrix(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", graph_type);
 		matrix->print();
 		matrix->add_node();
 		matrix->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", graph_type);
 		matrix->print();
 		matrix->add_node();
 		matrix->print();
@@ -398,14 +409,14 @@ void Graph::Examples::remove_edge_matrix(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", graph_type);
 		matrix->print();
 		matrix->remove_edge(0, 1);
 		matrix->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", graph_type);
 		matrix->print();
 		matrix->remove_edge(0, 1);
 		matrix->print();
@@ -430,14 +441,14 @@ void Graph::Examples::remove_node_matrix(Type graph_type)
 
 	if (graph_type == Type::undirected)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphML.GRAPHML", graph_type);
 		matrix->print();
 		matrix->remove_node(0);
 		matrix->print();
 	}
 	else if (graph_type == Type::directed)
 	{
-		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", "Name", graph_type);
+		matrix = std::make_unique<Matrix>("samples\\graphMLdirected.GRAPHML", graph_type);
 		matrix->print();
 		matrix->remove_node(0);
 		matrix->print();

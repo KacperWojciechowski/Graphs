@@ -2,14 +2,10 @@
 #include "../inc/Examples.h"
 #include "../inc/Graph_list.h"
 
+using namespace Graph;
+
 int main()
 {
-	Graph::List list("samples\\graphML.GRAPHML", "Name", Graph::Type::undirected);
-
-	list.print();
-
-	list.remove_node(1);
-
-	list.print();
+	Examples::remove_node_matrix(Type::directed);
 	return 0;
 }

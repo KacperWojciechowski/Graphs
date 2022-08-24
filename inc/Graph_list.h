@@ -65,8 +65,8 @@ namespace Graph
 
 		/* Load functions for specific file formats */
 		void load_lst_file(std::fstream& file);
-		void load_graphml_file(std::fstream& file);
-		void calculate_degrees();
+		void load_graphml_file(std::fstream& file);			// checked
+		void calculate_degrees();							// checked
 
 		/* Objects containing the graph */
 		std::vector<std::list<Node>> list;

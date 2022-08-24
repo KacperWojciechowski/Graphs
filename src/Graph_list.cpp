@@ -127,8 +127,6 @@ void Graph::List::load_lst_file(std::fstream& file)
 
 	Node vertex;
 
-	std::cout << amount << std::endl;
-
 	// extract each of the adjacent vertices
 	for (std::size_t i = 0; i < amount; i++)
 	{
@@ -137,8 +135,6 @@ void Graph::List::load_lst_file(std::fstream& file)
 		if (line != "")
 		{
 			this->list.push_back({});
-
-			std::cout << this->list.size() << std::endl;
 
 			pos = line.find(' ');
 
@@ -150,7 +146,7 @@ void Graph::List::load_lst_file(std::fstream& file)
 				vertex.ID = static_cast<std::size_t>(atoi(line.c_str())) - 1;
 				vertex.weight = 1;
 				itr->push_back(vertex);
-				pos = line.find(' ', pos);
+				pos = line.find(' ');
 			}
 		}
 	}
@@ -310,7 +306,7 @@ void Graph::List::load_graphml_file(std::fstream& file)
 		this->list[atoi(id1.c_str())].push_back({ static_cast<std::size_t>(atoi(id2.c_str())), static_cast<uint32_t>(weight) });
 
 		// if graph is undirected, make the connection both ways
-		if (this->type == Type::undirected)
+		if (this->type == Type::undirected && id1 != id2)
 		{
 			this->list[atoi(id2.c_str())].push_back({ static_cast<std::size_t>(atoi(id1.c_str())), static_cast<uint32_t>(weight) });
 		}
@@ -476,10 +472,10 @@ void Graph::List::print()
 		}
 		else
 		{
-			std::cout << "degrees: (in|out) " << std::left << std::setw(4) << this->degrees[index].in_deg << " | " << this->degrees[index].out_deg;
+			std::cout << "degrees: (in|out) " << this->degrees[index].in_deg << " | " << this->degrees[index].out_deg;
 		}
 
-		std::cout << ", " << index << ": ";
+		std::cout << ",    " << index << ": ";
 
 		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
 		{
@@ -619,6 +615,7 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 			this->degrees[source].out_deg--;
 			this->degrees[source].deg--;
 			this->degrees[destination].in_deg--;
+			break;
 		}
 	}
 
@@ -634,6 +631,7 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 				this->degrees[destination].out_deg--;
 				this->degrees[destination].deg--;
 				this->degrees[source].in_deg--;
+				break;
 			}
 		}
 	}
@@ -691,7 +689,7 @@ void Graph::List::remove_node(std::size_t node_id)
 					itr2++;
 					this->list[i].erase(itr_tmp);
 					this->degrees[i].deg--;
-					this->degrees[i].in_deg--;
+					this->degrees[i].out_deg--;
 					continue;
 				}
 				// if vertex of higher ID than the given one was found

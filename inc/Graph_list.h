@@ -32,12 +32,12 @@ namespace Graph
 		List(List&& l) noexcept;
 
 		/* Interface */
-		void print();																	// checked
-		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);	// checked
+		void print();
+		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);
 		void add_node();
 
 		void remove_edge(std::size_t source, std::size_t destination);
-		void remove_node(std::size_t node_id);											// checked
+		void remove_node(std::size_t node_id);
 
 		const std::size_t get_nodes_amount();
 		const Degree get_node_degree(std::size_t node_id);

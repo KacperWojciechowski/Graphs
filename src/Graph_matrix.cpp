@@ -764,11 +764,11 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
 		for (std::size_t j = 0; j < vertices; j++)
 		{
 			file >> temp;
-			if (temp <= 0)
+			if (temp < 0)
 			{
-				throw std::runtime_error("Weight less or equal to zero");
+				throw std::runtime_error("Weight less than zero");
 			}
-			this->matrix[index].push_back(static_cast<uint32_t>(temp));
+			this->matrix[index - 1].push_back(static_cast<uint32_t>(temp));
 		}
 	}
 }
@@ -964,11 +964,15 @@ void Graph::Matrix::calculate_degrees()
 	std::size_t index1;
 	std::size_t index2;
 
+	// create the degrees table
+	for (std::size_t i = 0; i < this->matrix.size(); i++)
+	{
+		this->degrees.push_back({ 0, 0, 0 });
+	}
+
 	// iterate through the whole adjacency matrix to calculate degree of each node
 	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
 	{
-		this->degrees.push_back({ 0, 0, 0 });
-
 		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
 		{
 			// if connection was found, increase the degree

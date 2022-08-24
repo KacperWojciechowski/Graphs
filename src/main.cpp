@@ -6,6 +6,6 @@ using namespace Graph;
 
 int main()
 {
-	Examples::remove_edge_list(Type::directed);
+	Examples::remove_node_matrix(Type::directed);
 	return 0;
 }

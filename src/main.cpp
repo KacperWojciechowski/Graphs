@@ -7,8 +7,5 @@ using namespace Graph;
 
 int main()
 {
-	Examples::generate_pixel_map_file();
-	
-	
 	return 0;
 }

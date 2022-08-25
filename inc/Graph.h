@@ -13,8 +13,6 @@ namespace Graph
 		undirected = 0, /**< The graph is undirected, which means that the weights of the connections are automatically 
 						mirrored */
 		directed, /**< The graph is directed, which means that the weights are not automatically mirrored */
-		undefined /**< The graph type is undefined. In majority of cases, operations on such graph are either
-						incorrect, or the graph type is assumed as directed */
 	};
 
 

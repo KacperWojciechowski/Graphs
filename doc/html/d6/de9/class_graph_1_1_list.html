@@ -235,7 +235,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Class representing a graph in the adjacency list form. </p>
 <p >The representation is based on the STL list and vector classes. It does provide a standard graph interface stated by the <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html" title="Abstract class stating the common interface for each of the graph representation.">Graph</a> virtual class. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d3/d0e/create_list_from_lst_file_8cpp-example.html#_a1">create_list_from_lst_file.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d5/d68/create_list_from_graphml_8cpp-example.html#_a1">create_list_from_graphml.cpp</a>, and <a class="el" href="../../d9/dd8/create_list_from_lst_8cpp-example.html#_a1">create_list_from_lst.cpp</a>.</dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0763a04f4986dac2f8f61550a65e4cd5" name="a0763a04f4986dac2f8f61550a65e4cd5"></a>
@@ -269,8 +269,7 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">file_path</td><td>Path of the data source file. </td></tr>
-    <tr><td class="paramname">name</td><td>Name of the graph (user-given). </td></tr>
-    <tr><td class="paramname">type</td><td>Type of the graph (from the <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0" title="Enum class stating the type of the graph.">Graph::Type</a> enum).</td></tr>
+    <tr><td class="paramname">type</td><td>Type of the graph (from the <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0" title="Enum class stating the type of the graph.">Graph::Type</a> enum). In case of reading from graphML file this parameter is ignored.</td></tr>
   </table>
   </dd>
 </dl>
@@ -279,9 +278,12 @@ Additional Inherited Members</h2></td></tr>
 <li>std::runtime_error - when given file cannot be accessed. </li>
 </ul>
 </dd></dl>
-<dl class="section attention"><dt>Attention</dt><dd>Supported formats are .lst and .GRAPHML. The .lst representation does not contain weights, so a weight of 1 is assumed for each connection if using this file format as a data source. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd>House of Graphs for .lst adjacency <a class="el" href="../../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b">list</a> file reference.</dd></dl>
-<p><a class="el" href="../../d3/d0e/create_list_from_lst_file_8cpp-example.html">Example of using .lst file as data source</a> </p>
+<dl class="section attention"><dt>Attention</dt><dd>Supported formats are .lst and .GRAPHML. The .lst representation does not contain weights, so a weight of 1 is assumed for each connection if using this file format as a data source.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://hog.grinvin.org/Formats.action">Here </a> for House of Graphs adjacency <a class="el" href="../../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b">list</a> format guideline. </dd>
+<dd>
+<a href="http://graphml.graphdrawing.org/primer/graphml-primer.html">http://graphml.graphdrawing.org/primer/graphml-primer.html</a> for GraphML format guideline.</dd></dl>
+<p><a class="el" href="../../d9/dd8/create_list_from_lst_8cpp-example.html">Example of using .lst file as data source</a><br  />
+ <a class="el" href="../../d5/d68/create_list_from_graphml_8cpp-example.html">Example of using .GRAPHML file as data source</a> </p>
 
 </div>
 </div>
@@ -779,7 +781,7 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd><a class="el" href="../../de/d75/namespace_data.html">Data</a> is displayed in format "degree: ____*, ID: adj_vert_ID {weight}, adj_vert_ID {weight}, ...", but the degree field varies based on the graph type. In case of undirected graph, only one value is shown. In case of directed graphs, indegree and outdegree is shown in format "in|out". </dd></dl>
 
 <p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a2d9ea3acf27e89fb55b1154c39704279">Graph::Graph</a>.</p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d3/d0e/create_list_from_lst_file_8cpp-example.html#a3">create_list_from_lst_file.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d5/d68/create_list_from_graphml_8cpp-example.html#a3">create_list_from_graphml.cpp</a>, and <a class="el" href="../../d9/dd8/create_list_from_lst_8cpp-example.html#a3">create_list_from_lst.cpp</a>.</dd>
 </dl>
 
 </div>

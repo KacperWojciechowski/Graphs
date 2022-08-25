@@ -15,15 +15,6 @@
 void Data::Generator::make_list(std::ostream& stream, uint32_t vertex_amount, Graph::Type type)
 {
 	std::vector<Data::coord> edges;
-
-	if (type == Graph::Type::undefined)
-	{
-		std::cerr << "Please select either directed or undirected graph type\n";
-	}
-	else
-	{
-
-	}
 }
 
 
@@ -65,4 +56,5 @@ void Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint
 			stream << '\n';
 		}
 	}
+	stream << std::flush;
 }

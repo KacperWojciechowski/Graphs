@@ -1,6 +1,6 @@
-#include "..\inc\Graph_list.h"
+#include "..\..\inc\Graph_list.h"
 
-int main()
+void main()
 {
     Graph::List list("samples\\listDirected.lst", Graph::Type::directed);
     list.print();

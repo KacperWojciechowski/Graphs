@@ -496,10 +496,6 @@ void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 	case Type::undirected:
 		stream << "\"undirected\">\n";
 		break;
-	// in case of undefined type, directed type is assumed
-	case Type::undefined:
-		stream << "\"directed\">\n";
-		break;
 	}
 
 	// vertices data
@@ -531,7 +527,7 @@ void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 
 	// close the tags and the file
 	stream << "\t</graph>\n";
-	stream << "</graphml>";
+	stream << "</graphml>" << std::flush;
 }
 
 
@@ -806,7 +802,7 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 	}
 	else
 	{
-		this->type = Type::undefined;
+		throw std::runtime_error("Unsupported graph type");
 	}
 
 	// obtain vertices count

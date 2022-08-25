@@ -6,6 +6,7 @@
 namespace Data
 {
 	/**
+	* 
 	 * \brief Structure containing coordinates of the vertex or edge.
 	 * 
 	 * \note If the structure stores an edge coordinates, the first coordinate states

@@ -76,17 +76,6 @@ namespace Graph
 	};
 }
 
-/**
- * \example create_list_from_lst_file.cpp
- * 
- * An example showing how to create an object of Graph::List class.
- * 
- * This example shows how to pass the path to the source file
- * and graph type from the Graph::Type enum. It uses the
- * \b listDirected.lst 
- * file provided as a sample in the samples folder.
- */
-
 
 
 

@@ -10,8 +10,8 @@
  * or the file cannot be accessed, an exception is returned. 
  * 
  * \param file_path Path of the data source file.
- * \param name Name of the graph (user-given).
- * \param type Type of the graph (from the Graph::Type enum).
+ * \param type Type of the graph (from the Graph::Type enum). In case of reading from graphML file
+ *			   this parameter is ignored.
  * 
  * \warning Exceptions to guard against:
  *		- std::invalid_argument - when given file extension is not supported.
@@ -19,9 +19,12 @@
  * \attention Supported formats are .lst and .GRAPHML. The .lst representation does not
  *			  contain weights, so a weight of 1 is assumed for each connection if using
  *			  this file format as a data source. 
- * \see House of Graphs for .lst adjacency list file reference.
  * 
- * \ref create_list_from_lst_file.cpp "Example of using .lst file as data source"
+ * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for House of Graphs adjacency list format guideline.
+ * \see http://graphml.graphdrawing.org/primer/graphml-primer.html for GraphML format guideline.
+ * 
+ * \ref create_list_from_lst.cpp "Example of using .lst file as data source"\n 
+ * \ref create_list_from_graphml.cpp "Example of using .GRAPHML file as data source"
  */
 Graph::List::List(std::string file_path, Type type)
 	: type(type)
@@ -207,7 +210,7 @@ void Graph::List::load_graphml_file(std::fstream& file)
 	}
 	else
 	{
-		this->type = Type::undefined;
+		throw std::runtime_error("Unsupported graph type");
 	}
 
 	// obtain vertices count
@@ -732,7 +735,10 @@ const Graph::Type Graph::List::get_type()
 /**
  * \brief Function saving current graph structure  into a .GRAPHML format file.
  * 
- * \param output_file_path Path to the output file.
+ * This format does contain the weights of the edges.
+ * 
+ * \param stream Stream to which the graphML data format should be saved to.
+ * \param name Name of the graph (user-given).
  */
 void Graph::List::save_graphml(std::ostream& stream, std::string name)
 {
@@ -763,10 +769,6 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 	case Type::undirected:
 		stream << "\"undirected\">\n";
 		break;
-		// in case of undefined type, directed type is assumed
-	case Type::undefined:
-		stream << "\"directed\">\n";
-		break;
 	}
 
 	// vertices data
@@ -795,5 +797,5 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 
 	// close the tags and the file
 	stream << "\t</graph>\n";
-	stream << "</graphml>";
+	stream << "</graphml>" << std::flush;
 }

@@ -24,8 +24,8 @@ namespace Graph
 	public:
 
 		/* Constructors */
-		Matrix(std::string file_path, std::string name, Type type);
-		Matrix(std::vector<std::vector<uint32_t>>& mat, std::string name, Type type);
+		Matrix(std::string file_path, Type type);
+		Matrix(std::vector<std::vector<uint32_t>>& mat, Type type);
 		
 		Matrix(Matrix& m);
 		Matrix(Matrix&& m) noexcept;
@@ -42,10 +42,9 @@ namespace Graph
 		const std::size_t get_nodes_amount();
 		const Degree get_node_degree(std::size_t node_id);
 		const uint32_t get_edge(std::size_t source, std::size_t destination);
-		const std::string get_name();
 		const Type get_type();
 
-		void save_graphml(std::string output_file_path);
+		void save_graphml(std::ostream& stream, std::string name);
 
 		Matrix change_to_line_graph();
 
@@ -71,8 +70,7 @@ namespace Graph
 		std::vector<std::vector<uint32_t>> throughtput;
 		std::vector<Degree> degrees;
 
-		/* GraphML format information */
-		std::string name;
+		/* Graph type information */
 		Type type;
 	};
 }

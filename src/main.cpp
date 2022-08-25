@@ -6,6 +6,6 @@ using namespace Graph;
 
 int main()
 {
-	Examples::remove_node_matrix(Type::directed);
+	Examples::create_matrix_from_graphml_file(Type::undirected);
 	return 0;
 }

@@ -126,14 +126,6 @@ namespace Graph
 
 
 		/**
-		 * \brief Common function definition for name getter.
-		 */
-		virtual const std::string get_name() = 0;
-
-
-
-
-		/**
 		 * \brief Common function definition for type getter.
 		 */
 		virtual const Type get_type() = 0;
@@ -148,7 +140,7 @@ namespace Graph
 		 * 
 		 * \param output_file_path Path of the destination file.
 		 */
-		virtual void save_graphml(std::string output_file_path) = 0;
+		virtual void save_graphml(std::ostream& stream, std::string name) = 0;
 
 
 

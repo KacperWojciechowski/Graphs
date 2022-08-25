@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 
+#include "../lib/rapidxml/rapidxml.hpp"
 #include "../inc/Coord.h"
 
 /**
@@ -22,9 +23,8 @@
  * \attention Supported formats are .mat and .GRAPHML. 
  * \see House of Graphs for .mat adjacency matrix file reference.
  */
-Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
-	: name(name),
-	  type(type)
+Graph::Matrix::Matrix(std::string file_path, Type type)
+	: type(type)
 {
 	// loading the .mat file
 	if (file_path.find(".mat", 0) != std::string::npos)
@@ -75,9 +75,8 @@ Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
  */
-Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, std::string name, Type type)
+Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, Type type)
 	: matrix(mat),
-	name(name),
 	type(type)
 {
 	this->calculate_degrees();
@@ -93,7 +92,6 @@ Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, std::string name,
  */
 Graph::Matrix::Matrix(Matrix& m)
 	: matrix(m.matrix),
-	name(m.name),
 	type(m.type),
 	degrees(m.degrees),
 	throughtput(m.throughtput)
@@ -109,13 +107,11 @@ Graph::Matrix::Matrix(Matrix& m)
  */
 Graph::Matrix::Matrix(Matrix&& m) noexcept
 	: matrix(m.matrix),
-	name(m.name),
 	type(m.type),
 	degrees(m.degrees),
 	throughtput(m.throughtput)
 {
 	m.matrix.clear();
-	m.name.clear();
 	m.degrees.clear();
 	m.throughtput.clear();
 }
@@ -127,7 +123,6 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  * \brief Function displaying the information regarding current graph on standard output.
  * 
  * The function displays following information:
- * - name of the graph
  * - type of the graph
  * - graph structure along with weights in form of adjacency matrix
  * - degrees of each of the vertices
@@ -137,8 +132,7 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  */
 void Graph::Matrix::print()
 {
-	// display name and type information
-	std::cout << "Name = " << this->name << std::endl;
+	// display type information
 	std::cout << "Type = ";
 	
 	switch (this->type)
@@ -164,21 +158,22 @@ void Graph::Matrix::print()
 	// display adjacency matrix
 	std::cout << "[" << std::endl;
 
-	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
+	for (std::size_t index = 0; auto row : this->matrix)
 	{
-		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
+		for (auto itr2 = row.begin(); itr2 != row.end(); itr2++)
 		{
 			std::cout << std::setw(3) << std::right << *itr2 << ", ";
 		}
 		if (this->type == Type::undirected)
 		{
-			std::cout << "  degree: " << this->degrees[std::distance(this->matrix.begin(), itr)].deg << std::endl;
+			std::cout << "  degree: " << this->degrees[index].deg << std::endl;
 		}
 		else
 		{
-			std::cout << "  degrees: (in|out) " << this->degrees[std::distance(this->matrix.begin(), itr)].in_deg
-				<< " | " << this->degrees[std::distance(this->matrix.begin(), itr)].out_deg << std::endl;
+			std::cout << "  degrees: (in|out) " << this->degrees[index].in_deg
+				<< " | " << this->degrees[index].out_deg << std::endl;
 		}
+		index++;
 	}
 
 	std::cout << "]" << std::endl;
@@ -342,8 +337,6 @@ void Graph::Matrix::remove_node(std::size_t node_id)
 		throw std::out_of_range("ID out of bounds");
 	}
 
-	std::size_t index;
-
 	// remove the column of the deleted vertex and update degree of each vertex if necessary
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
@@ -453,19 +446,6 @@ const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destinati
 
 
 /**
- * \brief Getter for the name of the graph.
- * 
- * \return Const string containing the name of the graph.
- */
-const std::string Graph::Matrix::get_name()
-{
-	return this->name;
-}
-
-
-
-
-/**
  * \brief Getter for the type of the graph.
  * 
  * \return Graph::Type enum defining the type of the graph.
@@ -487,49 +467,46 @@ const Graph::Type Graph::Matrix::get_type()
  * 
  * \param output_file_path Path to the output file
  */
-void Graph::Matrix::save_graphml(std::string output_file_path)
+void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 {
-	// opening output file
-	std::ofstream file(output_file_path);
-
 	// header
-	file << "<?xml version=\"1.0\"";
-	file << " encoding=\"UTF-8\"?>\n";
+	stream << "<?xml version=\"1.0\"";
+	stream << " encoding=\"UTF-8\"?>" << std::endl;
 
 	// xml schema
-	file << "<graphml xmlns=";
-	file << "\"http://graphml.graphdrawing.org/xmlns\"\n";
-	file << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
-	file << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns\n";
-	file << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n";
+	stream << "<graphml xmlns=";
+	stream << "\"http://graphml.graphdrawing.org/xmlns\"" << std::endl;
+	stream << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" << std::endl;
+	stream << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns" << std::endl;
+	stream << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">" << std::endl;
 
 	// weight data info
-	file << "<key id=\"d0\" for=\"edge\"\n";
-	file << "	attr.name=\"weight\" attr.type=\"integer\"/>\n";
+	stream << "\t<key id=\"d0\" for=\"edge\"" << std::endl;
+	stream << "\t\tattr.name=\"weight\" attr.type=\"integer\"/>" << std::endl;
 
 	// graph type data
-	file << " <graph id=";
-	file << "\"" + this->name + "\"";
-	file << " edgedefault=";
+	stream << "\t<graph id=";
+	stream << "\"" + name + "\"";
+	stream << " edgedefault=";
 	switch (this->type)
 	{
 	case Type::directed:
-		file << "\"directed\">\n";
+		stream << "\"directed\">" << std::endl;
 		break;
 	case Type::undirected:
-		file << "\"undirected\">\n";
+		stream << "\"undirected\">" << std::endl;
 		break;
 	// in case of undefined type, directed type is assumed
 	case Type::undefined:
-		file << "\"directed\">\n";
+		stream << "\"directed\">" << std::endl;
 		break;
 	}
 
 	// vertices data
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
-		file << "	<node id=\"n" << i;
-		file << "\"/>\n";
+		stream << "\t\t<node id=\"n" << i;
+		stream << "\"/>" << std::endl;
 	}
 
 	// edge data including weight
@@ -543,19 +520,18 @@ void Graph::Matrix::save_graphml(std::string output_file_path)
 				{
 					continue;
 				}
-				file << "	<edge source=\"n" << i;
-				file << "\" target=\"n" << j;
-				file << "\">\n";
-				file << "		<data key=\"d0\">" + std::to_string(this->matrix[i][j]) + "</data>\n";
-				file << "	</edge>\n";
+				stream << "\t\t<edge source=\"n" << i;
+				stream << "\" target=\"n" << j;
+				stream << "\">" << std::endl;
+				stream << "\t\t\t<data key=\"d0\">" + std::to_string(this->matrix[i][j]) + "</data>" << std::endl;
+				stream << "\t\t</edge>" << std::endl;
 			}
 		}
 	}
 
 	// close the tags and the file
-	file << "	</graph>\n";
-	file << "</graphml>";
-	file.close();
+	stream << "\t</graph>" << std::endl;
+	stream << "</graphml>";
 }
 
 
@@ -639,7 +615,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 	}
 
 	// create and return the line graph object based on created matrix
-	Matrix matrix(mat, this->name, this->type);
+	Matrix matrix(mat, this->type);
 	return matrix;
 }
 
@@ -789,51 +765,37 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
  */
 void Graph::Matrix::load_graphml_file(std::fstream& file)
 {
-	std::string line;
-	std::string line2;
+	// create the document and nodes instances
+	auto document = std::make_unique< rapidxml::xml_document<>>();
 
-	// set the default position of graph ID
-	std::size_t pos = std::string::npos;
-	std::size_t pos2 = std::string::npos;
+	// split the document into vector
+	std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	buffer.push_back('\0');
 
-	std::string weight_id;
+	// parse the document
+	document->parse<0>(&buffer[0]);
 
-	// search for graph ID and weight marker ID
-	while (pos == std::string::npos)
+	// save the root node and key node
+	auto root_node = document->first_node("graphml");
+	auto weight_node = root_node->first_node("key");
+	auto graph_node = root_node->first_node("graph");
+
+	std::string weight_key = "";
+
+	// acquire the weight key
+	while (weight_node && strcmp(weight_node->first_attribute("attr.name")->value(), "weight") != 0)
 	{
-		std::getline(file, line);
-		line2 = line;
-		// search for the key marker
-		pos = line.find("key");
-		if (pos != std::string::npos)
-		{
-			// search for the weight keyword
-			pos2 = line.find("weight");
-			// if the keyword was not found, check the next line
-			if (pos2 == std::string::npos)
-			{
-				std::getline(file, line2);
-				pos2 = line2.find("weight");
-			}
-			// if the keyword was found, save the ID, else skip
-			if (pos2 != std::string::npos)
-			{
-				weight_id = line.substr(pos + 8, 2);
-			}
-		}
-		pos = line2.find("graph id=");
+		weight_node = weight_node->next_sibling("key");
 	}
 
-	// search for the edge type
-	pos2 = line.find("edgedefault=");
+	if (weight_node)
+	{
+		weight_key = weight_node->first_attribute("id")->value();
+	}
 
-	// save ID
-	this->name = line.substr(pos + 10, pos2 - 2 - (pos + 10));
+	// parse the graph type
+	std::string type = graph_node->first_attribute("edgedefault")->value();
 
-	// search for the end of the marker and save graph type
-	pos = line.find("\">");
-	std::string type = line.substr(pos2 + 13, pos - (pos2 + 13));
-	
 	if (type == "undirected")
 	{
 		this->type = Type::undirected;
@@ -847,107 +809,72 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 		this->type = Type::undefined;
 	}
 
-	// search for vertices count
-	std::getline(file, line);
-	pos = line.find("node");
-
-	std::size_t vertices = 0;
-
-	while (pos != std::string::npos)
+	// obtain vertices count
+	for (rapidxml::xml_node<>* vertex = graph_node->first_node("node"); vertex; vertex = vertex->next_sibling("node"))
 	{
-		vertices++;
-		std::getline(file, line);
-		pos = line.find("node");
+		this->matrix.push_back({});
 	}
 
-	// create adjacency matrix and fill it with zeros
-	std::vector<uint32_t> v;
-
-	for (std::size_t j = 0; j < vertices; j++)
+	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
 	{
-		v.push_back(0);
+		for (std::size_t i = 0; i < this->matrix.size(); i++)
+		{
+			itr->push_back(0);
+		}
 	}
 
-	for (std::size_t i = 0; i < vertices; i++)
-	{
-		this->matrix.push_back(v);
-	}
-
-	// find the edge marker
-	pos = line.find("edge");
-
+	// obtain edges
 	std::string id1;
 	std::string id2;
+	uint32_t weight;
 
-	int32_t weight;
-	std::string weight_str;
+	std::size_t index1, index2;
 
-	// extract edge info
-	while (pos != std::string::npos)
+	for (rapidxml::xml_node<>* edge = graph_node->first_node("edge"); edge; edge = edge->next_sibling("edge"))
 	{
-		// find and extract the source and target nodes IDs
-		pos = line.find("source=");
-		pos2 = line.find("\" target=");
+		// get the IDs
+		id1 = edge->first_attribute("source")->value();
+		id2 = edge->first_attribute("target")->value();
 
-		id1 = line.substr(pos + 9, pos2 - (pos + 9));
-		pos = line.find("\">");
-		id2 = line.substr(pos2 + 11, pos - (pos2 + 11));
-
-		// if the weight is specified, look for it
-		if (!weight_id.empty())
+		// stip any letters at the beginning of IDs
+		for (std::size_t i = 0; i < id1.size(); i++)
 		{
-			pos = line.find("data");
-			pos2 = line.find(weight_id);
-			// search this and next line for the right data tag
-			do {
-				std::getline(file, line);
-				pos = line.find("data");
-				pos2 = line.find(weight_id);
-			} while (pos != std::string::npos && pos2 == std::string::npos);
-
-			// if data tags ended, assume the weight as 1
-			if (pos == std::string::npos)
+			if (id1[i] >= '0' && id1[i] <= '9')
 			{
-				weight = 1;
-			}
-			// else extract the right weight
-			else
-			{
-				pos = line.find("<", pos2);
-				weight = atoi(line.substr(pos2 + 4, pos - (pos2 + 4)).c_str());
-				if (weight <= 0)
-				{
-					throw std::runtime_error("Weight less or equal to zero");
-				}
-
-				// skip the </edge> closing tag and load the next edge tag
-				std::getline(file, line);
-				std::getline(file, line);
+				id1 = id1.substr(i);
+				break;
 			}
 		}
-		// if no weight data ID was given, assume all weights as 1
-		else
+
+		for (std::size_t i = 0; i < id2.size(); i++)
 		{
-			weight = 1;
+			if (id2[i] >= '0' && id2[i] <= '9')
+			{
+				id2 = id2.substr(i);
+			}
 		}
 
-		// input the connection into matrix
-		this->matrix[atoi(id1.c_str())][atoi(id2.c_str())] = static_cast<uint32_t>(weight);
+		// obtain weight
+		weight = 1;
 
-		// if graph is undirected, make the connection both ways
-		if (this->type == Type::undirected)
+		for (rapidxml::xml_node<>* key = edge->first_node("data"); key; key = key->next_sibling())
 		{
-			this->matrix[atoi(id2.c_str())][atoi(id1.c_str())] = static_cast<uint32_t>(weight);
+			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
+			{
+				weight = atoi(key->value());
+			}
 		}
+		index1 = static_cast<std::size_t>(atoi(id1.c_str()));
+		index2 = static_cast<std::size_t>(atoi(id2.c_str()));
+		
+		this->matrix[index1][index2] = weight;
 
-		// search for next edge marker
-		pos = line.find("edge");
-		if (pos == std::string::npos || line[pos - 1] == '/')
+		if (this->type == Type::undirected && id1 != id2)
 		{
-			std::getline(file, line);
+			this->matrix[index2][index1] = weight;
 		}
-		pos = line.find("edge");
 	}
+
 }
 
 
@@ -961,9 +888,6 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
  */
 void Graph::Matrix::calculate_degrees()
 {
-	std::size_t index1;
-	std::size_t index2;
-
 	// create the degrees table
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
@@ -971,16 +895,13 @@ void Graph::Matrix::calculate_degrees()
 	}
 
 	// iterate through the whole adjacency matrix to calculate degree of each node
-	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
+	for (std::size_t index1 = 0; auto row : this->matrix)
 	{
-		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
+		for (std::size_t index2 = 0; auto element : row)
 		{
 			// if connection was found, increase the degree
-			if (*itr2 != 0)
+			if (element != 0)
 			{
-				index1 = std::distance(this->matrix.begin(), itr);
-				index2 = std::distance(itr->begin(), itr2);
-
 				this->degrees[index1].out_deg++;
 				this->degrees[index2].in_deg++;
 
@@ -997,6 +918,8 @@ void Graph::Matrix::calculate_degrees()
 					}
 				}
 			}
+			index2++;
 		}
+		index1++;
 	}
 }

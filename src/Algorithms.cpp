@@ -10,21 +10,21 @@
  */
 void Graph::Roadmap::print()
 {
-	for (auto itr = this->distance.begin(); itr != this->distance.end(); itr++)
+	for (std::size_t index = 0; auto element : this->distance)
 	{
-		std::cout << "Distance: " << *itr << std::endl;
+		std::cout << "Distance: " << element << std::endl;
 		std::cout << "Prev node: ";
 
-		std::size_t index = std::distance(this->distance.begin(), itr);
-
-		for (auto itr2 = this->prev_node[index].begin(); itr2 != this->prev_node[index].end(); itr2++)
+		for (std::size_t index2 = 0; auto vertex : this->prev_node[index])
 		{
-			std::cout << *itr2;
-			if (std::distance(this->prev_node[index].begin(), itr2) < this->prev_node[index].size() - 1)
+			std::cout << vertex;
+			if (index2 < this->prev_node[index].size() - 1)
 			{
 				std::cout << " / ";
 			}
+			index2++;
 		}
+		index++;
 		std::cout << std::endl;
 	}
 }

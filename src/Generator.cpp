@@ -1,7 +1,33 @@
 #include "../inc/Generator.h"
+#include "../inc/Coord.h"
 
 #include <time.h>
 #include <iostream>
+#include <vector>
+
+/**
+ * Function generating a random graph in a list representation, of a given type.
+ * 
+ * \param stream Output stream to save generated list to
+ * \param vertex_amount Desired amount of vertices within the graph
+ * \param type Type of the graph from Graph::Type enum
+ */
+void Data::Generator::make_list(std::ostream& stream, uint32_t vertex_amount, Graph::Type type)
+{
+	std::vector<Data::coord> edges;
+
+	if (type == Graph::Type::undefined)
+	{
+		std::cerr << "Please select either directed or undirected graph type" << std::endl;
+	}
+	else
+	{
+
+	}
+}
+
+
+
 
 /**
  * \brief Function generating a random pixel map within given stream, with given length and width.
@@ -36,7 +62,7 @@ void Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint
 
 		if (i < length - 1)
 		{
-			stream << std::endl;
+			stream << '\n';
 		}
 	}
 }

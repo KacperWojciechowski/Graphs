@@ -27,7 +27,7 @@ void Graph::Examples::create_list_from_lst_file(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Choose either Graph::directed or Graph::undirected" << std::endl;
+		std::cerr << "Choose either Graph::directed or Graph::undirected" << std::endl;
 	}
 }
 
@@ -55,7 +55,7 @@ void Graph::Examples::create_list_from_graphml_file(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Choose either Graph::directed or Graph::undirected" << std::endl;
+		std::cerr << "Choose either Graph::directed or Graph::undirected" << std::endl;
 	}
 }
 
@@ -94,7 +94,7 @@ void Graph::Examples::save_list_to_graphml_file(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Choose either Graph::directed or Graph::undirected" << std::endl;
+		std::cerr << "Choose either Graph::directed or Graph::undirected" << std::endl;
 	}
 }
 
@@ -109,8 +109,6 @@ void Graph::Examples::save_list_to_graphml_file(Type graph_type)
 void Graph::Examples::add_edge_list(Type graph_type)
 {
 	std::unique_ptr<List> list;
-
-	std::cout << "This example adds an edge from 0 to 2, and overrides the edge from 0 to 1." << std::endl;
 
 	if (graph_type == Type::undirected)
 	{
@@ -132,7 +130,7 @@ void Graph::Examples::add_edge_list(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Choose either Graph::directed or Graph::undirected" << std::endl;
+		std::cerr << "Choose either Graph::directed or Graph::undirected" << std::endl;
 	}
 }
 
@@ -285,7 +283,7 @@ void Graph::Examples::create_matrix_from_mat_file(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Choose either directed or undirected graph type" << std::endl;
+		std::cerr << "Choose either directed or undirected graph type" << std::endl;
 	}
 
 }
@@ -314,7 +312,7 @@ void Graph::Examples::create_matrix_from_graphml_file(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Please select either directed or undirected Graph type" << std::endl;
+		std::cerr << "Please select either directed or undirected Graph type" << std::endl;
 	}
 }
 
@@ -341,7 +339,7 @@ void Graph::Examples::save_matrix_to_graphml_file(Type graph_type)
 		matrix->print();
 		matrix->save_graphml(file, "Graph");
 	
-		std::cout << "The graph structure has been saved to the \"saved_graphML.GRAPHML\" file in the samples library" << std::endl;
+		std::cerr << "The graph structure has been saved to the \"saved_graphML.GRAPHML\" file in the samples library" << std::endl;
 	}
 	else if (graph_type == Type::directed)
 	{
@@ -349,11 +347,11 @@ void Graph::Examples::save_matrix_to_graphml_file(Type graph_type)
 		matrix->print();
 		matrix->save_graphml(file, "Graph");
 
-		std::cout << "The graph structure has been saved to the \"saved_graphML.GRAPHML\" file in the samples library" << std::endl;
+		std::cerr << "The graph structure has been saved to the \"saved_graphML.GRAPHML\" file in the samples library" << std::endl;
 	}
 	else
 	{
-		std::cout << "Please select either directed or undirected Graph type" << std::endl;
+		std::cerr << "Please select either directed or undirected Graph type" << std::endl;
 	}
 }
 
@@ -389,7 +387,7 @@ void Graph::Examples::add_edge_matrix(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Please select either directed or undirected Graph type" << std::endl;
+		std::cerr << "Please select either directed or undirected Graph type" << std::endl;
 	}
 }
 
@@ -421,7 +419,7 @@ void Graph::Examples::add_node_matrix(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Please select either directed or undirected Graph type" << std::endl;
+		std::cerr << "Please select either directed or undirected Graph type" << std::endl;
 	}
 }
 
@@ -453,7 +451,7 @@ void Graph::Examples::remove_edge_matrix(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Please select either directed or undirected Graph type" << std::endl;
+		std::cerr << "Please select either directed or undirected Graph type" << std::endl;
 	}
 }
 
@@ -485,6 +483,6 @@ void Graph::Examples::remove_node_matrix(Type graph_type)
 	}
 	else
 	{
-		std::cout << "Please select either directed or undirected Graph type" << std::endl;
+		std::cerr << "Please select either directed or undirected Graph type" << std::endl;
 	}
 }

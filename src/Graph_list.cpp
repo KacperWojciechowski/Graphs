@@ -736,18 +736,18 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 {
 	// header
 	stream << "<?xml version=\"1.0\"";
-	stream << " encoding=\"UTF-8\"?>" << std::endl;
+	stream << " encoding=\"UTF-8\"?>\n";
 
 	// xml schema
 	stream << "<graphml xmlns=";
-	stream << "\"http://graphml.graphdrawing.org/xmlns\"" << std::endl;
-	stream << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" << std::endl;
-	stream << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns" << std::endl;
-	stream << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">" << std::endl;
+	stream << "\"http://graphml.graphdrawing.org/xmlns\"\n";
+	stream << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+	stream << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns\n";
+	stream << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n";
 
 	// weight data info
-	stream << "\t<key id=\"d0\" for=\"edge\"" << std::endl;
-	stream << "\t\tattr.name=\"weight\" attr.type=\"integer\"/>" << std::endl;
+	stream << "\t<key id=\"d0\" for=\"edge\"\n";
+	stream << "\t\tattr.name=\"weight\" attr.type=\"integer\"/>\n";
 
 	// graph type data
 	stream << "\t<graph id=";
@@ -756,10 +756,10 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 	switch (this->type)
 	{
 	case Type::directed:
-		stream << "\"directed\">" << std::endl;
+		stream << "\"directed\">\n";
 		break;
 	case Type::undirected:
-		stream << "\"undirected\">" << std::endl;
+		stream << "\"undirected\">\n";
 		break;
 		// in case of undefined type, directed type is assumed
 	case Type::undefined:
@@ -771,7 +771,7 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 	for (std::size_t i = 0; i < this->list.size(); i++)
 	{
 		stream << "\t\t<node id=\"n" << i;
-		stream << "\"/>" << std::endl;
+		stream << "\"/>\n";
 	}
 
 	// edge data including weight
@@ -785,13 +785,13 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 			}
 			stream << "\t\t<edge source=\"n" << i;
 			stream << "\" target=\"n" << itr->ID;
-			stream << "\">" << std::endl;
-			stream << "\t\t\t<data key=\"d0\">" + std::to_string(itr->weight) + "</data>" << std::endl;
-			stream << "\t\t</edge>" << std::endl;
+			stream << "\">\n";
+			stream << "\t\t\t<data key=\"d0\">" + std::to_string(itr->weight) + "</data>\n";
+			stream << "\t\t</edge>\n";
 		}
 	}
 
 	// close the tags and the file
-	stream << "\t</graph>" << std::endl;
+	stream << "\t</graph>\n";
 	stream << "</graphml>";
 }

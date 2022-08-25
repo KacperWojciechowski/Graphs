@@ -549,8 +549,6 @@ void Graph::List::print()
 
 	std::cout << "{" << std::endl;
 
-	std::size_t index;
-
 	for (std::size_t index = 0; auto element : this->list)
 	{
 		// display degrees

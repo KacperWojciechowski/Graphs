@@ -15,13 +15,14 @@ void Graph::Roadmap::print()
 		std::cout << "Distance: " << element << std::endl;
 		std::cout << "Prev node: ";
 
-		for (auto itr2 = this->prev_node[index].begin(); itr2 != this->prev_node[index].end(); itr2++)
+		for (std::size_t index2 = 0; auto vertex : this->prev_node[index])
 		{
-			std::cout << *itr2;
-			if (std::distance(this->prev_node[index].begin(), itr2) < this->prev_node[index].size() - 1)
+			std::cout << vertex;
+			if (index2 < this->prev_node[index].size() - 1)
 			{
 				std::cout << " / ";
 			}
+			index2++;
 		}
 		index++;
 		std::cout << std::endl;

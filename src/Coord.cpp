@@ -21,13 +21,14 @@ std::size_t Data::find_index(std::vector<Data::coord>& nodes, Data::coord _coord
 	std::size_t ret = std::numeric_limits<std::size_t>::max();
 
 	// search for the index
-	for (auto itr = nodes.begin(); itr != nodes.end(); itr++)
+	for (std::size_t index = 0; auto element : nodes)
 	{
-		if (itr->x == _coord.x && itr->y == _coord.y)
+		if (element.x == _coord.x && element.y == _coord.y)
 		{
-			ret = std::distance(nodes.begin(), itr);
+			ret = index;
 			break;
 		}
+		index++;
 	}
 
 	// return found index

@@ -157,21 +157,22 @@ void Graph::Matrix::print()
 	// display adjacency matrix
 	std::cout << "[" << std::endl;
 
-	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
+	for (std::size_t index = 0; auto row : this->matrix)
 	{
-		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
+		for (auto itr2 = row.begin(); itr2 != row.end(); itr2++)
 		{
 			std::cout << std::setw(3) << std::right << *itr2 << ", ";
 		}
 		if (this->type == Type::undirected)
 		{
-			std::cout << "  degree: " << this->degrees[std::distance(this->matrix.begin(), itr)].deg << std::endl;
+			std::cout << "  degree: " << this->degrees[index].deg << std::endl;
 		}
 		else
 		{
-			std::cout << "  degrees: (in|out) " << this->degrees[std::distance(this->matrix.begin(), itr)].in_deg
-				<< " | " << this->degrees[std::distance(this->matrix.begin(), itr)].out_deg << std::endl;
+			std::cout << "  degrees: (in|out) " << this->degrees[index].in_deg
+				<< " | " << this->degrees[index].out_deg << std::endl;
 		}
+		index++;
 	}
 
 	std::cout << "]" << std::endl;
@@ -942,16 +943,13 @@ void Graph::Matrix::calculate_degrees()
 	}
 
 	// iterate through the whole adjacency matrix to calculate degree of each node
-	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
+	for (std::size_t index1 = 0; auto row : this->matrix)
 	{
-		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
+		for (std::size_t index2 = 0; auto element : row)
 		{
 			// if connection was found, increase the degree
-			if (*itr2 != 0)
+			if (element != 0)
 			{
-				index1 = std::distance(this->matrix.begin(), itr);
-				index2 = std::distance(itr->begin(), itr2);
-
 				this->degrees[index1].out_deg++;
 				this->degrees[index2].in_deg++;
 
@@ -968,6 +966,8 @@ void Graph::Matrix::calculate_degrees()
 					}
 				}
 			}
+			index2++;
 		}
+		index1++;
 	}
 }

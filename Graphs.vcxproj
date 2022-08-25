@@ -116,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,6 +150,7 @@
     <ClInclude Include="inc\PixelMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Algorithms.cpp" />
     <ClCompile Include="src\Coord.cpp" />
     <ClCompile Include="src\Examples.cpp" />
     <ClCompile Include="src\Graph_list.cpp" />

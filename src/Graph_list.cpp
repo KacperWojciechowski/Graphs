@@ -549,12 +549,8 @@ void Graph::List::print()
 
 	std::cout << "{" << std::endl;
 
-	std::size_t index;
-
-	for (auto itr = this->list.begin(); itr != this->list.end(); itr++)
+	for (std::size_t index = 0; auto element : this->list)
 	{
-		index = std::distance(this->list.begin(), itr);
-
 		// display degrees
 		if (this->type == Type::undirected)
 		{
@@ -567,10 +563,11 @@ void Graph::List::print()
 
 		std::cout << ",    " << index << ": ";
 
-		for (auto itr2 = itr->begin(); itr2 != itr->end(); itr2++)
+		for (auto itr2 = element.begin(); itr2 != element.end(); itr2++)
 		{
 			std::cout << itr2->ID << " {" << itr2->weight << "}, ";
 		}
+		index++;
 		std::cout << std::endl;
 	}
 

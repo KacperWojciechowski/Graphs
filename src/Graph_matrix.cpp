@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 
+#include "../lib/rapidxml/rapidxml.hpp"
 #include "../inc/Coord.h"
 
 /**
@@ -764,48 +765,37 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
  */
 void Graph::Matrix::load_graphml_file(std::fstream& file)
 {
-	std::string line;
-	std::string line2;
+	// create the document and nodes instances
+	auto document = std::make_unique< rapidxml::xml_document<>>();
 
-	// set the default position of graph ID
-	std::size_t pos = std::string::npos;
-	std::size_t pos2 = std::string::npos;
+	// split the document into vector
+	std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	buffer.push_back('\0');
 
-	std::string weight_id;
+	// parse the document
+	document->parse<0>(&buffer[0]);
 
-	// search for graph ID and weight marker ID
-	while (pos == std::string::npos)
+	// save the root node and key node
+	auto root_node = document->first_node("graphml");
+	auto weight_node = root_node->first_node("key");
+	auto graph_node = root_node->first_node("graph");
+
+	std::string weight_key = "";
+
+	// acquire the weight key
+	while (weight_node && strcmp(weight_node->first_attribute("attr.name")->value(), "weight") != 0)
 	{
-		std::getline(file, line);
-		line2 = line;
-		// search for the key marker
-		pos = line.find("key");
-		if (pos != std::string::npos)
-		{
-			// search for the weight keyword
-			pos2 = line.find("weight");
-			// if the keyword was not found, check the next line
-			if (pos2 == std::string::npos)
-			{
-				std::getline(file, line2);
-				pos2 = line2.find("weight");
-			}
-			// if the keyword was found, save the ID, else skip
-			if (pos2 != std::string::npos)
-			{
-				weight_id = line.substr(pos + 8, 2);
-			}
-		}
-		pos = line2.find("graph id=");
+		weight_node = weight_node->next_sibling("key");
 	}
 
-	// search for the edge type
-	pos2 = line.find("edgedefault=");
+	if (weight_node)
+	{
+		weight_key = weight_node->first_attribute("id")->value();
+	}
 
-	// search for the end of the marker and save graph type
-	pos = line.find("\">");
-	std::string type = line.substr(pos2 + 13, pos - (pos2 + 13));
-	
+	// parse the graph type
+	std::string type = graph_node->first_attribute("edgedefault")->value();
+
 	if (type == "undirected")
 	{
 		this->type = Type::undirected;
@@ -819,107 +809,72 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 		this->type = Type::undefined;
 	}
 
-	// search for vertices count
-	std::getline(file, line);
-	pos = line.find("node");
-
-	std::size_t vertices = 0;
-
-	while (pos != std::string::npos)
+	// obtain vertices count
+	for (rapidxml::xml_node<>* vertex = graph_node->first_node("node"); vertex; vertex = vertex->next_sibling("node"))
 	{
-		vertices++;
-		std::getline(file, line);
-		pos = line.find("node");
+		this->matrix.push_back({});
 	}
 
-	// create adjacency matrix and fill it with zeros
-	std::vector<uint32_t> v;
-
-	for (std::size_t j = 0; j < vertices; j++)
+	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
 	{
-		v.push_back(0);
+		for (std::size_t i = 0; i < this->matrix.size(); i++)
+		{
+			itr->push_back(0);
+		}
 	}
 
-	for (std::size_t i = 0; i < vertices; i++)
-	{
-		this->matrix.push_back(v);
-	}
-
-	// find the edge marker
-	pos = line.find("edge");
-
+	// obtain edges
 	std::string id1;
 	std::string id2;
+	uint32_t weight;
 
-	int32_t weight;
-	std::string weight_str;
+	std::size_t index1, index2;
 
-	// extract edge info
-	while (pos != std::string::npos)
+	for (rapidxml::xml_node<>* edge = graph_node->first_node("edge"); edge; edge = edge->next_sibling("edge"))
 	{
-		// find and extract the source and target nodes IDs
-		pos = line.find("source=");
-		pos2 = line.find("\" target=");
+		// get the IDs
+		id1 = edge->first_attribute("source")->value();
+		id2 = edge->first_attribute("target")->value();
 
-		id1 = line.substr(pos + 9, pos2 - (pos + 9));
-		pos = line.find("\">");
-		id2 = line.substr(pos2 + 11, pos - (pos2 + 11));
-
-		// if the weight is specified, look for it
-		if (!weight_id.empty())
+		// stip any letters at the beginning of IDs
+		for (std::size_t i = 0; i < id1.size(); i++)
 		{
-			pos = line.find("data");
-			pos2 = line.find(weight_id);
-			// search this and next line for the right data tag
-			do {
-				std::getline(file, line);
-				pos = line.find("data");
-				pos2 = line.find(weight_id);
-			} while (pos != std::string::npos && pos2 == std::string::npos);
-
-			// if data tags ended, assume the weight as 1
-			if (pos == std::string::npos)
+			if (id1[i] >= '0' && id1[i] <= '9')
 			{
-				weight = 1;
-			}
-			// else extract the right weight
-			else
-			{
-				pos = line.find("<", pos2);
-				weight = atoi(line.substr(pos2 + 4, pos - (pos2 + 4)).c_str());
-				if (weight <= 0)
-				{
-					throw std::runtime_error("Weight less or equal to zero");
-				}
-
-				// skip the </edge> closing tag and load the next edge tag
-				std::getline(file, line);
-				std::getline(file, line);
+				id1 = id1.substr(i);
+				break;
 			}
 		}
-		// if no weight data ID was given, assume all weights as 1
-		else
+
+		for (std::size_t i = 0; i < id2.size(); i++)
 		{
-			weight = 1;
+			if (id2[i] >= '0' && id2[i] <= '9')
+			{
+				id2 = id2.substr(i);
+			}
 		}
 
-		// input the connection into matrix
-		this->matrix[atoi(id1.c_str())][atoi(id2.c_str())] = static_cast<uint32_t>(weight);
+		// obtain weight
+		weight = 1;
 
-		// if graph is undirected, make the connection both ways
-		if (this->type == Type::undirected)
+		for (rapidxml::xml_node<>* key = edge->first_node("data"); key; key = key->next_sibling())
 		{
-			this->matrix[atoi(id2.c_str())][atoi(id1.c_str())] = static_cast<uint32_t>(weight);
+			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
+			{
+				weight = atoi(key->value());
+			}
 		}
+		index1 = static_cast<std::size_t>(atoi(id1.c_str()));
+		index2 = static_cast<std::size_t>(atoi(id2.c_str()));
+		
+		this->matrix[index1][index2] = weight;
 
-		// search for next edge marker
-		pos = line.find("edge");
-		if (pos == std::string::npos || line[pos - 1] == '/')
+		if (this->type == Type::undirected && id1 != id2)
 		{
-			std::getline(file, line);
+			this->matrix[index2][index1] = weight;
 		}
-		pos = line.find("edge");
 	}
+
 }
 
 
@@ -933,9 +888,6 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
  */
 void Graph::Matrix::calculate_degrees()
 {
-	std::size_t index1;
-	std::size_t index2;
-
 	// create the degrees table
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{

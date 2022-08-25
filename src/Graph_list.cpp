@@ -164,158 +164,6 @@ void Graph::List::load_lst_file(std::fstream& file)
  */
 void Graph::List::load_graphml_file(std::fstream& file)
 {
-	/*std::string line;
-	std::string line2;
-
-	// set the default position of graph ID
-	std::size_t pos = std::string::npos;
-	std::size_t pos2 = std::string::npos;
-
-	std::string weight_id;
-
-	// search for graph ID and weight marker ID
-	while (pos == std::string::npos)
-	{
-		std::getline(file, line);
-		line2 = line;
-		// search for the key marker
-		pos = line.find("key");
-		if (pos != std::string::npos)
-		{
-			// search for the weight keyword
-			pos2 = line.find("weight");
-			// if the keyword was not found, check the next line
-			if (pos2 == std::string::npos)
-			{
-				std::getline(file, line2);
-				pos2 = line2.find("weight");
-			}
-			// if the keyword was found, save the ID, else skip
-			if (pos2 != std::string::npos)
-			{
-				weight_id = line.substr(pos + 8, 2);
-			}
-		}
-		pos = line2.find("graph id=");
-	}
-
-	// search for the edge type
-	pos2 = line.find("edgedefault=");
-
-	// search for the end of the marker and save graph type
-	pos = line.find("\">");
-	std::string type = line.substr(pos2 + 13, pos - (pos2 + 13));
-
-	if (type == "undirected")
-	{
-		this->type = Type::undirected;
-	}
-	else if (type == "directed")
-	{
-		this->type = Type::directed;
-	}
-	else
-	{
-		this->type = Type::undefined;
-	}
-
-	// search for vertices count
-	std::getline(file, line);
-	pos = line.find("node");
-
-	std::size_t vertices = 0;
-
-	while (pos != std::string::npos)
-	{
-		vertices++;
-		std::getline(file, line);
-		pos = line.find("node");
-	}
-
-	// create empty adjacency list
-
-	for (std::size_t i = 0; i < vertices; i++)
-	{
-		this->list.push_back({});
-	}
-	
-	// find the edge marker
-	pos = line.find("edge");
-
-	std::string id1;
-	std::string id2;
-
-	int32_t weight;
-	std::string weight_str;
-
-	// extract edge info
-	while (pos != std::string::npos)
-	{
-		// find and extract the source and target nodes IDs
-		pos = line.find("source=");
-		pos2 = line.find("\" target=");
-
-		id1 = line.substr(pos + 9, pos2 - (pos + 9));
-		pos = line.find("\">");
-		id2 = line.substr(pos2 + 11, pos - (pos2 + 11));
-
-		// if the weight is specified, look for it
-		if (!weight_id.empty())
-		{
-			pos = line.find("data");
-			pos2 = line.find(weight_id);
-			// search this and next line for the right data tag
-			do {
-				std::getline(file, line);
-				pos = line.find("data");
-				pos2 = line.find(weight_id);
-			} while (pos != std::string::npos && pos2 == std::string::npos);
-
-			// if data tags ended, assume the weight as 1
-			if (pos == std::string::npos)
-			{
-				weight = 1;
-			}
-			// else extract the right weight
-			else
-			{
-				pos = line.find("<", pos2);
-				weight = atoi(line.substr(pos2 + 4, pos - (pos2 + 4)).c_str());
-
-				if (weight <= 0)
-				{
-					throw std::runtime_error("Weight less or equal to zero");
-				}
-
-				// skip the </edge> closing tag and load the next edge tag
-				std::getline(file, line);
-				std::getline(file, line);
-			}
-		}
-		// if no weight data ID was given, assume all weights as 1
-		else
-		{
-			weight = 1;
-		}
-
-		// input the connection into the list
-		this->list[atoi(id1.c_str())].push_back({ static_cast<std::size_t>(atoi(id2.c_str())), static_cast<uint32_t>(weight) });
-
-		// if graph is undirected, make the connection both ways
-		if (this->type == Type::undirected && id1 != id2)
-		{
-			this->list[atoi(id2.c_str())].push_back({ static_cast<std::size_t>(atoi(id1.c_str())), static_cast<uint32_t>(weight) });
-		}
-
-		// search for next edge marker
-		pos = line.find("edge");
-		if (pos == std::string::npos || line[pos - 1] == '/')
-		{
-			std::getline(file, line);
-		}
-		pos = line.find("edge");
-	}*/
-
 	// create the document and nodes instances
 	auto document = std::make_unique< rapidxml::xml_document<>>();
 
@@ -371,6 +219,8 @@ void Graph::List::load_graphml_file(std::fstream& file)
 	std::string id2;
 	uint32_t weight;
 
+	std::size_t index1, index2;
+
 	for (rapidxml::xml_node<>* edge = graph_node->first_node("edge"); edge; edge = edge->next_sibling("edge"))
 	{
 		// get the IDs
@@ -406,11 +256,14 @@ void Graph::List::load_graphml_file(std::fstream& file)
 			}
 		}
 
-		this->list[static_cast<std::size_t>(atoi(id1.c_str()))].push_back({static_cast<std::size_t>(atoi(id2.c_str())), weight});
+		index1 = static_cast<std::size_t>(atoi(id1.c_str()));
+		index2 = static_cast<std::size_t>(atoi(id2.c_str()));
+
+		this->list[index1].push_back({ index2, weight});
 
 		if (this->type == Type::undirected && id1 != id2)
 		{
-			this->list[static_cast<std::size_t>(atoi(id2.c_str()))].push_back({ static_cast<std::size_t>(atoi(id1.c_str())), weight });
+			this->list[index2].push_back({ index1, weight });
 		}
 	}
 }

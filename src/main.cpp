@@ -1,11 +1,14 @@
 #include "../inc/Graph_matrix.h"
 #include "../inc/Examples.h"
 #include "../inc/Graph_list.h"
+#include "../inc/Generator.h"
 
 using namespace Graph;
 
 int main()
 {
-	Examples::create_matrix_from_graphml_file(Type::undirected);
+	Examples::generate_pixel_map_file();
+	
+	
 	return 0;
 }

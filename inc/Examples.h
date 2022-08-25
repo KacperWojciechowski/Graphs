@@ -27,5 +27,9 @@ namespace Graph
 		static void add_node_list(Type graph_type);						// checked
 		static void remove_edge_list(Type graph_type);					// checked
 		static void remove_node_list(Type graph_type);					// checked
+
+		/* Generator examples */
+		static void generate_pixel_map_file();							// checked
+		static void generate_pixel_map_cout();							// checked
 	};
 }

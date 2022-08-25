@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <map>
 #include <vector>
+#include <iostream>
 
 namespace Graph
 {

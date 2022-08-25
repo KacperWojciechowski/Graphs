@@ -2,6 +2,7 @@
 
 #include "..\inc\Graph_matrix.h"
 #include "..\inc\Graph_list.h"
+#include "..\inc\Generator.h"
 
 #include <memory>
 
@@ -229,6 +230,35 @@ void Graph::Examples::remove_node_list(Type graph_type)
 	{
 		std::cout << "Choose either Graph::directed or Graph::undirected" << std::endl;
 	}
+}
+
+
+
+
+/**
+ * Example of generating a file containing a randomized pixel map.
+ * 
+ * Calling this function results in creating a "pixel_map.txt" file in the samples directory.
+ */
+void Graph::Examples::generate_pixel_map_file()
+{
+	Data::Generator gen;
+	std::ofstream file("samples\\pixel_map.txt");
+	gen.make_pixel_map(file, 5, 10);
+}
+
+
+
+
+/**
+ * Example of creating a randomized pixel map and outputing the result on an output stream other than file.
+ * In this case, std::cout output stream was used.
+ * 
+ */
+void Graph::Examples::generate_pixel_map_cout()
+{
+	Data::Generator gen;
+	gen.make_pixel_map(std::cout, 5, 10);
 }
 
 

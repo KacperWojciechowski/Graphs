@@ -18,7 +18,7 @@ void Data::Generator::make_list(std::ostream& stream, uint32_t vertex_amount, Gr
 
 	if (type == Graph::Type::undefined)
 	{
-		std::cerr << "Please select either directed or undirected graph type" << std::endl;
+		std::cerr << "Please select either directed or undirected graph type\n";
 	}
 	else
 	{

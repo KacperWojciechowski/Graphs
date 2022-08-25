@@ -20,6 +20,8 @@
  *			  contain weights, so a weight of 1 is assumed for each connection if using
  *			  this file format as a data source. 
  * \see House of Graphs for .lst adjacency list file reference.
+ * 
+ * \ref create_list_from_lst_file.cpp "Example of using .lst file as data source"
  */
 Graph::List::List(std::string file_path, Type type)
 	: type(type)

@@ -105,6 +105,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d33/class_graph_1_1_algorithms.html">Algorithms</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual class providing the algorithmic interface.  <a href="../../dd/d33/class_graph_1_1_algorithms.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html">Degree</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure containing the degree information of given vertex.  <a href="../../d2/d9f/struct_graph_1_1_degree.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/class_graph_1_1_examples.html">Examples</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class containing various examples in form of static functions.  <a href="../../de/d21/class_graph_1_1_examples.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,8 +120,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de1/class_graph_1_1_matrix.html">Matrix</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This class provides an adjacency matrix graph representation.  <a href="../../dc/de1/class_graph_1_1_matrix.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d67/struct_graph_1_1_roadmap.html">Roadmap</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for path-searching algorithms.  <a href="../../d4/d67/struct_graph_1_1_roadmap.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dd6/class_graph_1_1_roadmap.html">Roadmap</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for storing data from path-searching algorithms.  <a href="../../d3/dd6/class_graph_1_1_roadmap.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
@@ -153,11 +156,12 @@ Enumerations</h2></td></tr>
 
 <p>Enum class stating the type of the graph. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa4b8785265efefb668f2931c8f18c8e0abc26cd8237a1f32814d687d6745880db" name="aa4b8785265efefb668f2931c8f18c8e0abc26cd8237a1f32814d687d6745880db"></a>undirected&#160;</td><td class="fielddoc"><p >The graph is undirected, which means that the weights of the connections are automatically mirrored </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa4b8785265efefb668f2931c8f18c8e0abc26cd8237a1f32814d687d6745880db" name="aa4b8785265efefb668f2931c8f18c8e0abc26cd8237a1f32814d687d6745880db"></a>undirected&#160;</td><td class="fielddoc"><p >The graph is undirected, which means that the weights of the connections are automatically mirrored. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa4b8785265efefb668f2931c8f18c8e0a42e55a2462c0d3774dba7cba6835ff52" name="aa4b8785265efefb668f2931c8f18c8e0a42e55a2462c0d3774dba7cba6835ff52"></a>directed&#160;</td><td class="fielddoc"><p >The graph is directed, which means that the weights are not automatically mirrored </p>
+<tr><td class="fieldname"><a id="aa4b8785265efefb668f2931c8f18c8e0a42e55a2462c0d3774dba7cba6835ff52" name="aa4b8785265efefb668f2931c8f18c8e0a42e55a2462c0d3774dba7cba6835ff52"></a>directed&#160;</td><td class="fielddoc"><p >The graph is directed, which means that the weights are not automatically mirrored. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa4b8785265efefb668f2931c8f18c8e0a5e543256c480ac577d30f76f9120eb74" name="aa4b8785265efefb668f2931c8f18c8e0a5e543256c480ac577d30f76f9120eb74"></a>undefined&#160;</td><td class="fielddoc"><p >The graph type is undefined. In majority of cases, operations on such graph are either incorrect, or the graph type is assumed as directed </p>
+<tr><td class="fieldname"><a id="aa4b8785265efefb668f2931c8f18c8e0a5e543256c480ac577d30f76f9120eb74" name="aa4b8785265efefb668f2931c8f18c8e0a5e543256c480ac577d30f76f9120eb74"></a>undefined&#160;</td><td class="fielddoc"><p >The graph type is undefined. </p>
+<p >In majority of cases, operations on such graph are either incorrect, or the graph type is assumed as directed </p>
 </td></tr>
 </table>
 

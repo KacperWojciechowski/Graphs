@@ -20,7 +20,7 @@ namespace Graph
 		static void remove_node_matrix(Type graph_type);				// checked
 
 		/* List examples */
-		static void create_list_from_lst_file(Type graph_type);			// checked
+		static void create_list_from_lst_file(Type graph_type);
 		static void create_list_from_graphml_file(Type graph_type);		// checked
 		static void save_list_to_graphml_file(Type graph_type);			// checked
 		static void add_edge_list(Type graph_type);						// checked

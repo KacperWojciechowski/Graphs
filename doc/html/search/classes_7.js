@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['roadmap_0',['Roadmap',['../d4/d67/struct_graph_1_1_roadmap.html',1,'Graph']]]
+  ['node_0',['Node',['../d6/d87/struct_graph_1_1_list_1_1_node.html',1,'Graph::List']]]
 ];

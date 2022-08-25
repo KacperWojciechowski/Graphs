@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['main_0',['main',['../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main.cpp']]],
-  ['main_2ecpp_1',['main.cpp',['../df/d0a/main_8cpp.html',1,'']]],
-  ['make_5flist_2',['make_list',['../d6/d50/class_data_1_1_generator.html#a42766a88c5289f7300335063cc488598',1,'Data::Generator']]],
-  ['make_5fpixel_5fmap_3',['make_pixel_map',['../d6/d50/class_data_1_1_generator.html#a1e229182fec568afa2a37ddd6c95a49c',1,'Data::Generator']]],
-  ['make_5fthroughtput_5fmatrix_4',['make_throughtput_matrix',['../d6/d50/class_data_1_1_generator.html#a08f1ce8da9a9c79393868a2430006d11',1,'Data::Generator']]],
-  ['make_5fweighted_5fmatrix_5',['make_weighted_matrix',['../d6/d50/class_data_1_1_generator.html#a72499601ed1ce577bf3c3dcd00e0860b',1,'Data::Generator']]],
-  ['matrix_6',['Matrix',['../dc/de1/class_graph_1_1_matrix.html',1,'Graph::Matrix'],['../dc/de1/class_graph_1_1_matrix.html#a0b33f8ee83b683a46cb39e5eb0761771',1,'Graph::Matrix::Matrix(std::string file_path, std::string name, Type type)'],['../dc/de1/class_graph_1_1_matrix.html#ae8ee1620bf1c7a468569c94e7a41d6f4',1,'Graph::Matrix::Matrix(std::vector&lt; std::vector&lt; uint32_t &gt; &gt; &amp;mat, std::string name, Type type)'],['../dc/de1/class_graph_1_1_matrix.html#a90f6a138050588337b37c494dae7dc6d',1,'Graph::Matrix::Matrix(Matrix &amp;m)'],['../dc/de1/class_graph_1_1_matrix.html#a3ca91a0f18813b6cf0a8cbec8f118e76',1,'Graph::Matrix::Matrix(Matrix &amp;&amp;m) noexcept']]]
+  ['lf_5fcoloring_0',['lf_coloring',['../dd/d33/class_graph_1_1_algorithms.html#aaf4d052c3c1823d7547e105dc415c1c2',1,'Graph::Algorithms']]],
+  ['list_1',['List',['../d6/de9/class_graph_1_1_list.html',1,'Graph']]],
+  ['list_2',['list',['../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b',1,'Graph::List']]],
+  ['list_3',['List',['../d6/de9/class_graph_1_1_list.html#a0763a04f4986dac2f8f61550a65e4cd5',1,'Graph::List::List(std::string file_path, Type type)'],['../d6/de9/class_graph_1_1_list.html#a958cdfd61ab7e34c31e00f1a85fc079f',1,'Graph::List::List(Matrix &amp;matrix)'],['../d6/de9/class_graph_1_1_list.html#a2dfc34ec8280d8d10ba0091caec245e1',1,'Graph::List::List(Data::PixelMap &amp;map)'],['../d6/de9/class_graph_1_1_list.html#ae7ca493d4e85ac472251314ca962c4e6',1,'Graph::List::List(List &amp;l)'],['../d6/de9/class_graph_1_1_list.html#a90f4f1bebe6c7973ef317229b82d1f8a',1,'Graph::List::List(List &amp;&amp;l) noexcept']]],
+  ['load_5fgraphml_5ffile_4',['load_graphml_file',['../d6/d4f/class_graph_1_1_graph.html#aa81c7010bfa5634ba029577d4797e87e',1,'Graph::Graph::load_graphml_file()'],['../d6/de9/class_graph_1_1_list.html#a849f725f7a29aabd2fb049c7cfe7dddf',1,'Graph::List::load_graphml_file()'],['../dc/de1/class_graph_1_1_matrix.html#ae90db249b764afdbfdbd2fe0fec5b608',1,'Graph::Matrix::load_graphml_file()']]],
+  ['load_5flst_5ffile_5',['load_lst_file',['../d6/de9/class_graph_1_1_list.html#ad0bec7ee5bed87a60b0b5bf6503488f8',1,'Graph::List']]],
+  ['load_5fmat_5ffile_6',['load_mat_file',['../dc/de1/class_graph_1_1_matrix.html#abe32bda2c4dc0dd829595ee6ef21290c',1,'Graph::Matrix']]],
+  ['load_5fthroughtput_7',['load_throughtput',['../dc/de1/class_graph_1_1_matrix.html#a6ee30501dc9ceb4042f6479449408512',1,'Graph::Matrix']]]
 ];

@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "../inc/Graph.h"
+
 namespace Data
 {
 	/**
@@ -9,19 +11,19 @@ namespace Data
 	 * 
 	 * This class offers to generate such data sources as random weighted adjacency matrix,
 	 * random adjacency list, random throughtput matrix, and random pixel map. All generated 
-	 * data is saved in form of plain-text files with various extensions.
+	 * data is saved within given output stream (such as a file output stream).
 	 */
 	class Generator
 	{
 	public:
 		// matrix graph generation
-		void make_weighted_matrix(std::string output_file_path, uint32_t vertex_amount);
-		void make_throughtput_matrix(std::string graph_file_path, std::string output_file_path);
+		void make_weighted_matrix(std::ostream& stream, uint32_t vertex_amount, Graph::Type type);
+		void make_throughtput_matrix(std::ostream& stream, std::string output_file_path, Graph::Type type);
 
 		// list graph generation
-		void make_list(std::string output_file_path, uint32_t vertex_amount);
+		void make_list(std::ostream& stream, uint32_t vertex_amount, Graph::Type type);
 
 		// pixel map generationd
-		void make_pixel_map(std::string output_file_path, uint32_t length, uint32_t width);
+		void make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width);
 	};
 }

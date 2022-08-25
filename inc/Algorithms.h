@@ -48,40 +48,57 @@ namespace Graph
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the greedy algorithm rules.
 		 * 
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime. This value is also passed to the core coloring function.
+		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
+		 *					False by default.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual int32_t greedy_coloring(bool log) = 0;
+		virtual int32_t greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr) = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the LF algorithm rules. 
 		 * 
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime. This value is also passed to the core coloring function.
+		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
+		 *					False by default.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual int32_t lf_coloring(bool log) = 0;
+		virtual int32_t lf_coloring(bool permutate = false, std::ostream* log_stream = nullptr) = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the SL algorithm rules.
 		 * 
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime. This value is also passed to the core coloring function.
+		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
+		 *					False by default.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual int32_t sl_coloring(bool log) = 0;
+		virtual int32_t sl_coloring(bool permutate = false, std::ostream* log_stream = nullptr) = 0;
 
 		/**
 		 * Common definition of the function providing the Belman-Ford path-searching algorithm implementation.
 		 * 
-		 * \param start_vertex Numer of vertex (starting from 0) from which the search for paths to all other
+		 * \param start ID of the vertex (starting from 0) from which the search for paths to all other
 		 * vertices should begin.
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime.
+		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
+		 *					False by default.
 		 * \return Data::Roadmap structure containing all necessary informations regarding the found paths.
 		 */
-		virtual Roadmap belman_ford(std::size_t start_vertex, bool log) = 0;
+		virtual Roadmap belman_ford_point_to_all(std::size_t start, std::ostream* log_stream = nullptr) = 0;
+
+		/**
+		 * Common definition of the function providing the Belman-Ford path-searching algorithm, with extraction of point-to-point path.
+		 * 
+		 * \param start ID of the vertex (starting from 0) from which to search for path to the destination vertex  
+		 * \param destination ID of the destination vertex
+		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
+		 *					False by default.
+		 * \return 
+		 */
+		virtual std::vector<std::size_t> belman_ford_point_to_point(std::size_t start, std::size_t destination, std::ostream* log_stream = nullptr) = 0;
 
 	protected:
 
@@ -93,10 +110,10 @@ namespace Graph
 		 * (once provided the right order of vertices according to their own rules).
 		 * 
 		 * \param m Map containing the created ordering of vertices.
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime.
+		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
+		 *					False by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual int32_t greedy_coloring_core(std::map<int, int>& m, bool log) = 0;
+		virtual int32_t greedy_coloring_core(std::map<int, int>& m, std::ostream* log_stream = nullptr) = 0;
 	};
 }

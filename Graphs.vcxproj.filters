@@ -47,9 +47,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="src\Examples.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graph_matrix.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>

@@ -58,7 +58,7 @@ namespace Graph
 		 */
 		struct Node
 		{
-			std::size_t ID; /**< Adjacent vertex ID */
+			std::size_t ID;  /**< Adjacent vertex ID */
 			uint32_t weight; /**< Weight of the connection */
 		};
 
@@ -67,12 +67,13 @@ namespace Graph
 		void load_graphml_file(std::fstream& file);
 		void calculate_degrees();
 
-		/* Objects containing the graph */
-		std::vector<std::list<Node>> list;
-		std::vector<Degree> degrees;
+		/* Objects containing the graph information */
 
-		/* Graph type information */
-		Type type;
+		std::vector<std::list<Node>> list; /**< List structure of the graph. Consists of the std::vector 
+												containing std::lists of neighbour vertices for a given vertex. */
+		std::vector<Degree> degrees;	   /**< Vector containing degrees of each vertex. Degrees are stored within the Graph::Degree
+												structure, and the type field decides which fields of the structure should be used. */
+		Type type;						   /**< Enum signifying the type of the graph */
 	};
 }
 

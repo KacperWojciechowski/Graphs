@@ -6,9 +6,7 @@ var searchData=
   ['coord_2ecpp_3',['Coord.cpp',['../d6/da6/_coord_8cpp.html',1,'']]],
   ['coord_2eh_4',['Coord.h',['../de/d99/_coord_8h.html',1,'']]],
   ['create_5flist_5ffrom_5fgraphml_2ecpp_5',['create_list_from_graphml.cpp',['../d3/df8/create__list__from__graphml_8cpp.html',1,'']]],
-  ['create_5flist_5ffrom_5fgraphml_5ffile_6',['create_list_from_graphml_file',['../de/d21/class_graph_1_1_examples.html#a81547fa7720efd5cf3aa5dd2eff2ebfd',1,'Graph::Examples']]],
-  ['create_5flist_5ffrom_5flst_2ecpp_7',['create_list_from_lst.cpp',['../d1/d0b/create__list__from__lst_8cpp.html',1,'']]],
-  ['create_5flist_5ffrom_5flst_5ffile_8',['create_list_from_lst_file',['../de/d21/class_graph_1_1_examples.html#acd4ea66d94a982f947da13d41fbf8a00',1,'Graph::Examples']]],
-  ['create_5fmatrix_5ffrom_5fgraphml_5ffile_9',['create_matrix_from_graphml_file',['../de/d21/class_graph_1_1_examples.html#a28235f3ed7ede9a18cef53dd49746dd4',1,'Graph::Examples']]],
-  ['create_5fmatrix_5ffrom_5fmat_5ffile_10',['create_matrix_from_mat_file',['../de/d21/class_graph_1_1_examples.html#a93d22652abf04eeacae9ef964c6442f1',1,'Graph::Examples']]]
+  ['create_5flist_5ffrom_5flst_2ecpp_6',['create_list_from_lst.cpp',['../d1/d0b/create__list__from__lst_8cpp.html',1,'']]],
+  ['create_5fmatrix_5ffrom_5fgraphml_5ffile_7',['create_matrix_from_graphml_file',['../de/d21/class_graph_1_1_examples.html#a28235f3ed7ede9a18cef53dd49746dd4',1,'Graph::Examples']]],
+  ['create_5fmatrix_5ffrom_5fmat_5ffile_8',['create_matrix_from_mat_file',['../de/d21/class_graph_1_1_examples.html#a93d22652abf04eeacae9ef964c6442f1',1,'Graph::Examples']]]
 ];

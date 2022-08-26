@@ -438,6 +438,8 @@ void Graph::List::print()
 /**
  * \brief Function adding a connection between two given vertices.
  * 
+ * If the graph type is undirected, the connection will be inserted both ways.
+ * 
  * \warning If an edge between given vertices already exists, the weight of the 
  *			connection will be overwritten, and second edge will not be added.
  * 
@@ -535,6 +537,8 @@ void Graph::List::add_node()
 
 /**
  * \brief Function removing a connection between two given adjacency vertices.
+ * 
+ * If the graph is undirected, the connection will be removed both ways.
  * 
  * \param source ID of the beginning vertex.
  * \param destination ID of the end vertex.

@@ -1,8 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"de/d21/class_graph_1_1_examples.html":[2,0,1,2],
-"de/d21/class_graph_1_1_examples.html":[3,0,1,2],
-"de/d75/namespace_data.html":[2,0,0],
 "de/d75/namespace_data.html#a3fc0992ca23fde8bb88cc31a41eb5d14":[2,0,0,3],
 "de/d81/_graph__list_8h.html":[4,0,1,5],
 "de/d81/_graph__list_8h_source.html":[4,0,1,5],

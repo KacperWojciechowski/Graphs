@@ -185,6 +185,8 @@ void Graph::Matrix::print()
 /**
  * \brief Function for adding a weighted edge between the source and destination vertices.
  * 
+ * In case of undirected graph, this function will insert the edge both ways.
+ * 
  * \param source ID of the source vertex of the edge.
  * \param destination ID of the end vertex of the edge.
  * \param weight Weight of inserted edge.
@@ -275,6 +277,8 @@ void Graph::Matrix::add_node()
 
 /**
  * \brief Function for removing an edge between two given vertices.
+ * 
+ * If the graph is undirected the edge will be removed both ways.
  * 
  * \param source ID of the source vertex of the edge (counting from 0).
  * \param destination ID of the destination vertex of the edge (counting from 0).
@@ -628,7 +632,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
  * \param file_path Path to the throughtput matrix .mat file.
  * 
  * \attention The user has to make sure that the throughtput matrix is just as big as
- * the adjacency matrix.
+ * the adjacency matrix. Other dimentions may result in an undefined behaviour.
  * 
  * \warning Exceptions to guard against:
  *		- std::invalid_argument - when the file has an unsupported extension.

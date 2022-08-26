@@ -7,6 +7,7 @@ The implementation provides adjacency matrix and adjacency list representations 
 Each graph representation provides implementation of basic graph coloring and path searching algorithms. Each of the representations support both directed and undirected graphs, however does not support multigraphs, and graphs with negative weights (the latter causing to raise an exception).
 
 The implementation is suited for weighted and non-weighted undirected and directed graphs. It does support graphs with loops, however it does not support multigraphs and will treat them as weighted graphs instead.
+Graph representation classes implement a common interface via inheritance from an abstract Graph class, which allows user to exchange the representations without modifying the code around it. 
 
 Features:
 -------------------------------------------------------------
@@ -24,3 +25,28 @@ Features:
 - Data::Benchmark class generating the raports of time efficiency and results of various algorithms implemented by the graph representations.
 - Data::Generator class allowing user to generate sample weighted graphs, pixel maps and throughput matrices.
 - Examples library available also in documentation, showing how to use the library's API
+
+**For further information see doxygen documentation**
+
+Patch notes: 
+-------------------------------------------------------------
+
+###v.0.5
+####v.0.5.2.
+Introduced patch notes tracking in readme.
+
+####v.0.5.1.
+Moving the examples from executable code to Doxygen example pages. 
+
+###v.0.4.
+Introduced examples and RapidXML library for parsing.
+
+###v.0.3.
+Introduced Doxygen documentation.
+ 
+###v.0.2.
+Basic implementation of the Graph::Matrix class.
+
+###v.0.1.
+Basic implementation of the Graph::List class.
+

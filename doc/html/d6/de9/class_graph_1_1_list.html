@@ -217,10 +217,13 @@ Private Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:abd0a86cc45cfced742b4f8ba76bcaa9b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::list&lt; <a class="el" href="../../d6/d87/struct_graph_1_1_list_1_1_node.html">Node</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b">list</a></td></tr>
+<tr class="memdesc:abd0a86cc45cfced742b4f8ba76bcaa9b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d6/de9/class_graph_1_1_list.html" title="Class representing a graph in the adjacency list form.">List</a> structure of the graph.  <a href="../../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b">More...</a><br /></td></tr>
 <tr class="separator:abd0a86cc45cfced742b4f8ba76bcaa9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abef17270c063efae94f48f147780af37"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html">Degree</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#abef17270c063efae94f48f147780af37">degrees</a></td></tr>
+<tr class="memdesc:abef17270c063efae94f48f147780af37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector containing degrees of each vertex.  <a href="../../d6/de9/class_graph_1_1_list.html#abef17270c063efae94f48f147780af37">More...</a><br /></td></tr>
 <tr class="separator:abef17270c063efae94f48f147780af37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3900bb15c47f06569b9a2de77a6e3d2e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a3900bb15c47f06569b9a2de77a6e3d2e">type</a></td></tr>
+<tr class="memdesc:a3900bb15c47f06569b9a2de77a6e3d2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum signifying the type of the graph.  <a href="../../d6/de9/class_graph_1_1_list.html#a3900bb15c47f06569b9a2de77a6e3d2e">More...</a><br /></td></tr>
 <tr class="separator:a3900bb15c47f06569b9a2de77a6e3d2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
@@ -279,7 +282,7 @@ Additional Inherited Members</h2></td></tr>
 </ul>
 </dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>Supported formats are .lst and .GRAPHML. The .lst representation does not contain weights, so a weight of 1 is assumed for each connection if using this file format as a data source.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a href="https://hog.grinvin.org/Formats.action">Here </a> for House of Graphs adjacency <a class="el" href="../../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b">list</a> format guideline. </dd>
+<dl class="section see"><dt>See also</dt><dd><a href="https://hog.grinvin.org/Formats.action">Here </a> for House of Graphs adjacency <a class="el" href="../../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b" title="List structure of the graph.">list</a> format guideline. </dd>
 <dd>
 <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html">http://graphml.graphdrawing.org/primer/graphml-primer.html</a> for GraphML format guideline.</dd></dl>
 <p><a class="el" href="../../d9/dd8/create_list_from_lst_8cpp-example.html">Example of using .lst file as data source</a><br  />
@@ -914,9 +917,11 @@ Exception to guard against:<ul>
 </div><div class="memdoc">
 
 <p>Function saving current graph structure into a .GRAPHML format file. </p>
+<p >This format does contain the weights of the edges.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">output_file_path</td><td>Path to the output file. </td></tr>
+    <tr><td class="paramname">stream</td><td>Stream to which the graphML data format should be saved to. </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the graph (user-given). </td></tr>
   </table>
   </dd>
 </dl>
@@ -946,6 +951,9 @@ Exception to guard against:<ul>
 </table>
 </div><div class="memdoc">
 
+<p>Vector containing degrees of each vertex. </p>
+<p >Degrees are stored within the <a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html" title="Structure containing the degree information of given vertex.">Graph::Degree</a> structure, and the type field decides which fields of the structure should be used. </p>
+
 </div>
 </div>
 <a id="abd0a86cc45cfced742b4f8ba76bcaa9b" name="abd0a86cc45cfced742b4f8ba76bcaa9b"></a>
@@ -968,6 +976,9 @@ Exception to guard against:<ul>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="../../d6/de9/class_graph_1_1_list.html" title="Class representing a graph in the adjacency list form.">List</a> structure of the graph. </p>
+<p >Consists of the std::vector containing std::lists of neighbour vertices for a given vertex. </p>
+
 </div>
 </div>
 <a id="a3900bb15c47f06569b9a2de77a6e3d2e" name="a3900bb15c47f06569b9a2de77a6e3d2e"></a>
@@ -989,6 +1000,8 @@ Exception to guard against:<ul>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Enum signifying the type of the graph. </p>
 
 </div>
 </div>

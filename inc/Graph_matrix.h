@@ -65,12 +65,13 @@ namespace Graph
 		void load_graphml_file(std::fstream& file);
 		void calculate_degrees();
 
-		/* Objects containing the graph */
-		std::vector<std::vector<uint32_t>> matrix;
-		std::vector<std::vector<uint32_t>> throughtput;
-		std::vector<Degree> degrees;
-
-		/* Graph type information */
-		Type type;
+		/* Objects containing the graph*/
+		std::vector<std::vector<uint32_t>> matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/
+		std::vector<std::vector<uint32_t>> throughtput; /**< Structure containing the throughtput matrix corresponding to the adjacency matrix. This matrix
+															 has to be of the same dimentions as the adjacency matrix. This feature is exclusive to the matrix 
+															 representation. */
+		std::vector<Degree> degrees;					/**< Vector of structures storing the degrees of each vertex in Graph::Degree structures. The type of
+															 the graph decides which members of the structure should be used. */
+		Type type;										/**< Enum signifying the type of the graph. */
 	};
 }

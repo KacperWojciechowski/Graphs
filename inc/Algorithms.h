@@ -84,8 +84,8 @@ namespace Graph
 		 * 
 		 * \param start ID of the vertex (starting from 0) from which the search for paths to all other
 		 * vertices should begin.
-		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
-		 *					False by default.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Data::Roadmap structure containing all necessary informations regarding the found paths.
 		 */
 		virtual Roadmap belman_ford_point_to_all(std::size_t start, std::ostream* log_stream = nullptr) = 0;
@@ -95,8 +95,8 @@ namespace Graph
 		 * 
 		 * \param start ID of the vertex (starting from 0) from which to search for path to the destination vertex  
 		 * \param destination ID of the destination vertex
-		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
-		 *					False by default.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return 
 		 */
 		virtual std::vector<std::size_t> belman_ford_point_to_point(std::size_t start, std::size_t destination, std::ostream* log_stream = nullptr) = 0;
@@ -111,8 +111,8 @@ namespace Graph
 		 * (once provided the right order of vertices according to their own rules).
 		 * 
 		 * \param m Map containing the created ordering of vertices.
-		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
-		 *					False by default.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
 		virtual int32_t greedy_coloring_core(std::map<int, int>& m, std::ostream* log_stream = nullptr) = 0;

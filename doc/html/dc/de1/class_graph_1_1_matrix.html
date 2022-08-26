@@ -31,7 +31,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="../../logo.jpg"/></td>
   <td id="projectalign">
-   <div id="projectname">Graphs<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">Graphs<span id="projectnumber">&#160;0.1</span>
    </div>
    <div id="projectbrief">Simple House of Graphs compliant graph software</div>
   </td>
@@ -428,6 +428,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Function for adding a weighted edge between the source and destination vertices. </p>
+<p >In case of undirected graph, this function will insert the edge both ways.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">source</td><td>ID of the source vertex of the edge. </td></tr>
@@ -786,7 +787,7 @@ Additional Inherited Members</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section attention"><dt>Attention</dt><dd>The user has to make sure that the throughtput matrix is just as big as the adjacency matrix.</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>The user has to make sure that the throughtput matrix is just as big as the adjacency matrix. Other dimentions may result in an undefined behaviour.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Exceptions to guard against:<ul>
 <li>std::invalid_argument - when the file has an unsupported extension.</li>
 <li>std::runtime_error - when the file could not be accessed. </li>
@@ -882,6 +883,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Function for removing an edge between two given vertices. </p>
+<p >If the graph is undirected the edge will be removed both ways.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">source</td><td>ID of the source vertex of the edge (counting from 0). </td></tr>

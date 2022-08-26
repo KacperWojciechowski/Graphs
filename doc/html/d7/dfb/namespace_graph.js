@@ -2,7 +2,6 @@ var namespace_graph =
 [
     [ "Algorithms", "dd/d33/class_graph_1_1_algorithms.html", "dd/d33/class_graph_1_1_algorithms" ],
     [ "Degree", "d2/d9f/struct_graph_1_1_degree.html", "d2/d9f/struct_graph_1_1_degree" ],
-    [ "Examples", "de/d21/class_graph_1_1_examples.html", null ],
     [ "Graph", "d6/d4f/class_graph_1_1_graph.html", "d6/d4f/class_graph_1_1_graph" ],
     [ "List", "d6/de9/class_graph_1_1_list.html", "d6/de9/class_graph_1_1_list" ],
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html", "dc/de1/class_graph_1_1_matrix" ],

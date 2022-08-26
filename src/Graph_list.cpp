@@ -446,6 +446,9 @@ void Graph::List::print()
  * \param source ID of the source vertex.
  * \param destination ID of the end vertex.
  * \param weight Weight of the connection.
+ * 
+ * \ref add_edge_list_insert.cpp "Example of adding an edge between two vertices"\n
+ * \ref add_edge_list_override.cpp "Example of modifying the weight of an existing edge"
  */
 void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t weight)
 {

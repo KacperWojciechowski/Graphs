@@ -31,7 +31,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="../../logo.jpg"/></td>
   <td id="projectalign">
-   <div id="projectname">Graphs<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">Graphs<span id="projectnumber">&#160;0.1</span>
    </div>
    <div id="projectbrief">Simple House of Graphs compliant graph software</div>
   </td>
@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('d8/d02/md__d___repozytoria__c____graph
 <h1><a class="anchor" id="autotoc_md1"></a>
 Overview:</h1>
 <p >The implementation provides adjacency matrix and adjacency list representations compatibile with the House of Graphs portal data formats, and GraphML format. Each graph representation provides implementation of basic graph coloring and path searching algorithms. Each of the representations support both directed and undirected graphs, however does not support multigraphs, and graphs with negative weights (the latter causing to raise an exception).</p>
-<p >The implementation is suited for weighted and non-weighted undirected and directed graphs. It does support graphs with loops, however it does not support multigraphs and will treat them as weighted graphs instead.</p>
+<p >The implementation is suited for weighted and non-weighted undirected and directed graphs. It does support graphs with loops, however it does not support multigraphs and will treat them as weighted graphs instead. <a class="el" href="../../d7/dfb/namespace_graph.html">Graph</a> representation classes implement a common interface via inheritance from an abstract <a class="el" href="../../d7/dfb/namespace_graph.html">Graph</a> class, which allows user to exchange the representations without modifying the code around it.</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Features:</h1>
 <p ><b>Each of the representation implements following algorithms:</b></p><ul>
@@ -116,8 +116,9 @@ Features:</h1>
 <li><a class="el" href="../../d3/d20/class_data_1_1_pixel_map.html" title="Class representing a map of binary pixels.">Data::PixelMap</a> class allowing for representation of a terrain map via binary values. Can be used with the graph representations to create a graph of the terrain for tasks such as path searching.</li>
 <li>Data::Benchmark class generating the raports of time efficiency and results of various algorithms implemented by the graph representations.</li>
 <li><a class="el" href="../../d6/d50/class_data_1_1_generator.html" title="Class responsible for generating various data sources supported by this library.">Data::Generator</a> class allowing user to generate sample weighted graphs, pixel maps and throughput matrices.</li>
-<li>Examples library available also in documentation, showing how to use the library's API </li>
+<li>Examples library available also in documentation, showing how to use the library's API</li>
 </ul>
+<p ><b>For further information see doxygen documentation</b> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

@@ -31,22 +31,22 @@ Features:
 Patch notes: 
 -------------------------------------------------------------
 
-###v.0.5
-####v.0.5.2.
+### v.0.5
+#### v.0.5.2.
 Introduced patch notes tracking in readme.
 
-####v.0.5.1.
+#### v.0.5.1.
 Moving the examples from executable code to Doxygen example pages. 
 
-###v.0.4.
+### v.0.4.
 Introduced examples and RapidXML library for parsing.
 
-###v.0.3.
+### v.0.3.
 Introduced Doxygen documentation.
  
-###v.0.2.
+### v.0.2.
 Basic implementation of the Graph::Matrix class.
 
-###v.0.1.
+### v.0.1.
 Basic implementation of the Graph::List class.
 

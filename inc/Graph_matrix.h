@@ -19,7 +19,7 @@ namespace Graph
 	 * The representation is based on the STL vector class. It does provide a
 	 * standard graph interface stated by the Graph virtual class. 
 	 */
-	class Matrix : public Graph
+	class Matrix : public Graph_t
 	{
 	public:
 

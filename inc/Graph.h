@@ -33,7 +33,7 @@ namespace Graph
 	/**
 	 * \brief Abstract class stating the common interface for each of the graph representation.
 	 */
-	class Graph
+	class Graph_t
 	{
 	public:
 

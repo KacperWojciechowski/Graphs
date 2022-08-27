@@ -528,6 +528,7 @@ void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t
  * Added vertex is initially isolated, so any connections to it need
  * to be added manually.
  * 
+ * \see add_node_list.cpp "Example of adding an isolated vertex"
  */
 void Graph::List::add_node()
 {
@@ -548,6 +549,8 @@ void Graph::List::add_node()
  * 
  * \warning Exceptions to guard against:
  *		- std::out_of_range - When any of the given IDs is out of bounds for the adjacency list.
+ * 
+ * \ref remove_edge_list.cpp "Example of removing an edge from graph structure"
  */
 void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 {
@@ -602,6 +605,8 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
  * 
  * \warning Exception to guard against:
  *			- std::out_of_range - when given vertex ID is out of bounds for the list.
+ * 
+ * \ref remove_node_list.cpp "Example of removing a vertex from graph structure"
  */
 void Graph::List::remove_node(std::size_t node_id)
 {
@@ -746,6 +751,8 @@ const Graph::Type Graph::List::get_type()
  * 
  * \param stream Stream to which the graphML data format should be saved to.
  * \param name Name of the graph (user-given).
+ * 
+ * \ref save_list_to_graphml.cpp "Example of saving current graph structure in .GRAPHML format"
  */
 void Graph::List::save_graphml(std::ostream& stream, std::string name)
 {

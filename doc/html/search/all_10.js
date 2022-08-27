@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['undirected_0',['undirected',['../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0abc26cd8237a1f32814d687d6745880db',1,'Graph']]]
+  ['weight_0',['weight',['../d6/d87/struct_graph_1_1_list_1_1_node.html#a78ee080f911be3cb3aacff282df58fb1',1,'Graph::List::Node']]]
 ];

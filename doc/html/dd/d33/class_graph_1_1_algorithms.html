@@ -117,12 +117,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adf8491653a336a3a547504cad5b0079c"><td class="memItemLeft" align="right" valign="top">virtual int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d33/class_graph_1_1_algorithms.html#adf8491653a336a3a547504cad5b0079c">sl_coloring</a> (bool permutate=false, std::ostream *log_stream=nullptr)=0</td></tr>
 <tr class="memdesc:adf8491653a336a3a547504cad5b0079c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common definition of the function providing ordering and permutation sequence according to the SL algorithm rules.  <a href="../../dd/d33/class_graph_1_1_algorithms.html#adf8491653a336a3a547504cad5b0079c">More...</a><br /></td></tr>
 <tr class="separator:adf8491653a336a3a547504cad5b0079c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1060857b3a127f8bb61d5360f332972"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/dd6/class_graph_1_1_roadmap.html">Roadmap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d33/class_graph_1_1_algorithms.html#af1060857b3a127f8bb61d5360f332972">belman_ford_point_to_all</a> (std::size_t start, std::ostream *log_stream=nullptr)=0</td></tr>
-<tr class="memdesc:af1060857b3a127f8bb61d5360f332972"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common definition of the function providing the Belman-Ford path-searching algorithm implementation.  <a href="../../dd/d33/class_graph_1_1_algorithms.html#af1060857b3a127f8bb61d5360f332972">More...</a><br /></td></tr>
-<tr class="separator:af1060857b3a127f8bb61d5360f332972"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6248bc3669baacada1e3d80f9fa08c14"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d33/class_graph_1_1_algorithms.html#a6248bc3669baacada1e3d80f9fa08c14">belman_ford_point_to_point</a> (std::size_t start, std::size_t destination, std::ostream *log_stream=nullptr)=0</td></tr>
-<tr class="memdesc:a6248bc3669baacada1e3d80f9fa08c14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common definition of the function providing the Belman-Ford path-searching algorithm, with extraction of point-to-point path.  <a href="../../dd/d33/class_graph_1_1_algorithms.html#a6248bc3669baacada1e3d80f9fa08c14">More...</a><br /></td></tr>
-<tr class="separator:a6248bc3669baacada1e3d80f9fa08c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9154ea447eb2290585111ce1f057aa26"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/dd6/class_graph_1_1_roadmap.html">Roadmap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d33/class_graph_1_1_algorithms.html#a9154ea447eb2290585111ce1f057aa26">belman_ford</a> (std::size_t start, std::ostream *log_stream=nullptr)=0</td></tr>
+<tr class="memdesc:a9154ea447eb2290585111ce1f057aa26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common definition of the function providing the Belman-Ford point-to-all path-searching algorithm implementation.  <a href="../../dd/d33/class_graph_1_1_algorithms.html#a9154ea447eb2290585111ce1f057aa26">More...</a><br /></td></tr>
+<tr class="separator:a9154ea447eb2290585111ce1f057aa26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -133,10 +130,11 @@ Protected Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Virtual class providing the algorithmic interface. </p>
 <p >The class provides common algorithmic interface for each of its inheriting classes. Its main purpose is to provide the Data::Benchmark class with an ability to use those functions without the knowledge of which graph representation was received as a parameter.</p>
-<dl class="section attention"><dt>Attention</dt><dd>Each of the coloring algorithms public function provide permutation functionality for randomized trials of efficiency. This functionality is triggered via a parameter to the chosen coloring function. As such, user might try to get an average result by running the function once, or try to get optimal results for the algorithm by running it multiple times with permutations, as does the Data::Benchmark class. For the latter purpose, the use of Data::Benchmark class is recommended, as it provides API to automate the process. </dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Each of the coloring algorithms public function provide permutation functionality for randomized trials of efficiency. This functionality is triggered via a parameter to the chosen coloring function. As such, user might try to get an average result by running the function once, or try to get optimal results for the algorithm by running it multiple times with permutations, as does the Data::Benchmark class. For the latter purpose, the use of Data::Benchmark class is recommended, as it provides API to automate the process.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The permutation feature allows the same permutation to be generated multiple times. As such, the minimal color acquired from this function might still not be an optimal value. </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="af1060857b3a127f8bb61d5360f332972" name="af1060857b3a127f8bb61d5360f332972"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1060857b3a127f8bb61d5360f332972">&#9670;&nbsp;</a></span>belman_ford_point_to_all()</h2>
+<a id="a9154ea447eb2290585111ce1f057aa26" name="a9154ea447eb2290585111ce1f057aa26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9154ea447eb2290585111ce1f057aa26">&#9670;&nbsp;</a></span>belman_ford()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -145,7 +143,7 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="../../d3/dd6/class_graph_1_1_roadmap.html">Roadmap</a> Graph::Algorithms::belman_ford_point_to_all </td>
+          <td class="memname">virtual <a class="el" href="../../d3/dd6/class_graph_1_1_roadmap.html">Roadmap</a> Graph::Algorithms::belman_ford </td>
           <td>(</td>
           <td class="paramtype">std::size_t&#160;</td>
           <td class="paramname"><em>start</em>, </td>
@@ -169,69 +167,15 @@ Protected Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Common definition of the function providing the Belman-Ford path-searching algorithm implementation. </p>
+<p>Common definition of the function providing the Belman-Ford point-to-all path-searching algorithm implementation. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">start</td><td>ID of the vertex (starting from 0) from which the search for paths to all other vertices should begin. </td></tr>
-    <tr><td class="paramname">permutate</td><td>Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring. False by default. </td></tr>
+    <tr><td class="paramname">log_stream</td><td>Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced. Nullptr by default. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Data::Roadmap structure containing all necessary informations regarding the found paths. </dd></dl>
-
-</div>
-</div>
-<a id="a6248bc3669baacada1e3d80f9fa08c14" name="a6248bc3669baacada1e3d80f9fa08c14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6248bc3669baacada1e3d80f9fa08c14">&#9670;&nbsp;</a></span>belman_ford_point_to_point()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual std::vector&lt; std::size_t &gt; Graph::Algorithms::belman_ford_point_to_point </td>
-          <td>(</td>
-          <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>start</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>destination</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::ostream *&#160;</td>
-          <td class="paramname"><em>log_stream</em> = <code>nullptr</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Common definition of the function providing the Belman-Ford path-searching algorithm, with extraction of point-to-point path. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">start</td><td>ID of the vertex (starting from 0) from which to search for path to the destination vertex <br  />
- </td></tr>
-    <tr><td class="paramname">destination</td><td>ID of the destination vertex </td></tr>
-    <tr><td class="paramname">permutate</td><td>Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring. False by default. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -320,7 +264,7 @@ Protected Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">m</td><td>Map containing the created ordering of vertices. </td></tr>
-    <tr><td class="paramname">permutate</td><td>Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring. False by default. </td></tr>
+    <tr><td class="paramname">log_stream</td><td>Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced. Nullptr by default. </td></tr>
   </table>
   </dd>
 </dl>

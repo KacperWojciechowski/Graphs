@@ -60,6 +60,57 @@
  * \ref add_edge_list_insert.cpp "Inserting an edge between two vertices"
  */
 
+/**
+ * \example add_node_list.cpp
+ * 
+ * An example of adding an isolated vertex to the adjacency list graph structure. 
+ * 
+ * This example shows how to add an isolated vertex to the graph structure in the Graph::List object. Added vertex will
+ * assume the index equal to the previous count of vertices. After adding the vertex, user needs to manually insert any
+ * edges connected to it, using the add_edge() function.
+ * 
+ * \see add_edge_list_insert.cpp "Adding an edge between two vertices"
+ */
+
+/**
+ * \example remove_edge_list.cpp
+ * 
+ * An example of removing existing edge between two given vertices in adjacency list graph structure.
+ * 
+ * This example shows how to remove an existing edge between two given vertices in the graph structure of the Graph::List object.
+ * If the type of the graph is undirected, the edge will be removed both ways. Else, only one-way edge will be removed, preserving
+ * any edge directed the other way around.
+ * 
+ * \note Using this method does not need to verify whether the edge exists beforehand.
+ */
+
+/**
+ * \example remove_node_list.cpp
+ * 
+ * An example of removing a vertex from the adjacency list graph structure.
+ * 
+ * This example shows how to remove a vertex along with all its edges from the graph structure of the Graph::List object.
+ * This function will remove all ingoing and outgoing edges regardless of the graph type. Removing the vertex causes the
+ * renumeration of each subsequent vertex by decreasing their indexes by 1.
+ */
+
+/**
+ * \example save_list_to_graphml.cpp
+ * 
+ * An example of saving the graph structure of Graph::List object in a .GRAPHML format in given output stream.
+ * 
+ * This example shows how to save current graph structure contained within Graph::List object in a .GRAPHML XML format.
+ * Created XML contains information such as graph name, type, IDs of vertices with added "n" notation in front, and all edges 
+ * with corresponding weights. The output is saved to the output stream passed as an argument to the function, and as such 
+ * can work with both file stream and standard output stream.
+ * 
+ * \note In order to display the resulting XML, pass std::cout reference as a stream argument.
+ * 
+ * \note A sample XML output can be seen in the samples directory in 
+ * \b "saved_graphML.GRAPHML" 
+ * file.
+ */
+
 
 
 

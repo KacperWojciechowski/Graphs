@@ -21,7 +21,7 @@ namespace Data
 		void make_throughtput_matrix(std::ostream& stream, std::string output_file_path, Graph::Type type);
 
 		// list graph generation
-		void make_list(std::ostream& stream, uint32_t vertex_amount, Graph::Type type);
+		void make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type);
 
 		// pixel map generationd
 		void make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width);

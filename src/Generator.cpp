@@ -12,9 +12,11 @@
  * \param vertex_amount Desired amount of vertices within the graph
  * \param type Type of the graph from Graph::Type enum
  */
-void Data::Generator::make_list(std::ostream& stream, uint32_t vertex_amount, Graph::Type type)
+void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type)
 {
 	std::vector<Data::coord> edges;
+
+	for (std::size_t i = 0; i < vertex_amount; i++)
 }
 
 

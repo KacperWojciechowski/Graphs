@@ -7,5 +7,8 @@ var namespace_graph =
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html", "dc/de1/class_graph_1_1_matrix" ],
     [ "Path", "d7/d30/class_graph_1_1_path.html", "d7/d30/class_graph_1_1_path" ],
     [ "Roadmap", "d3/dd6/class_graph_1_1_roadmap.html", "d3/dd6/class_graph_1_1_roadmap" ],
-    [ "Type", "d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0", null ]
+    [ "Type", "d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0", [
+      [ "undirected", "d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0abc26cd8237a1f32814d687d6745880db", null ],
+      [ "directed", "d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0a42e55a2462c0d3774dba7cba6835ff52", null ]
+    ] ]
 ];

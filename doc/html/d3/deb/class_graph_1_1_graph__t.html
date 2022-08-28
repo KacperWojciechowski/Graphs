@@ -111,7 +111,8 @@ Inheritance diagram for Graph::Graph_t:</div>
  <div class="center">
   <img src="../../d3/deb/class_graph_1_1_graph__t.png" usemap="#Graph::Graph_5Ft_map" alt=""/>
   <map id="Graph::Graph_5Ft_map" name="Graph::Graph_5Ft_map">
-<area href="../../dc/de1/class_graph_1_1_matrix.html" title="This class provides an adjacency matrix graph representation." alt="Graph::Matrix" shape="rect" coords="0,56,98,80"/>
+<area href="../../d6/de9/class_graph_1_1_list.html" title="Class representing a graph in the adjacency list form." alt="Graph::List" shape="rect" coords="0,56,98,80"/>
+<area href="../../dc/de1/class_graph_1_1_matrix.html" title="This class provides an adjacency matrix graph representation." alt="Graph::Matrix" shape="rect" coords="108,56,206,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -120,9 +121,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7eb6ba40c0e77b07748686a75dbcfe67"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a7eb6ba40c0e77b07748686a75dbcfe67">print</a> ()=0</td></tr>
 <tr class="memdesc:a7eb6ba40c0e77b07748686a75dbcfe67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comomn function definition for printing the representation of a graph.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a7eb6ba40c0e77b07748686a75dbcfe67">More...</a><br /></td></tr>
 <tr class="separator:a7eb6ba40c0e77b07748686a75dbcfe67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add18a0cb23a405ee5819b3a873f3cf90"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#add18a0cb23a405ee5819b3a873f3cf90">add_edge</a> (std::size_t source, std::size_t destination, uint32_t weight)=0</td></tr>
-<tr class="memdesc:add18a0cb23a405ee5819b3a873f3cf90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for adding an edge to the graph object.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#add18a0cb23a405ee5819b3a873f3cf90">More...</a><br /></td></tr>
-<tr class="separator:add18a0cb23a405ee5819b3a873f3cf90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45e76ba9d00bfa3c7bac573f26d039b6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a45e76ba9d00bfa3c7bac573f26d039b6">make_edge</a> (std::size_t source, std::size_t destination, uint32_t weight)=0</td></tr>
+<tr class="memdesc:a45e76ba9d00bfa3c7bac573f26d039b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for adding an edge to the graph object.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a45e76ba9d00bfa3c7bac573f26d039b6">More...</a><br /></td></tr>
+<tr class="separator:a45e76ba9d00bfa3c7bac573f26d039b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafbfb9620410170f041f7029d44fc53f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#aafbfb9620410170f041f7029d44fc53f">add_node</a> ()=0</td></tr>
 <tr class="memdesc:aafbfb9620410170f041f7029d44fc53f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for adding a vertex to the graph object.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#aafbfb9620410170f041f7029d44fc53f">More...</a><br /></td></tr>
 <tr class="separator:aafbfb9620410170f041f7029d44fc53f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -160,60 +161,6 @@ Protected Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Abstract class stating the common interface for each of the graph representation. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="add18a0cb23a405ee5819b3a873f3cf90" name="add18a0cb23a405ee5819b3a873f3cf90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add18a0cb23a405ee5819b3a873f3cf90">&#9670;&nbsp;</a></span>add_edge()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void Graph::Graph_t::add_edge </td>
-          <td>(</td>
-          <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>source</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>destination</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>weight</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Common function definition for adding an edge to the graph object. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">Source</td><td>source vertex of an edge. </td></tr>
-    <tr><td class="paramname">Destination</td><td>end vertex of an edge. </td></tr>
-    <tr><td class="paramname">Weight</td><td>weight of the connection. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#ad139277cb4fe5f39dda0675f5768abad">Graph::Matrix</a>.</p>
-
-</div>
-</div>
 <a id="aafbfb9620410170f041f7029d44fc53f" name="aafbfb9620410170f041f7029d44fc53f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aafbfb9620410170f041f7029d44fc53f">&#9670;&nbsp;</a></span>add_node()</h2>
 
@@ -239,7 +186,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Common function definition for adding a vertex to the graph object. </p>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#aa624af2a2f29f55beeb2866f525e087a">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#aac4ab303faf71a30792c6d431f240714">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#aa624af2a2f29f55beeb2866f525e087a">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -268,7 +215,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Common function definition for calculating the degrees of each vertex inside the graph object. </p>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#acd29a53e72f4f1e20f1f7ce79f44f329">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#adcd533ffc69d17a70472a68a61cee4bc">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#acd29a53e72f4f1e20f1f7ce79f44f329">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -316,7 +263,7 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Weight value of the connection. </dd></dl>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a74e4fcea8469cfbe3dc6caf33dce62c4">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#a1a5ea23d4a4b2f4b18bbc6e0da6af8de">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a74e4fcea8469cfbe3dc6caf33dce62c4">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -353,7 +300,7 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The degree of a given vertex. </dd></dl>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#aa2741d02d34a465e55e3459369227f1a">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#a25351584a0c871a5d91acd37d8a2f5a0">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#aa2741d02d34a465e55e3459369227f1a">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -383,7 +330,7 @@ Protected Member Functions</h2></td></tr>
 <p>Common function definition for acquiring the vertices amount in the graph object. </p>
 <dl class="section return"><dt>Returns</dt><dd>The amount of the vertices in a graph object. </dd></dl>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#ad644287eae3e0f32e5b9080c8d258525">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#aa5200e14bc56cd74feb2a9ca1964f730">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#ad644287eae3e0f32e5b9080c8d258525">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -412,7 +359,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Common function definition for type getter. </p>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a6fc72fa87ab4dd231e21b83c6abaad78">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#a3be578b82ffcc1136e4c9d5976bb22a3">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a6fc72fa87ab4dd231e21b83c6abaad78">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -448,7 +395,61 @@ Protected Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#ae90db249b764afdbfdbd2fe0fec5b608">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#a849f725f7a29aabd2fb049c7cfe7dddf">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#ae90db249b764afdbfdbd2fe0fec5b608">Graph::Matrix</a>.</p>
+
+</div>
+</div>
+<a id="a45e76ba9d00bfa3c7bac573f26d039b6" name="a45e76ba9d00bfa3c7bac573f26d039b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45e76ba9d00bfa3c7bac573f26d039b6">&#9670;&nbsp;</a></span>make_edge()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Graph::Graph_t::make_edge </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>destination</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>weight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Common function definition for adding an edge to the graph object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Source</td><td>source vertex of an edge. </td></tr>
+    <tr><td class="paramname">Destination</td><td>end vertex of an edge. </td></tr>
+    <tr><td class="paramname">Weight</td><td>weight of the connection. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a5d584e32879b4e9f049ef4244e984ebe">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -477,7 +478,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Comomn function definition for printing the representation of a graph. </p>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#ae4317f9823368f3c13bc7f8c2d6efd8d">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#a5c40d7a296ad6f41914843c09b1ef313">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#ae4317f9823368f3c13bc7f8c2d6efd8d">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -524,7 +525,7 @@ Protected Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#af2eb78b8e9975ea63f963cbe74ba165f">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#af13cea946f86e424eeb676e3a4e131ea">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#af2eb78b8e9975ea63f963cbe74ba165f">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -560,7 +561,7 @@ Protected Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#acf3701fcd0a05606afd210a84a4f2b2f">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#af39782688cefc4b94cec525de0cad405">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#acf3701fcd0a05606afd210a84a4f2b2f">Graph::Matrix</a>.</p>
 
 </div>
 </div>
@@ -606,7 +607,7 @@ Protected Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a276b200993b022be8913e9f727fa25f1">Graph::Matrix</a>.</p>
+<p>Implemented in <a class="el" href="../../d6/de9/class_graph_1_1_list.html#ab9e7e80227be6e2e9931b5cac020b037">Graph::List</a>, and <a class="el" href="../../dc/de1/class_graph_1_1_matrix.html#a276b200993b022be8913e9f727fa25f1">Graph::Matrix</a>.</p>
 
 </div>
 </div>

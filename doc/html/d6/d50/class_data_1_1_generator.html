@@ -111,9 +111,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acf44d4879f961acd4711857609125cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5739dab0734350829949b6fc0a65bdff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a5739dab0734350829949b6fc0a65bdff">make_throughtput_matrix</a> (std::ostream &amp;stream, std::string output_file_path, <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a> type)</td></tr>
 <tr class="separator:a5739dab0734350829949b6fc0a65bdff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a929e011e4c23d06a00fcd38fd835dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a2a929e011e4c23d06a00fcd38fd835dd">make_list</a> (std::ostream &amp;stream, uint32_t vertex_amount, <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a> type)</td></tr>
-<tr class="memdesc:a2a929e011e4c23d06a00fcd38fd835dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function generating a random graph in a list representation, of a given type.  <a href="../../d6/d50/class_data_1_1_generator.html#a2a929e011e4c23d06a00fcd38fd835dd">More...</a><br /></td></tr>
-<tr class="separator:a2a929e011e4c23d06a00fcd38fd835dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfa5954ba4357e024882bcfd0b230259"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#acfa5954ba4357e024882bcfd0b230259">make_list</a> (std::ostream &amp;stream, std::size_t vertex_amount, <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a> type)</td></tr>
+<tr class="memdesc:acfa5954ba4357e024882bcfd0b230259"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function generating a random graph in a list representation, of a given type.  <a href="../../d6/d50/class_data_1_1_generator.html#acfa5954ba4357e024882bcfd0b230259">More...</a><br /></td></tr>
+<tr class="separator:acfa5954ba4357e024882bcfd0b230259"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39388325bf8b5cc3ec8cc5cf343310f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a39388325bf8b5cc3ec8cc5cf343310f4">make_pixel_map</a> (std::ostream &amp;stream, uint32_t length, uint32_t width)</td></tr>
 <tr class="memdesc:a39388325bf8b5cc3ec8cc5cf343310f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function generating a random pixel map within given stream, with given length and width.  <a href="../../d6/d50/class_data_1_1_generator.html#a39388325bf8b5cc3ec8cc5cf343310f4">More...</a><br /></td></tr>
 <tr class="separator:a39388325bf8b5cc3ec8cc5cf343310f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -121,9 +121,11 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Class responsible for generating various data sources supported by this library. </p>
 <p >This class offers to generate such data sources as random weighted adjacency matrix, random adjacency list, random throughtput matrix, and random pixel map. All generated data is saved within given output stream (such as a file output stream). </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../da/dd3/pixel_map_generator_8cpp-example.html#_a1">pixel_map_generator.cpp</a>.</dd>
+</dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2a929e011e4c23d06a00fcd38fd835dd" name="a2a929e011e4c23d06a00fcd38fd835dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a929e011e4c23d06a00fcd38fd835dd">&#9670;&nbsp;</a></span>make_list()</h2>
+<a id="acfa5954ba4357e024882bcfd0b230259" name="acfa5954ba4357e024882bcfd0b230259"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfa5954ba4357e024882bcfd0b230259">&#9670;&nbsp;</a></span>make_list()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -137,7 +139,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramtype">std::size_t&#160;</td>
           <td class="paramname"><em>vertex_amount</em>, </td>
         </tr>
         <tr>
@@ -204,9 +206,12 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">stream</td><td>Output stream to save generated pixel map in. </td></tr>
     <tr><td class="paramname">length</td><td>Vertical length of the map. </td></tr>
-    <tr><td class="paramname">width</td><td>Horizontal width of the map. </td></tr>
+    <tr><td class="paramname">width</td><td>Horizontal width of the map.</td></tr>
   </table>
   </dd>
+</dl>
+<p><a class="el" href="../../da/dd3/pixel_map_generator_8cpp-example.html">Example of generating the pixel map data source</a> </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../da/dd3/pixel_map_generator_8cpp-example.html#a2">pixel_map_generator.cpp</a>.</dd>
 </dl>
 
 </div>

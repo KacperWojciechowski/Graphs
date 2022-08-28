@@ -11,6 +11,8 @@
  * file provided as a sample in the samples folder.
  * 
  * \see https://hog.grinvin.org/Formats.action for House of Graphs adjacency list format guideline.
+ * 
+ * \see Graph::List::List(std::string file_path, Graph::Type type)
  */
 
 /**
@@ -26,10 +28,12 @@
  * ignored, as this data is contained within the graphML file itself.
  * 
  * \see http://graphml.graphdrawing.org/primer/graphml-primer.html for GraphML format guideline.
+ * 
+ * \see Graph::List::List(std::string file_path, Graph::Type type)
  */
 
 /**
- * \example add_edge_list_insert.cpp
+ * \example make_edge_list_insert.cpp
  * 
  * An example of inserting an edge between two given vertices in the Graph::List object.
  * 
@@ -42,11 +46,13 @@
  * Depending of the type of the graph, the edge will be modified either one way for directed graph, or
  * two ways for undirected graphs.
  * 
- * \ref add_edge_list_override.cpp "Overriding the weight of an existing edge"\n
+ * \ref make_edge_list_override.cpp "Overriding the weight of an existing edge"\n
+ * 
+ * \see Graph::List::make_edge()
  */
 
 /**
- * \example add_edge_list_override.cpp
+ * \example make_edge_list_override.cpp
  * 
  * An example of overriding the weight of an already existing edge between two given vertices in the Graph::List object.
  * 
@@ -57,7 +63,9 @@
  * vertices. Type of the edge (unidirectional / bidirectional) is decided based on the graph type. To see an example of
  * inserting an edge between vertices, see the example linked below.
  * 
- * \ref add_edge_list_insert.cpp "Inserting an edge between two vertices"
+ * \ref make_edge_list_insert.cpp "Inserting an edge between two vertices"
+ * 
+ * \see Graph::List::make_edge()
  */
 
 /**
@@ -69,7 +77,9 @@
  * assume the index equal to the previous count of vertices. After adding the vertex, user needs to manually insert any
  * edges connected to it, using the add_edge() function.
  * 
- * \see add_edge_list_insert.cpp "Adding an edge between two vertices"
+ * \ref add_edge_list_insert.cpp "Adding an edge between two vertices"
+ * 
+ * \see Graph::List::add_node() 
  */
 
 /**
@@ -82,6 +92,8 @@
  * any edge directed the other way around.
  * 
  * \note Using this method does not need to verify whether the edge exists beforehand.
+ * 
+ * \see Graph::List::remove_edge()
  */
 
 /**
@@ -92,6 +104,8 @@
  * This example shows how to remove a vertex along with all its edges from the graph structure of the Graph::List object.
  * This function will remove all ingoing and outgoing edges regardless of the graph type. Removing the vertex causes the
  * renumeration of each subsequent vertex by decreasing their indexes by 1.
+ * 
+ * \see Graph::List::remove_node()
  */
 
 /**
@@ -109,6 +123,36 @@
  * \note A sample XML output can be seen in the samples directory in 
  * \b "saved_graphML.GRAPHML" 
  * file.
+ * 
+ * \see Graph::List::save_graphml()
+ */
+
+/**
+ * \example pixel_map_generator.cpp
+ * 
+ * An example of generating a randomized pixel map data source via Data::Generator class.
+ * 
+ * This example shows how to generate a randomized pixel map data. The output is directed to an output stream passed
+ * as an argument to the function, and as such, can redirect the output to file or to standard output.
+ * 
+ * \note To redirect the function result to the standard output, pass std::cout reference as an argument.
+ * 
+ * \see Data::Generator::make_pixel_map()
+ */
+
+
+/**
+ * \example make_edge_matrix_insert.cpp
+ * 
+ * An example of adding an edge between two given vertices in Graph::Matrix object.
+ * 
+ * This example shows how to add a new edge to the graph structure in the Graph::Matrix object. The function does verify
+ * whether given indexes are correct, and the given weight is non-zero. In case the edge already exists, this function
+ * modifies the weight the edge, as shown in the different example linked below.
+ * 
+ * \ref make_edge_matrix_override.cpp "Modify the weight of an edge"
+ * 
+ * \see Graph::Matrix::make_edge()
  */
 
 

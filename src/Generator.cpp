@@ -17,6 +17,9 @@ void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
 	std::vector<Data::coord> edges;
 
 	for (std::size_t i = 0; i < vertex_amount; i++)
+	{
+
+	}
 }
 
 
@@ -32,6 +35,8 @@ void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
  * \param stream Output stream to save generated pixel map in.
  * \param length Vertical length of the map.
  * \param width Horizontal width of the map.
+ * 
+ * \ref pixel_map_generator.cpp "Example of generating the pixel map data source"
  */
 void Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width)
 {

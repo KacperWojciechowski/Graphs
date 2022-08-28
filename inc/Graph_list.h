@@ -33,7 +33,7 @@ namespace Graph
 
 		/* Interface */
 		void print();
-		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);
+		void make_edge(std::size_t source, std::size_t destination, uint32_t weight);
 		void add_node();
 
 		void remove_edge(std::size_t source, std::size_t destination);

@@ -121,7 +121,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Class responsible for generating various data sources supported by this library. </p>
 <p >This class offers to generate such data sources as random weighted adjacency matrix, random adjacency list, random throughtput matrix, and random pixel map. All generated data is saved within given output stream (such as a file output stream). </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../da/dd3/pixel_map_generator_8cpp-example.html#_a1">pixel_map_generator.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d3/d98/list_generator_8cpp-example.html#_a1">list_generator.cpp</a>, and <a class="el" href="../../da/dd3/pixel_map_generator_8cpp-example.html#_a1">pixel_map_generator.cpp</a>.</dd>
 </dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="acfa5954ba4357e024882bcfd0b230259" name="acfa5954ba4357e024882bcfd0b230259"></a>
@@ -157,13 +157,17 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Function generating a random graph in a list representation, of a given type. </p>
+<p >The generated format is compliant with .lst format provided by House of Graphs, and as such, uses vertex indexes starting with 1. Depending of the graph type, this function generates either undirected or directed connections. This function generates mostly dense graphs.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">stream</td><td>Output stream to save generated list to </td></tr>
     <tr><td class="paramname">vertex_amount</td><td>Desired amount of vertices within the graph </td></tr>
-    <tr><td class="paramname">type</td><td>Type of the graph from <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0" title="Enum class stating the type of the graph.">Graph::Type</a> enum </td></tr>
+    <tr><td class="paramname">type</td><td>Type of the graph from <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0" title="Enum class stating the type of the graph.">Graph::Type</a> enum</td></tr>
   </table>
   </dd>
+</dl>
+<p><a class="el" href="../../d3/d98/list_generator_8cpp-example.html">Example of generating a randomized list</a> </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d3/d98/list_generator_8cpp-example.html#a2">list_generator.cpp</a>.</dd>
 </dl>
 
 </div>

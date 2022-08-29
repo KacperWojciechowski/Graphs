@@ -16,5 +16,6 @@ var examples =
     [ "create_matrix_from_mat.cpp", "d6/de5/create_matrix_from_mat_8cpp-example.html", null ],
     [ "remove_edge_matrix.cpp", "de/d2e/remove_edge_matrix_8cpp-example.html", null ],
     [ "remove_node_matrix.cpp", "dc/d4c/remove_node_matrix_8cpp-example.html", null ],
-    [ "save_matrix_to_graphml.cpp", "df/dd3/save_matrix_to_graphml_8cpp-example.html", null ]
+    [ "save_matrix_to_graphml.cpp", "df/dd3/save_matrix_to_graphml_8cpp-example.html", null ],
+    [ "list_generator.cpp", "d3/d98/list_generator_8cpp-example.html", null ]
 ];

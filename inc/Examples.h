@@ -250,3 +250,22 @@
  * 
  * \see Graph::Matrix::save_graphml()
  */
+
+/**
+ * \example list_generator.cpp
+ * 
+ * An example of generating a randomized adjacency list in the .lst format.
+ * 
+ * This example shows how to use Data::Generator class to generate randomized adjacency list representation of a graph.
+ * The structure is saved in an output stream provided by the user, and as such this function can be used both for saving
+ * in file, and for displaying the result in a standard output.
+ * 
+ * \note To display the result in the standard output, pass std::cout reference as an argument.
+ * 
+ * \see Data::Generator::make_list()
+ */
+
+
+
+
+

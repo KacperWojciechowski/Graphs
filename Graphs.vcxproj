@@ -152,7 +152,6 @@
   <ItemGroup>
     <ClCompile Include="src\Algorithms.cpp" />
     <ClCompile Include="src\Coord.cpp" />
-    <ClCompile Include="src\Examples.cpp" />
     <ClCompile Include="src\Generator.cpp" />
     <ClCompile Include="src\Graph_list.cpp" />
     <ClCompile Include="src\Graph_matrix.cpp" />

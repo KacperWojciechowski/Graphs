@@ -12,15 +12,11 @@
  * \param vertex_amount Desired amount of vertices within the graph
  * \param type Type of the graph from Graph::Type enum
  */
-void Data::Generator::make_list(std::ostream& stream, uint32_t vertex_amount, Graph::Type type)
+void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type)
 {
 	std::vector<Data::coord> edges;
 
-	if (type == Graph::Type::undefined)
-	{
-		std::cerr << "Please select either directed or undirected graph type" << std::endl;
-	}
-	else
+	for (std::size_t i = 0; i < vertex_amount; i++)
 	{
 
 	}
@@ -39,6 +35,8 @@ void Data::Generator::make_list(std::ostream& stream, uint32_t vertex_amount, Gr
  * \param stream Output stream to save generated pixel map in.
  * \param length Vertical length of the map.
  * \param width Horizontal width of the map.
+ * 
+ * \ref pixel_map_generator.cpp "Example of generating the pixel map data source"
  */
 void Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width)
 {
@@ -65,4 +63,5 @@ void Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint
 			stream << '\n';
 		}
 	}
+	stream << std::flush;
 }

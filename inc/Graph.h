@@ -13,8 +13,6 @@ namespace Graph
 		undirected = 0, /**< The graph is undirected, which means that the weights of the connections are automatically 
 						mirrored */
 		directed, /**< The graph is directed, which means that the weights are not automatically mirrored */
-		undefined /**< The graph type is undefined. In majority of cases, operations on such graph are either
-						incorrect, or the graph type is assumed as directed */
 	};
 
 
@@ -35,7 +33,7 @@ namespace Graph
 	/**
 	 * \brief Abstract class stating the common interface for each of the graph representation.
 	 */
-	class Graph
+	class Graph_t
 	{
 	public:
 
@@ -57,7 +55,7 @@ namespace Graph
 		 * \param Destination end vertex of an edge.
 		 * \param Weight weight of the connection.
 		 */
-		virtual void add_edge(std::size_t source, std::size_t destination, uint32_t weight) = 0;
+		virtual void make_edge(std::size_t source, std::size_t destination, uint32_t weight) = 0;
 
 
 

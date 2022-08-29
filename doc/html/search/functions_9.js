@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['save_5fgraphml_0',['save_graphml',['../d6/d4f/class_graph_1_1_graph.html#ac9fc006e1a5d4bcb9c00409a2d1b540b',1,'Graph::Graph::save_graphml()'],['../d6/de9/class_graph_1_1_list.html#a85e52c34c9f61a3138d321b172b6e7a4',1,'Graph::List::save_graphml()'],['../dc/de1/class_graph_1_1_matrix.html#a60b5bd86202fa315c4d11a83464a220f',1,'Graph::Matrix::save_graphml()']]],
-  ['save_5fmatrix_5fto_5fgraphml_5ffile_1',['save_matrix_to_graphml_file',['../de/d21/class_graph_1_1_examples.html#a74b280db56384a5a24c232395bd54127',1,'Graph::Examples']]],
-  ['sl_5fcoloring_2',['sl_coloring',['../dd/d33/class_graph_1_1_algorithms.html#ab360634b73e4eb64c8317feee417837e',1,'Graph::Algorithms']]]
+  ['save_5fgraphml_0',['save_graphml',['../d3/deb/class_graph_1_1_graph__t.html#a88a55dc3ef39d7339ffb44b4713cb153',1,'Graph::Graph_t::save_graphml()'],['../d6/de9/class_graph_1_1_list.html#ab9e7e80227be6e2e9931b5cac020b037',1,'Graph::List::save_graphml()'],['../dc/de1/class_graph_1_1_matrix.html#a276b200993b022be8913e9f727fa25f1',1,'Graph::Matrix::save_graphml()']]],
+  ['sl_5fcoloring_1',['sl_coloring',['../dd/d33/class_graph_1_1_algorithms.html#adf8491653a336a3a547504cad5b0079c',1,'Graph::Algorithms']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['prev_5fnode_0',['prev_node',['../d4/d67/struct_graph_1_1_roadmap.html#a9a8aa9cf0c20e11e9f9e2ba3c2047e26',1,'Graph::Roadmap']]]
+  ['id_0',['ID',['../d6/d87/struct_graph_1_1_list_1_1_node.html#a9fb038ede196ea03b317faa9415ae633',1,'Graph::List::Node']]],
+  ['in_5fdeg_1',['in_deg',['../d2/d9f/struct_graph_1_1_degree.html#a123a95d37ab9bed000e1210b8e0ee56a',1,'Graph::Degree']]]
 ];

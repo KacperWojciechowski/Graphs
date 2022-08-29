@@ -10,8 +10,8 @@
  * or the file cannot be accessed, an exception is returned. 
  * 
  * \param file_path Path of the data source file.
- * \param name Name of the graph (user-given).
- * \param type Type of the graph (from the Graph::Type enum).
+ * \param type Type of the graph (from the Graph::Type enum). In case of reading from graphML file
+ *			   this parameter is ignored.
  * 
  * \warning Exceptions to guard against:
  *		- std::invalid_argument - when given file extension is not supported.
@@ -19,7 +19,12 @@
  * \attention Supported formats are .lst and .GRAPHML. The .lst representation does not
  *			  contain weights, so a weight of 1 is assumed for each connection if using
  *			  this file format as a data source. 
- * \see House of Graphs for .lst adjacency list file reference.
+ * 
+ * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for House of Graphs adjacency list format guideline.
+ * \see <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html"> Here </a> for GraphML format guideline.
+ * 
+ * \ref create_list_from_lst.cpp "Example of using .lst file as data source"\n 
+ * \ref create_list_from_graphml.cpp "Example of using .GRAPHML file as data source"
  */
 Graph::List::List(std::string file_path, Type type)
 	: type(type)
@@ -205,7 +210,7 @@ void Graph::List::load_graphml_file(std::fstream& file)
 	}
 	else
 	{
-		this->type = Type::undefined;
+		throw std::runtime_error("Unsupported graph type");
 	}
 
 	// obtain vertices count
@@ -433,14 +438,19 @@ void Graph::List::print()
 /**
  * \brief Function adding a connection between two given vertices.
  * 
+ * If the graph type is undirected, the connection will be inserted both ways.
+ * 
  * \warning If an edge between given vertices already exists, the weight of the 
  *			connection will be overwritten, and second edge will not be added.
  * 
  * \param source ID of the source vertex.
  * \param destination ID of the end vertex.
  * \param weight Weight of the connection.
+ * 
+ * \ref add_edge_list_insert.cpp "Example of adding an edge between two vertices"\n
+ * \ref add_edge_list_override.cpp "Example of modifying the weight of an existing edge"
  */
-void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t weight)
+void Graph::List::make_edge(std::size_t source, std::size_t destination, uint32_t weight)
 {
 	// validate arguments
 	if (source >= this->list.size() || destination >= this->list.size())
@@ -518,6 +528,7 @@ void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t
  * Added vertex is initially isolated, so any connections to it need
  * to be added manually.
  * 
+ * \see add_node_list.cpp "Example of adding an isolated vertex"
  */
 void Graph::List::add_node()
 {
@@ -531,11 +542,15 @@ void Graph::List::add_node()
 /**
  * \brief Function removing a connection between two given adjacency vertices.
  * 
+ * If the graph is undirected, the connection will be removed both ways.
+ * 
  * \param source ID of the beginning vertex.
  * \param destination ID of the end vertex.
  * 
  * \warning Exceptions to guard against:
  *		- std::out_of_range - When any of the given IDs is out of bounds for the adjacency list.
+ * 
+ * \ref remove_edge_list.cpp "Example of removing an edge from graph structure"
  */
 void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 {
@@ -590,6 +605,8 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
  * 
  * \warning Exception to guard against:
  *			- std::out_of_range - when given vertex ID is out of bounds for the list.
+ * 
+ * \ref remove_node_list.cpp "Example of removing a vertex from graph structure"
  */
 void Graph::List::remove_node(std::size_t node_id)
 {
@@ -730,7 +747,12 @@ const Graph::Type Graph::List::get_type()
 /**
  * \brief Function saving current graph structure  into a .GRAPHML format file.
  * 
- * \param output_file_path Path to the output file.
+ * This format does contain the weights of the edges.
+ * 
+ * \param stream Stream to which the graphML data format should be saved to.
+ * \param name Name of the graph (user-given).
+ * 
+ * \ref save_list_to_graphml.cpp "Example of saving current graph structure in .GRAPHML format"
  */
 void Graph::List::save_graphml(std::ostream& stream, std::string name)
 {
@@ -761,10 +783,6 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 	case Type::undirected:
 		stream << "\"undirected\">\n";
 		break;
-		// in case of undefined type, directed type is assumed
-	case Type::undefined:
-		stream << "\"directed\">\n";
-		break;
 	}
 
 	// vertices data
@@ -793,5 +811,5 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 
 	// close the tags and the file
 	stream << "\t</graph>\n";
-	stream << "</graphml>";
+	stream << "</graphml>" << std::flush;
 }

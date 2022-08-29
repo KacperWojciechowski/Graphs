@@ -9,5 +9,12 @@ var examples =
     [ "remove_node_list.cpp", "d9/dc2/remove_node_list_8cpp-example.html", null ],
     [ "save_list_to_graphml.cpp", "d4/d29/save_list_to_graphml_8cpp-example.html", null ],
     [ "pixel_map_generator.cpp", "da/dd3/pixel_map_generator_8cpp-example.html", null ],
-    [ "make_edge_matrix_insert.cpp", "de/d7a/make_edge_matrix_insert_8cpp-example.html", null ]
+    [ "make_edge_matrix_insert.cpp", "de/d7a/make_edge_matrix_insert_8cpp-example.html", null ],
+    [ "make_edge_matrix_override.cpp", "d6/d76/make_edge_matrix_override_8cpp-example.html", null ],
+    [ "add_node_matrix.cpp", "df/d94/add_node_matrix_8cpp-example.html", null ],
+    [ "create_matrix_from_graphml.cpp", "d8/d78/create_matrix_from_graphml_8cpp-example.html", null ],
+    [ "create_matrix_from_mat.cpp", "d6/de5/create_matrix_from_mat_8cpp-example.html", null ],
+    [ "remove_edge_matrix.cpp", "de/d2e/remove_edge_matrix_8cpp-example.html", null ],
+    [ "remove_node_matrix.cpp", "dc/d4c/remove_node_matrix_8cpp-example.html", null ],
+    [ "save_matrix_to_graphml.cpp", "df/dd3/save_matrix_to_graphml_8cpp-example.html", null ]
 ];

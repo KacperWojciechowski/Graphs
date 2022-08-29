@@ -5,12 +5,12 @@
  *
  * An example showing how to create an object of Graph::List class using .lst file.
  *
- * This example shows how to pass the path to the source file
- * and graph type from the Graph::Type enum. It uses the
+ * This example uses the
  * \b listDirected.lst
- * file provided as a sample in the samples folder.
+ * file provided as a sample in the samples folder. The constructor creates the internal graph structure contained
+ * within the object. All weights of the edges present in the data source are assumed to be 1.
  * 
- * \see https://hog.grinvin.org/Formats.action for House of Graphs adjacency list format guideline.
+ * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for House of Graphs adjacency list format guideline.
  * 
  * \see Graph::List::List(std::string file_path, Graph::Type type)
  */
@@ -20,14 +20,13 @@
  * 
  * An example showing how to create an object of Graph::List class using .GRAPHML file.
  * 
- * This example shows how to pass the path to the source file and
- * graph type from the Graph::Type enum. It uses the
+ * This example uses the
  * \b graphML.GRAPHML
  * file provided as a sample in the samples folder.
  * In case of graphML files, the second argument of the constructor is
  * ignored, as this data is contained within the graphML file itself.
  * 
- * \see http://graphml.graphdrawing.org/primer/graphml-primer.html for GraphML format guideline.
+ * \see <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html"> Here </a> for GraphML format guideline.
  * 
  * \see Graph::List::List(std::string file_path, Graph::Type type)
  */
@@ -148,14 +147,106 @@
  * 
  * This example shows how to add a new edge to the graph structure in the Graph::Matrix object. The function does verify
  * whether given indexes are correct, and the given weight is non-zero. In case the edge already exists, this function
- * modifies the weight the edge, as shown in the different example linked below.
+ * modifies the weight the edge, as shown in the different example linked below. Depending on the graph type, this function
+ * inserts an edge or modifies its weight either one-way in case of directed graph, or both ways in case of undirected graph.
  * 
  * \ref make_edge_matrix_override.cpp "Modify the weight of an edge"
  * 
  * \see Graph::Matrix::make_edge()
  */
 
+/**
+ * \example make_edge_matrix_override.cpp
+ * 
+ * An example of changing the weight of an existing edge in Graph::Matrix object.
+ * 
+ * This example shows how to override the weight of already existing edge between two given vertices in the Graph::Matrix object.
+ * The function does verify whether given indexes are correct, and the given weight is non-zero. In case the edge does not exists,
+ * it will insert a new edge according to the graph type. The edge will be inserted / its weight modified one way in case of directed
+ * graph, or both ways in case of undirected graph. An example of adding a prevously not existing edge to the graph is linked below.
+ * 
+ * \ref make_edge_matrix_insert.cpp "Add an edge to the graph structure"
+ * 
+ * \see Graph::Matrix::make_edge()
+ */
 
+/**
+ * \example add_node_matrix.cpp
+ * 
+ * An example of adding an isolated vertex to the graph structure in the Graph::Matrix object.
+ * 
+ * This example shows how to add  an isolated vertex to the graph structure. In order to connect the added vertex with any other
+ * vertices, the user must manually insert the connections using the Graph::Matrix::make_edge() function.
+ * 
+ * \see Graph::Matrix::add_node()
+ */
 
+/**
+ * \example create_matrix_from_graphml.cpp
+ * 
+ * An example of creating a Graph::Matrix object based on the .GRAPHML data set.
+ * 
+ * This example uses the
+ * \b graphML.GRAPHML
+ * file as the data source. During the process, the function parses the file searching for information such as graph type, 
+ * vertices, and edges with their weights. The graph type parameter provided by the user in this case is ignored. In case
+ * the information regarding an edge's weight is not present, a weight of 1 is assumed.
+ * 
+ * \see <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html"> Here </a> for GraphML format guideline.
+ * 
+ * \see Graph::Matrix::Matrix(std::string file_path, Graph::Type type) 
+ */
 
+/**
+ * \example create_matrix_from_mat.cpp
+ * 
+ * An example of creating a Graph::Matrix object based on the .lst data format.
+ * 
+ * This example uses the
+ * \b matrixUndirected.mat
+ * file as the data source. During the process, the constructor calls a function that parses provided data source file. 
+ * Graph type needs to be stated by the user, as the format does not contain any graph type information itself.
+ * 
+ * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for House of Graphs adjacency matrix format guideline.
+ * 
+ * \see Graph::Matrix::Matrix(std::string file_path, Graph::Type type)
+ */
 
+/**
+ * \example remove_edge_matrix.cpp
+ * 
+ * An example of removing an edge from graph structure in the Graph::Matrix object.
+ * 
+ * This example shows how to remove an existing edge from the graph structure contained within the Graph::Matrix object.
+ * The function does not verify nor needs a verification whether the edge is present. Depending on the graph type, an edge
+ * might be removed one way in case of directed graph, or both ways in case of the undirected graph.
+ * 
+ * \see Graph::Matrix::remove_edge()
+ */
+
+/**
+ * \example remove_node_matrix.cpp
+ * 
+ * An example of removing a vertex from the graph structure in the Graph::Matrix object.
+ * 
+ * This example shows how to remove an existing vertex along with all its edges from the graph structure contained within
+ * the Graph::Matrix object. All the edges connected to the given vertex will be removed regardless to the graph type. 
+ * Removing a vertex causes a renumeration of each subsequent vertex, decreasing their indexes by 1. The function automatically
+ * recalculates the corresponding degrees.
+ * 
+ * \see Graph::Matrix::remove_node()
+ */
+
+/**
+ * \example save_matrix_to_graphml.cpp
+ * 
+ * An example of saving the graph structure from the Graph::Matrix object in a .GRAPHML format.
+ * 
+ * This example shows how to save the graph structure contained within the Graph::Matrix object in a .GRAPHML XML format.
+ * The function accepts a reference to an output stream as a parameter, and as such allows user to save the result in any
+ * output stream, such as file or standard output. 
+ * 
+ * \note In order to display the result, pass the std::cout reference as the argument.
+ * 
+ * \see Graph::Matrix::save_graphml()
+ */

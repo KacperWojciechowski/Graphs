@@ -21,7 +21,7 @@
  *			  this file format as a data source. 
  * 
  * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for House of Graphs adjacency list format guideline.
- * \see http://graphml.graphdrawing.org/primer/graphml-primer.html for GraphML format guideline.
+ * \see <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html"> Here </a> for GraphML format guideline.
  * 
  * \ref create_list_from_lst.cpp "Example of using .lst file as data source"\n 
  * \ref create_list_from_graphml.cpp "Example of using .GRAPHML file as data source"

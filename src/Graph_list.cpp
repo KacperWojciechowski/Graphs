@@ -73,7 +73,7 @@ Graph::List::List(const std::string& file_path, Type type)
 
 
 /**
- * \brief Constructor creating the adjacency list object based on the adjacency matrix object.
+ * \brief Constructor creating the Graph::List object based on any supported graph representation.
  * 
  * \param matrix Reference to the Graph::Matrix object.
  */
@@ -81,18 +81,22 @@ Graph::List::List(GraphBase& graph)
 {
 	// get general graph info
 	this->type = graph.get_type();
+	std::size_t count = graph.get_nodes_amount();
 	
-	// build list based on the matrix
-	for (std::size_t i = 0; i < graph.get_nodes_amount(); i++)
+	std::size_t val;
+
+	// build list
+	for (std::size_t i = 0; i < count; i++)
 	{
-		this->list.push_back({});
-		this->degrees.push_back(graph.get_node_degree(i));
+		this->list.emplace_back(0);
+		this->degrees.emplace_back(graph.get_node_degree(i));
 
 		for (std::size_t j = 0; j < graph.get_nodes_amount(); j++)
 		{
-			if (graph.get_edge(i, j) != 0)
+			val = graph.get_edge(i, j);
+			if (val != 0)
 			{
-				this->list[i].push_back({ j, graph.get_edge(i, j) });
+				this->list[i].emplace_back( j, val );
 			}
 		}
 	}
@@ -138,7 +142,7 @@ void Graph::List::load_lst_file(std::istream& file)
 
 		if (line != "")
 		{
-			this->list.push_back({});
+			this->list.emplace_back(0);
 
 			pos = line.find(' ');
 
@@ -149,7 +153,7 @@ void Graph::List::load_lst_file(std::istream& file)
 				line = line.substr(pos + 1);
 				vertex.ID = static_cast<std::size_t>(atoi(line.c_str())) - 1;
 				vertex.weight = 1;
-				itr->push_back(vertex);
+				itr->emplace_back(vertex);
 				pos = line.find(' ');
 			}
 		}
@@ -174,7 +178,7 @@ void Graph::List::load_graphml_file(std::istream& file)
 
 	// split the document into vector
 	std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-	buffer.push_back('\0');
+	buffer.emplace_back('\0');
 
 	// parse the document
 	document->parse<0>(&buffer[0]);
@@ -216,7 +220,7 @@ void Graph::List::load_graphml_file(std::istream& file)
 	// obtain vertices count
 	for (rapidxml::xml_node<>* vertex = graph_node->first_node("node"); vertex; vertex = vertex->next_sibling("node"))
 	{
-		this->list.push_back({});
+		this->list.emplace_back(0);
 	}
 
 	// obtain edges
@@ -264,11 +268,11 @@ void Graph::List::load_graphml_file(std::istream& file)
 		index1 = static_cast<std::size_t>(atoi(id1.c_str()));
 		index2 = static_cast<std::size_t>(atoi(id2.c_str()));
 
-		this->list[index1].push_back({ index2, weight});
+		this->list[index1].emplace_back( index2, weight );
 
 		if (this->type == Type::undirected && id1 != id2)
 		{
-			this->list[index2].push_back({ index1, weight });
+			this->list[index2].emplace_back( index1, weight );
 		}
 	}
 }
@@ -287,7 +291,7 @@ void Graph::List::calculate_degrees()
 	// calculate the degree of each vertex
 	for (std::size_t i = 0; i < this->list.size(); i++)
 	{
-		this->degrees.push_back({ 0, 0, 0 });
+		this->degrees.emplace_back( 0, 0, 0 );
 		for (auto itr = this->list[i].begin(); itr != this->list[i].end(); itr++)
 		{
 			this->degrees[i].out_deg++;
@@ -481,7 +485,7 @@ void Graph::List::make_edge(std::size_t source, std::size_t destination, uint32_
 	// else insert the connection to the structure
 	else
 	{
-		this->list[source].push_back({ destination, weight });
+		this->list[source].emplace_back( destination, weight );
 		
 		// calculate degrees
 		this->degrees[source].out_deg++;
@@ -511,7 +515,7 @@ void Graph::List::make_edge(std::size_t source, std::size_t destination, uint32_
 		// else insert the mirrored connection to the structure
 		else
 		{
-			this->list[destination].push_back({ source, weight });
+			this->list[destination].emplace_back( source, weight );
 			this->degrees[destination].out_deg++;
 			this->degrees[destination].deg++;
 			this->degrees[source].in_deg++;

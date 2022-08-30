@@ -91,16 +91,29 @@ Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, Type type)
 
 
 /**
- * Conversion constructor allowing to create a Graph::Matrix object based on Graph::List object.
+ * Conversion constructor allowing to create a Graph::Matrix object based on any supported graph representation.
  * 
- * This constructor allows user to switch graph representation by converting adjacency list to
- * adjacency matrix.
+ * This constructor allows user to switch current graph representation to adjacency matrix representation.
  * 
- * \param l Reference to the source Graph::List object.
+ * \param l Reference to a different supported graph representation.
  */
-Graph::Matrix::Matrix(GraphBase& l)
+Graph::Matrix::Matrix(GraphBase& graph)
 { 
-	
+	// get general graph info
+	this->type = graph.get_type();
+	std::size_t count = graph.get_nodes_amount();
+
+
+	for (std::size_t i = 0; i < count; i++)
+	{
+		this->matrix.emplace_back(0);
+		this->degrees.emplace_back(graph.get_node_degree(i));
+
+		for (std::size_t j = 0; j < count; j++)
+		{
+			this->matrix[i].emplace_back(graph.get_edge(i, j));
+		}
+	}
 }
 
 
@@ -279,25 +292,25 @@ void Graph::Matrix::add_node()
 	// add zeros at the end of each row to mark the new vertex to be added
 	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
 	{
-		itr->push_back(0);
+		itr->emplace_back(0);
 	}
 
 	// create the vector representing the neighbours of the new vertex
 	std::size_t size = this->matrix[0].size();
 
 	// add new row to the matrix
-	this->matrix.push_back({});
+	this->matrix.emplace_back(0);
 
 	// fill the new row with zeros
 	std::size_t index = this->matrix.size() - 1;
 
 	for (std::size_t i = 0; i < size; i++)
 	{
-		this->matrix[index].push_back(0);
+		this->matrix[index].emplace_back(0);
 	}
 
 	// add new vertex to the degrees vector
-	this->degrees.push_back({ 0, 0, 0 });
+	this->degrees.emplace_back( 0, 0, 0 );
 }
 
 
@@ -594,7 +607,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 		{
 			if (this->matrix[i][j] != 0)
 			{
-				edges.push_back({ i, j });
+				edges.emplace_back( i, j );
 			}
 		}
 	}
@@ -607,11 +620,11 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 
 	for (std::size_t i = 0; i < size; i++)
 	{
-		mat.push_back({});
+		mat.emplace_back(0);
 		index = mat.size() - 1;
 		for (std::size_t j = 0; j < size; j++)
 		{
-			mat[index].push_back(0);
+			mat[index].emplace_back(0);
 		}
 	}
 
@@ -690,14 +703,14 @@ void Graph::Matrix::load_throughtput(std::string file_path)
 			for (std::size_t i = 0; i < this->matrix.size(); i++)
 			{
 				// add a row to the throughtput matrix
-				this->throughtput.push_back({});
+				this->throughtput.emplace_back(0);
 				index = this->throughtput.size() - 1;
 
 				// load each value to the added row
 				for (std::size_t j = 0; j < this->matrix[i].size(); j++)
 				{
 					file >> value;
-					this->throughtput[index].push_back(value);
+					this->throughtput[index].emplace_back(value);
 				}
 			}
 		}
@@ -769,7 +782,7 @@ void Graph::Matrix::load_mat_file(std::istream& file)
 
 	for (std::size_t i = 0; i < vertices; i++)
 	{
-		this->matrix.push_back({});
+		this->matrix.emplace_back(0);
 		index = this->matrix.size();
 		for (std::size_t j = 0; j < vertices; j++)
 		{
@@ -778,7 +791,7 @@ void Graph::Matrix::load_mat_file(std::istream& file)
 			{
 				throw std::runtime_error("Weight less than zero");
 			}
-			this->matrix[index - 1].push_back(static_cast<uint32_t>(temp));
+			this->matrix[index - 1].emplace_back(static_cast<uint32_t>(temp));
 		}
 	}
 }
@@ -804,7 +817,7 @@ void Graph::Matrix::load_graphml_file(std::istream& file)
 
 	// split the document into vector
 	std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-	buffer.push_back('\0');
+	buffer.emplace_back('\0');
 
 	// parse the document
 	document->parse<0>(&buffer[0]);
@@ -846,14 +859,14 @@ void Graph::Matrix::load_graphml_file(std::istream& file)
 	// obtain vertices count
 	for (rapidxml::xml_node<>* vertex = graph_node->first_node("node"); vertex; vertex = vertex->next_sibling("node"))
 	{
-		this->matrix.push_back({});
+		this->matrix.emplace_back(0);
 	}
 
 	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
 	{
 		for (std::size_t i = 0; i < this->matrix.size(); i++)
 		{
-			itr->push_back(0);
+			itr->emplace_back(0);
 		}
 	}
 
@@ -925,7 +938,7 @@ void Graph::Matrix::calculate_degrees()
 	// create the degrees table
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
-		this->degrees.push_back({ 0, 0, 0 });
+		this->degrees.emplace_back( 0, 0, 0 );
 	}
 
 	// iterate through the whole adjacency matrix to calculate degree of each node

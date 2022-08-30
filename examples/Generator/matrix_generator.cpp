@@ -1,4 +1,4 @@
-#include "..\inc\Generator.h"
+#include "..\..\inc\Generator.h"
 #include <fstream>
 
 int main()

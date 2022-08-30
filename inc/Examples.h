@@ -281,6 +281,22 @@
  * \see Data::Generator::make_matrix()
  */
 
+/**
+ * \example thr_matrix_generator.cpp
+ * 
+ * An example of generating a randomized throughtput matrix based on existing adjacency matrix file.
+ * 
+ * This example shows how to use Data::Generator class to generate randomized throughtput matrix based on an adjacency matrix
+ * representation of a graph. The source of adjacency matrix must be an input file stream. The function reads the original
+ * adjacency matrix and generate corresponding random throughtput values for each edge in the original adjacency matrix.
+ * User must pass an output stream as a parameter, and as such, the function can be used to output the result eg. to file, or
+ * to a standard output.
+ * 
+ * \note To display the results, pass the std::cout reference as an argument.
+ * 
+ * \see Data::Generator::make_throughtput_matrix() 
+ */
+
 
 
 

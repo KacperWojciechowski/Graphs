@@ -8,6 +8,7 @@ var hierarchy =
       [ "Graph::List", "d6/de9/class_graph_1_1_list.html", null ],
       [ "Graph::Matrix", "dc/de1/class_graph_1_1_matrix.html", null ]
     ] ],
+    [ "Data::Limits", "d7/d0e/struct_data_1_1_limits.html", null ],
     [ "Graph::List::Node", "d6/d87/struct_graph_1_1_list_1_1_node.html", null ],
     [ "Graph::Path", "d7/d30/class_graph_1_1_path.html", null ],
     [ "Data::PixelMap", "d3/d20/class_data_1_1_pixel_map.html", null ],

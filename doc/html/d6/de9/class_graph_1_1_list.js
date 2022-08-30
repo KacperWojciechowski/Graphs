@@ -1,7 +1,7 @@
 var class_graph_1_1_list =
 [
     [ "Node", "d6/d87/struct_graph_1_1_list_1_1_node.html", "d6/d87/struct_graph_1_1_list_1_1_node" ],
-    [ "List", "d6/de9/class_graph_1_1_list.html#a0763a04f4986dac2f8f61550a65e4cd5", null ],
+    [ "List", "d6/de9/class_graph_1_1_list.html#a60f2cc594add5c4a70b32c9718b7ca65", null ],
     [ "List", "d6/de9/class_graph_1_1_list.html#a958cdfd61ab7e34c31e00f1a85fc079f", null ],
     [ "List", "d6/de9/class_graph_1_1_list.html#a2dfc34ec8280d8d10ba0091caec245e1", null ],
     [ "List", "d6/de9/class_graph_1_1_list.html#ae7ca493d4e85ac472251314ca962c4e6", null ],
@@ -9,10 +9,10 @@ var class_graph_1_1_list =
     [ "add_node", "d6/de9/class_graph_1_1_list.html#aac4ab303faf71a30792c6d431f240714", null ],
     [ "calculate_degrees", "d6/de9/class_graph_1_1_list.html#adcd533ffc69d17a70472a68a61cee4bc", null ],
     [ "change_to_line_graph", "d6/de9/class_graph_1_1_list.html#af3478b78c8393c9df8d440b52ca9c23c", null ],
-    [ "get_edge", "d6/de9/class_graph_1_1_list.html#a1a5ea23d4a4b2f4b18bbc6e0da6af8de", null ],
-    [ "get_node_degree", "d6/de9/class_graph_1_1_list.html#a25351584a0c871a5d91acd37d8a2f5a0", null ],
-    [ "get_nodes_amount", "d6/de9/class_graph_1_1_list.html#aa5200e14bc56cd74feb2a9ca1964f730", null ],
-    [ "get_type", "d6/de9/class_graph_1_1_list.html#a3be578b82ffcc1136e4c9d5976bb22a3", null ],
+    [ "get_edge", "d6/de9/class_graph_1_1_list.html#a39fe59b34278f72cb03d6f68340984b3", null ],
+    [ "get_node_degree", "d6/de9/class_graph_1_1_list.html#ad9aae5c3d481526b7e1892b4dd7a8e39", null ],
+    [ "get_nodes_amount", "d6/de9/class_graph_1_1_list.html#af401c129c5e5185ecebb9b81ce4b2ec4", null ],
+    [ "get_type", "d6/de9/class_graph_1_1_list.html#a386bbfc49e6e82e0963d7f8872583ce0", null ],
     [ "load_graphml_file", "d6/de9/class_graph_1_1_list.html#a849f725f7a29aabd2fb049c7cfe7dddf", null ],
     [ "load_lst_file", "d6/de9/class_graph_1_1_list.html#ad0bec7ee5bed87a60b0b5bf6503488f8", null ],
     [ "make_edge", "d6/de9/class_graph_1_1_list.html#aaef0516e0039e1a433d8edbef4a72de6", null ],

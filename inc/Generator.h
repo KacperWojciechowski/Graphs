@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <fstream>
 
 #include "../inc/Graph.h"
 
@@ -8,8 +9,8 @@ namespace Data
 {
 	struct Limits
 	{
-		std::size_t min;
-		std::size_t max;
+		std::size_t min; /**< An upper limit of given interval */
+		std::size_t max; /**< A lower limit of given interval */
 	};
 
 	/**
@@ -24,7 +25,7 @@ namespace Data
 	public:
 		// matrix graph generation
 		void make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc = 1);
-		void make_throughtput_matrix(std::ostream& stream, std::istream& matrix_src, const Limits& limits, Graph::Type type);
+		void make_throughtput_matrix(std::ostream& stream, std::ifstream& matrix_src, const Limits& limits, Graph::Type type);
 
 		// list graph generation
 		void make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc = 1);

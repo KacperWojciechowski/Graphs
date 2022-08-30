@@ -107,6 +107,159 @@ void Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
 
 
 /**
+ * Function generating a random throughtput matrix based on an existing adjacency matrix.
+ * 
+ * The function first reads the input file for adjacency matrix, to later analyze it and create throughtput
+ * values where there are edges in the original adjacency matrix.
+ * 
+ * \note Limits are expressed as a left open interval (limits.min; limits.max>.
+ * 
+ * \warning The source of the adjacency matrix must be an input file stream. The function does not support imput
+ *			from standard input, however it does support outputing the result to the standard output.
+ * \warning The function does not verify whether source matrix graph type and graph type provided by the user match.
+ *			In case of missmatching the source matrix type, function will result in incorrect throughtput matrix generation.
+ * 
+ * \warning Exception to guard against:
+ *			- std::runtime_error - The adjacency matrix file contains negative weights, or the matrix is not square.
+ * 
+ * \warning The matrix must consist of only integer values. Otherwise, this funcion might result in an undefined behaviour.
+ * 
+ * \param stream Output stream to save generated list to
+ * \param matrix_src Input stream where to read the adjacency matrix from
+ * \param limits Upper and lower limits for throughtput values
+ * \param type Type of the source graph
+ * 
+ * \ref thr_matrix_generator.cpp "Example of generating a throughtput matrix"
+ */
+void Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstream& matrix_src, const Limits& limits, Graph::Type type)
+{
+	std::vector<std::vector<std::size_t>> src_matrix;
+	std::vector<std::vector<std::size_t>> dest_matrix;
+	
+	srand(static_cast<uint32_t>(time(NULL)));
+
+	// calculate the divider for modulo division
+	std::size_t divider = limits.max - limits.min + 1;
+	
+	std::string line;
+	std::size_t pos;
+
+	std::size_t index = 0;
+
+	// lambda function extracting the values from read row of the source matrix
+	auto extract_val = [&line, &pos]() -> std::size_t {
+
+		std::int32_t val = atoi(line.c_str());
+		line = line.substr(pos + 1);
+
+		if (val < 0)
+		{
+			throw std::runtime_error("Weight less than zero");
+		}
+
+		pos = line.find(' ');
+		return static_cast<std::size_t>(val);
+	};
+
+	// parse the source matrix file
+	while (!matrix_src.eof())
+	{
+		std::getline(matrix_src, line);
+
+		if (line != "")
+		{
+			src_matrix.push_back({});
+
+			pos = line.find(' ');
+
+			while (pos != std::string::npos)
+			{
+				src_matrix[index].push_back(extract_val());
+			}
+			src_matrix[index].push_back(extract_val());
+			index++;
+		}
+	}
+
+	// verify whether the source matrix is square
+	for (std::size_t index = 0; auto& row : src_matrix)
+	{
+		if (src_matrix.size() != row.size())
+		{
+			throw std::runtime_error("The source matrix is not square");
+		}
+		else
+		{
+			dest_matrix.push_back({});
+
+			for (auto& element : row)
+			{
+				dest_matrix[index].push_back(0);
+			}
+			index++;
+		}
+	}
+
+	std::size_t val;
+
+	// create the destination matrix
+	if (type == Graph::Type::directed)
+	{
+		for (std::size_t i = 0; i < src_matrix.size(); i++)
+		{
+			dest_matrix.push_back({});
+			for (std::size_t j = 0; j < src_matrix.size(); j++)
+			{
+				if (src_matrix[i][j] != 0)
+				{
+					dest_matrix[i][j] = rand() % divider + limits.min;
+				}
+			}
+		}
+	}
+	else
+	{
+		for (std::size_t i = 0; i < src_matrix.size(); i++)
+		{
+			dest_matrix.push_back({});
+			for (std::size_t j = i; j < src_matrix.size(); j++)
+			{
+				if (src_matrix[i][j] != 0)
+				{
+					val = rand() % divider + limits.min;
+					dest_matrix[i][j] = val;
+					dest_matrix[j][i] = val;
+				}
+			}
+		}
+	}
+
+	// output the created throughtput matrix
+	for (std::size_t index1 = 0; auto& row : dest_matrix)
+	{
+		for (std::size_t index2 = 0; auto& element : row)
+		{
+			stream << element;
+			if (index2 < row.size() - 1)
+			{
+				stream << ' ';
+			}
+			index2++;
+		}
+		if (index1 < dest_matrix.size() - 1)
+		{
+			stream << '\n';
+		}
+		index1++;
+	}
+
+	stream << std::flush;
+}
+
+
+
+
+/**
  * Function generating a random graph in a list of given type representation. 
  * 
  * The generated format is compliant with .lst format provided by House of Graphs, and

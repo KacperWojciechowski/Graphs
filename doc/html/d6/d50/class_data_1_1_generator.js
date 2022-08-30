@@ -1,7 +1,7 @@
 var class_data_1_1_generator =
 [
-    [ "make_list", "d6/d50/class_data_1_1_generator.html#a42766a88c5289f7300335063cc488598", null ],
-    [ "make_pixel_map", "d6/d50/class_data_1_1_generator.html#a1e229182fec568afa2a37ddd6c95a49c", null ],
-    [ "make_throughtput_matrix", "d6/d50/class_data_1_1_generator.html#a08f1ce8da9a9c79393868a2430006d11", null ],
-    [ "make_weighted_matrix", "d6/d50/class_data_1_1_generator.html#a72499601ed1ce577bf3c3dcd00e0860b", null ]
+    [ "make_list", "d6/d50/class_data_1_1_generator.html#a3e0c69af79b38692062124848828e649", null ],
+    [ "make_matrix", "d6/d50/class_data_1_1_generator.html#aca5fa2861406cec3eda1d1bd6ff7321b", null ],
+    [ "make_pixel_map", "d6/d50/class_data_1_1_generator.html#a39388325bf8b5cc3ec8cc5cf343310f4", null ],
+    [ "make_throughtput_matrix", "d6/d50/class_data_1_1_generator.html#a52c6a97e8fc8ec84150c3c878acbae4b", null ]
 ];

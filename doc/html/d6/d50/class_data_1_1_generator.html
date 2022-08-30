@@ -31,7 +31,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="../../logo.jpg"/></td>
   <td id="projectalign">
-   <div id="projectname">Graphs<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">Graphs<span id="projectnumber">&#160;0.1</span>
    </div>
    <div id="projectbrief">Simple House of Graphs compliant graph software</div>
   </td>
@@ -107,21 +107,27 @@ $(document).ready(function(){initNavTree('d6/d50/class_data_1_1_generator.html',
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a72499601ed1ce577bf3c3dcd00e0860b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a72499601ed1ce577bf3c3dcd00e0860b">make_weighted_matrix</a> (std::string output_file_path, uint32_t vertex_amount)</td></tr>
-<tr class="separator:a72499601ed1ce577bf3c3dcd00e0860b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08f1ce8da9a9c79393868a2430006d11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a08f1ce8da9a9c79393868a2430006d11">make_throughtput_matrix</a> (std::string graph_file_path, std::string output_file_path)</td></tr>
-<tr class="separator:a08f1ce8da9a9c79393868a2430006d11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42766a88c5289f7300335063cc488598"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a42766a88c5289f7300335063cc488598">make_list</a> (std::string output_file_path, uint32_t vertex_amount)</td></tr>
-<tr class="separator:a42766a88c5289f7300335063cc488598"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e229182fec568afa2a37ddd6c95a49c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a1e229182fec568afa2a37ddd6c95a49c">make_pixel_map</a> (std::string output_file_path, uint32_t length, uint32_t width)</td></tr>
-<tr class="separator:a1e229182fec568afa2a37ddd6c95a49c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca5fa2861406cec3eda1d1bd6ff7321b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#aca5fa2861406cec3eda1d1bd6ff7321b">make_matrix</a> (std::ostream &amp;stream, uint32_t vertex_amount, const <a class="el" href="../../d7/d0e/struct_data_1_1_limits.html">Limits</a> &amp;limits, <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a> type, std::uint8_t density_psc=1)</td></tr>
+<tr class="memdesc:aca5fa2861406cec3eda1d1bd6ff7321b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function generating a random graph of given type in a matrix representation.  <a href="../../d6/d50/class_data_1_1_generator.html#aca5fa2861406cec3eda1d1bd6ff7321b">More...</a><br /></td></tr>
+<tr class="separator:aca5fa2861406cec3eda1d1bd6ff7321b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c6a97e8fc8ec84150c3c878acbae4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a52c6a97e8fc8ec84150c3c878acbae4b">make_throughtput_matrix</a> (std::ostream &amp;stream, std::ifstream &amp;matrix_src, const <a class="el" href="../../d7/d0e/struct_data_1_1_limits.html">Limits</a> &amp;limits, <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a> type)</td></tr>
+<tr class="memdesc:a52c6a97e8fc8ec84150c3c878acbae4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function generating a random throughtput matrix based on an existing adjacency matrix.  <a href="../../d6/d50/class_data_1_1_generator.html#a52c6a97e8fc8ec84150c3c878acbae4b">More...</a><br /></td></tr>
+<tr class="separator:a52c6a97e8fc8ec84150c3c878acbae4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e0c69af79b38692062124848828e649"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a3e0c69af79b38692062124848828e649">make_list</a> (std::ostream &amp;stream, std::size_t vertex_amount, <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a> type, std::uint8_t density_psc=1)</td></tr>
+<tr class="memdesc:a3e0c69af79b38692062124848828e649"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function generating a random graph in a list of given type representation.  <a href="../../d6/d50/class_data_1_1_generator.html#a3e0c69af79b38692062124848828e649">More...</a><br /></td></tr>
+<tr class="separator:a3e0c69af79b38692062124848828e649"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39388325bf8b5cc3ec8cc5cf343310f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a39388325bf8b5cc3ec8cc5cf343310f4">make_pixel_map</a> (std::ostream &amp;stream, uint32_t length, uint32_t width)</td></tr>
+<tr class="memdesc:a39388325bf8b5cc3ec8cc5cf343310f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function generating a random pixel map within given stream, with given length and width.  <a href="../../d6/d50/class_data_1_1_generator.html#a39388325bf8b5cc3ec8cc5cf343310f4">More...</a><br /></td></tr>
+<tr class="separator:a39388325bf8b5cc3ec8cc5cf343310f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Class responsible for generating various data sources supported by this library. </p>
-<p >This class offers to generate such data sources as random weighted adjacency matrix, random adjacency list, random throughtput matrix, and random pixel map. All generated data is saved in form of plain-text files with various extensions. </p>
+<p >This class offers to generate such data sources as random weighted adjacency matrix, random adjacency list, random throughtput matrix, and random pixel map. All generated data is saved within given output stream (such as a file output stream). </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d3/d98/list_generator_8cpp-example.html#_a1">list_generator.cpp</a>, <a class="el" href="../../d0/d69/matrix_generator_8cpp-example.html#_a1">matrix_generator.cpp</a>, <a class="el" href="../../da/dd3/pixel_map_generator_8cpp-example.html#_a1">pixel_map_generator.cpp</a>, and <a class="el" href="../../d6/d49/thr_matrix_generator_8cpp-example.html#_a1">thr_matrix_generator.cpp</a>.</dd>
+</dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a42766a88c5289f7300335063cc488598" name="a42766a88c5289f7300335063cc488598"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42766a88c5289f7300335063cc488598">&#9670;&nbsp;</a></span>make_list()</h2>
+<a id="a3e0c69af79b38692062124848828e649" name="a3e0c69af79b38692062124848828e649"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e0c69af79b38692062124848828e649">&#9670;&nbsp;</a></span>make_list()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -129,14 +135,26 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Data::Generator::make_list </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>output_file_path</em>, </td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>vertex_amount</em>&#160;</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>vertex_amount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::uint8_t&#160;</td>
+          <td class="paramname"><em>density_psc</em> = <code>1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -146,10 +164,91 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Function generating a random graph in a list of given type representation. </p>
+<p >The generated format is compliant with .lst format provided by House of Graphs, and as such, uses vertex indexes starting with 1. Depending of the graph type, this function generates either undirected or directed connections. This function generates mostly dense graphs.</p>
+<dl class="section note"><dt>Note</dt><dd>Density prescaler does not guarantee any specific density, but manipulate the chance of generating an edge for each field. The chance of generating an edge when using a prescaler is expressed as 1/x * (va - 1) / va, where x denotes the prescaler value, and va denotes the vertices amount.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>Output stream to save generated list to </td></tr>
+    <tr><td class="paramname">vertex_amount</td><td>Desired amount of vertices within the graph </td></tr>
+    <tr><td class="paramname">type</td><td>Type of the graph from <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0" title="Enum class stating the type of the graph.">Graph::Type</a> enum </td></tr>
+    <tr><td class="paramname">density_psc</td><td>Prescaler for graph density manipulation. Allows user to decrease the chance an edge will be generated, by increasing the prescaler. Assumes value of 1 by default, which does not cause any modification.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p><a class="el" href="../../d3/d98/list_generator_8cpp-example.html">Example of generating a randomized list</a> </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d3/d98/list_generator_8cpp-example.html#a2">list_generator.cpp</a>.</dd>
+</dl>
+
 </div>
 </div>
-<a id="a1e229182fec568afa2a37ddd6c95a49c" name="a1e229182fec568afa2a37ddd6c95a49c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e229182fec568afa2a37ddd6c95a49c">&#9670;&nbsp;</a></span>make_pixel_map()</h2>
+<a id="aca5fa2861406cec3eda1d1bd6ff7321b" name="aca5fa2861406cec3eda1d1bd6ff7321b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca5fa2861406cec3eda1d1bd6ff7321b">&#9670;&nbsp;</a></span>make_matrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Data::Generator::make_matrix </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>vertex_amount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d7/d0e/struct_data_1_1_limits.html">Limits</a> &amp;&#160;</td>
+          <td class="paramname"><em>limits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::uint8_t&#160;</td>
+          <td class="paramname"><em>density_psc</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function generating a random graph of given type in a matrix representation. </p>
+<p >The generated format is compliant with .mat format provided by House of Graphs. Each number in the data file structure represents a weight of an edge. The value of zero represents no edge between two vertices. Undirected graphs will result in being represented as a symmetric matrix, with the diagonal as a symmetry axis. This function generates graphs only with positive weights.</p>
+<dl class="section note"><dt>Note</dt><dd><a class="el" href="../../d7/d0e/struct_data_1_1_limits.html">Limits</a> are expressed as a left open interval (limits.min; limits.max&gt;. </dd>
+<dd>
+Density prescaler does not guarantee any specific density, but manipulate the chance of generating an edge for each field. The chance of generating an edge when using a prescaler is expressed as 1/x * (max - min) / (max - min + 1), where x denotes the prescaler value, max denotes the upper weight limit, and min denotes the lower weight limit.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>Output stream to save generated matrix to. </td></tr>
+    <tr><td class="paramname">vertex_amount</td><td>Desired amount of vertices within the graph. </td></tr>
+    <tr><td class="paramname">limits</td><td>Upper and lower limits for the weight values. </td></tr>
+    <tr><td class="paramname">type</td><td>Type of the graph from <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0" title="Enum class stating the type of the graph.">Graph::Type</a> enum. </td></tr>
+    <tr><td class="paramname">density_psc</td><td>Prescaler for graph density manipulation. Allows user to decrease the chance an edge will be generated, by increasing the prescaler. Assumes value of 1 by default, which does not cause any modification.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p><a class="el" href="../../d0/d69/matrix_generator_8cpp-example.html">Example of generating a randomized matrix</a> </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d0/d69/matrix_generator_8cpp-example.html#a2">matrix_generator.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="a39388325bf8b5cc3ec8cc5cf343310f4" name="a39388325bf8b5cc3ec8cc5cf343310f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39388325bf8b5cc3ec8cc5cf343310f4">&#9670;&nbsp;</a></span>make_pixel_map()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -157,8 +256,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Data::Generator::make_pixel_map </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>output_file_path</em>, </td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -180,10 +279,24 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Function generating a random pixel map within given stream, with given length and width. </p>
+<p >Pixel map is represented by a matrix of binary values, where 0 represents a corridor, and 1 represents a wall. This map can be used with List class to create a graph of connected corridors, which can be later used with a path-searching algorithm to find the shortest paths from given place to all other places.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>Output stream to save generated pixel map in. </td></tr>
+    <tr><td class="paramname">length</td><td>Vertical length of the map. </td></tr>
+    <tr><td class="paramname">width</td><td>Horizontal width of the map.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p><a class="el" href="../../da/dd3/pixel_map_generator_8cpp-example.html">Example of generating the pixel map data source</a> </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../da/dd3/pixel_map_generator_8cpp-example.html#a2">pixel_map_generator.cpp</a>.</dd>
+</dl>
+
 </div>
 </div>
-<a id="a08f1ce8da9a9c79393868a2430006d11" name="a08f1ce8da9a9c79393868a2430006d11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08f1ce8da9a9c79393868a2430006d11">&#9670;&nbsp;</a></span>make_throughtput_matrix()</h2>
+<a id="a52c6a97e8fc8ec84150c3c878acbae4b" name="a52c6a97e8fc8ec84150c3c878acbae4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52c6a97e8fc8ec84150c3c878acbae4b">&#9670;&nbsp;</a></span>make_throughtput_matrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,14 +304,26 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Data::Generator::make_throughtput_matrix </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>graph_file_path</em>, </td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>output_file_path</em>&#160;</td>
+          <td class="paramtype">std::ifstream &amp;&#160;</td>
+          <td class="paramname"><em>matrix_src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d7/d0e/struct_data_1_1_limits.html">Limits</a> &amp;&#160;</td>
+          <td class="paramname"><em>limits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a>&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -208,33 +333,31 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a72499601ed1ce577bf3c3dcd00e0860b" name="a72499601ed1ce577bf3c3dcd00e0860b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72499601ed1ce577bf3c3dcd00e0860b">&#9670;&nbsp;</a></span>make_weighted_matrix()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Data::Generator::make_weighted_matrix </td>
-          <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>output_file_path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>vertex_amount</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Function generating a random throughtput matrix based on an existing adjacency matrix. </p>
+<p >The function first reads the input file for adjacency matrix, to later analyze it and create throughtput values where there are edges in the original adjacency matrix.</p>
+<dl class="section note"><dt>Note</dt><dd><a class="el" href="../../d7/d0e/struct_data_1_1_limits.html">Limits</a> are expressed as a left open interval (limits.min; limits.max&gt;.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The source of the adjacency matrix must be an input file stream. The function does not support imput from standard input, however it does support outputing the result to the standard output. </dd>
+<dd>
+The function does not verify whether source matrix graph type and graph type provided by the user match. In case of missmatching the source matrix type, function will result in incorrect throughtput matrix generation.</dd>
+<dd>
+Exception to guard against:<ul>
+<li>std::runtime_error - The adjacency matrix file contains negative weights, or the matrix is not square.</li>
+</ul>
+</dd>
+<dd>
+The matrix must consist of only integer values. Otherwise, this funcion might result in an undefined behaviour.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>Output stream to save generated list to </td></tr>
+    <tr><td class="paramname">matrix_src</td><td>Input stream where to read the adjacency matrix from </td></tr>
+    <tr><td class="paramname">limits</td><td>Upper and lower limits for throughtput values </td></tr>
+    <tr><td class="paramname">type</td><td>Type of the source graph</td></tr>
+  </table>
+  </dd>
+</dl>
+<p><a class="el" href="../../d6/d49/thr_matrix_generator_8cpp-example.html">Example of generating a throughtput matrix</a> </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d6/d49/thr_matrix_generator_8cpp-example.html#a2">thr_matrix_generator.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>

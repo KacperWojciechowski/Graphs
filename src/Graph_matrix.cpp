@@ -20,8 +20,14 @@
  * \warning Exceptions to guard against:
  *		- std::invalid_argument - when given file extension is not supported.
  *		- std::runtime_error	- when given file cannot be accessed.
+ * 
  * \attention Supported formats are .mat and .GRAPHML. 
- * \see House of Graphs for .mat adjacency matrix file reference.
+ * 
+ * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for .mat adjacency matrix format guideline.
+ * \see <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html"> Here </a> for GraphML format guideline.
+ * 
+ * \ref create_matrix_from_graphml.cpp "Example of creating the object from .GRAPHML file"\b
+ * \ref create_matrix_from_mat.cpp "Example of creating the object from .mat file"\b
  */
 Graph::Matrix::Matrix(std::string file_path, Type type)
 	: type(type)
@@ -158,7 +164,7 @@ void Graph::Matrix::print()
 	// display adjacency matrix
 	std::cout << "[" << std::endl;
 
-	for (std::size_t index = 0; auto row : this->matrix)
+	for (std::size_t index = 0; auto& row : this->matrix)
 	{
 		for (auto itr2 = row.begin(); itr2 != row.end(); itr2++)
 		{
@@ -185,6 +191,8 @@ void Graph::Matrix::print()
 /**
  * \brief Function for adding a weighted edge between the source and destination vertices.
  * 
+ * In case of undirected graph, this function will insert the edge both ways.
+ * 
  * \param source ID of the source vertex of the edge.
  * \param destination ID of the end vertex of the edge.
  * \param weight Weight of inserted edge.
@@ -192,8 +200,11 @@ void Graph::Matrix::print()
  * \warning Exceptions to guard against:
  *		- std::out_of_range - when either of the IDs exceed the count of vertices.
  *		- std::invalid_argument - when the weight value is equal to 0.
+ * 
+ * \ref make_edge_matrix_insert.cpp "Adding a new edge to the graph structure"\n
+ * \ref make_edge_matrix_override.cpp "Changing the weight of an existing edge"\n
  */
-void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, uint32_t weight)
+void Graph::Matrix::make_edge(std::size_t source, std::size_t destination, uint32_t weight)
 {
 	// validate the parameters
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
@@ -243,6 +254,10 @@ void Graph::Matrix::add_edge(std::size_t source, std::size_t destination, uint32
 /**
  * \brief Function adding an isolated vertex to the graph structure.
  * 
+ * This function adds an isolated vertex to the graph structure. All degree information
+ * regarding the added vertex is set to zeros.
+ * 
+ * \ref add_node_matrix.cpp "Example of adding an isolated vertex"
  */
 void Graph::Matrix::add_node()
 {
@@ -276,11 +291,15 @@ void Graph::Matrix::add_node()
 /**
  * \brief Function for removing an edge between two given vertices.
  * 
+ * If the graph is undirected the edge will be removed both ways.
+ * 
  * \param source ID of the source vertex of the edge (counting from 0).
  * \param destination ID of the destination vertex of the edge (counting from 0).
  * 
  * \warning Exception to guard against:
  *		- std::out_of_range - when either of the IDs exceed the count of vertices.
+ * 
+ * \ref remove_edge_matrix.cpp "Example of removing an edge from graph structure"
  */
 void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
 {
@@ -328,6 +347,8 @@ void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
  * 
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.
+ * 
+ * \ref remove_node_matrix.cpp "Example of removing a vertex"
  */
 void Graph::Matrix::remove_node(std::size_t node_id)
 {
@@ -386,7 +407,7 @@ void Graph::Matrix::remove_node(std::size_t node_id)
  * 
  * \return Amount of vertices in the graph structure.
  */
-const std::size_t Graph::Matrix::get_nodes_amount()
+std::size_t Graph::Matrix::get_nodes_amount()
 {
 	return this->matrix.size();
 }
@@ -403,7 +424,7 @@ const std::size_t Graph::Matrix::get_nodes_amount()
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.
  */
-const Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
+Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
 {
 	if (node_id >= this->degrees.size())
 	{
@@ -430,7 +451,7 @@ const Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
  * \warning Exception to guard against:
  *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
  */
-const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
+uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
 {
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
 	{
@@ -450,7 +471,7 @@ const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destinati
  * 
  * \return Graph::Type enum defining the type of the graph.
  */
-const Graph::Type Graph::Matrix::get_type()
+Graph::Type Graph::Matrix::get_type()
 {
 	return this->type;
 }
@@ -466,23 +487,25 @@ const Graph::Type Graph::Matrix::get_type()
  * \note In case of undefined graph type, function assumes the graph is directed.
  * 
  * \param output_file_path Path to the output file
+ * 
+ * \ref save_matrix_to_graphml.cpp "Example of saving the graph structure in .GRAPHML file"
  */
 void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 {
 	// header
 	stream << "<?xml version=\"1.0\"";
-	stream << " encoding=\"UTF-8\"?>" << std::endl;
+	stream << " encoding=\"UTF-8\"?>\n";
 
 	// xml schema
 	stream << "<graphml xmlns=";
-	stream << "\"http://graphml.graphdrawing.org/xmlns\"" << std::endl;
-	stream << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" << std::endl;
-	stream << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns" << std::endl;
-	stream << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">" << std::endl;
+	stream << "\"http://graphml.graphdrawing.org/xmlns\"\n";
+	stream << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+	stream << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns\n";
+	stream << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n";
 
 	// weight data info
-	stream << "\t<key id=\"d0\" for=\"edge\"" << std::endl;
-	stream << "\t\tattr.name=\"weight\" attr.type=\"integer\"/>" << std::endl;
+	stream << "\t<key id=\"d0\" for=\"edge\"\n";
+	stream << "\t\tattr.name=\"weight\" attr.type=\"integer\"/>\n";
 
 	// graph type data
 	stream << "\t<graph id=";
@@ -491,14 +514,10 @@ void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 	switch (this->type)
 	{
 	case Type::directed:
-		stream << "\"directed\">" << std::endl;
+		stream << "\"directed\">\n";
 		break;
 	case Type::undirected:
-		stream << "\"undirected\">" << std::endl;
-		break;
-	// in case of undefined type, directed type is assumed
-	case Type::undefined:
-		stream << "\"directed\">" << std::endl;
+		stream << "\"undirected\">\n";
 		break;
 	}
 
@@ -506,7 +525,7 @@ void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
 		stream << "\t\t<node id=\"n" << i;
-		stream << "\"/>" << std::endl;
+		stream << "\"/>\n";
 	}
 
 	// edge data including weight
@@ -522,16 +541,16 @@ void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 				}
 				stream << "\t\t<edge source=\"n" << i;
 				stream << "\" target=\"n" << j;
-				stream << "\">" << std::endl;
-				stream << "\t\t\t<data key=\"d0\">" + std::to_string(this->matrix[i][j]) + "</data>" << std::endl;
-				stream << "\t\t</edge>" << std::endl;
+				stream << "\">\n";
+				stream << "\t\t\t<data key=\"d0\">" + std::to_string(this->matrix[i][j]) + "</data>\n";
+				stream << "\t\t</edge>\n";
 			}
 		}
 	}
 
 	// close the tags and the file
-	stream << "\t</graph>" << std::endl;
-	stream << "</graphml>";
+	stream << "\t</graph>\n";
+	stream << "</graphml>" << std::flush;
 }
 
 
@@ -632,7 +651,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
  * \param file_path Path to the throughtput matrix .mat file.
  * 
  * \attention The user has to make sure that the throughtput matrix is just as big as
- * the adjacency matrix.
+ * the adjacency matrix. Other dimentions may result in an undefined behaviour.
  * 
  * \warning Exceptions to guard against:
  *		- std::invalid_argument - when the file has an unsupported extension.
@@ -806,7 +825,7 @@ void Graph::Matrix::load_graphml_file(std::fstream& file)
 	}
 	else
 	{
-		this->type = Type::undefined;
+		throw std::runtime_error("Unsupported graph type");
 	}
 
 	// obtain vertices count
@@ -895,9 +914,9 @@ void Graph::Matrix::calculate_degrees()
 	}
 
 	// iterate through the whole adjacency matrix to calculate degree of each node
-	for (std::size_t index1 = 0; auto row : this->matrix)
+	for (std::size_t index1 = 0; auto& row : this->matrix)
 	{
-		for (std::size_t index2 = 0; auto element : row)
+		for (std::size_t index2 = 0; auto& element : row)
 		{
 			// if connection was found, increase the degree
 			if (element != 0)

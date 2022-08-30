@@ -13,8 +13,6 @@ namespace Graph
 		undirected = 0, /**< The graph is undirected, which means that the weights of the connections are automatically 
 						mirrored */
 		directed, /**< The graph is directed, which means that the weights are not automatically mirrored */
-		undefined /**< The graph type is undefined. In majority of cases, operations on such graph are either
-						incorrect, or the graph type is assumed as directed */
 	};
 
 
@@ -35,7 +33,7 @@ namespace Graph
 	/**
 	 * \brief Abstract class stating the common interface for each of the graph representation.
 	 */
-	class Graph
+	class Graph_t
 	{
 	public:
 
@@ -57,7 +55,7 @@ namespace Graph
 		 * \param Destination end vertex of an edge.
 		 * \param Weight weight of the connection.
 		 */
-		virtual void add_edge(std::size_t source, std::size_t destination, uint32_t weight) = 0;
+		virtual void make_edge(std::size_t source, std::size_t destination, uint32_t weight) = 0;
 
 
 
@@ -97,7 +95,7 @@ namespace Graph
 		 * 
 		 * \return The amount of the vertices in a graph object.
 		 */
-		virtual const std::size_t get_nodes_amount() = 0;
+		virtual std::size_t get_nodes_amount() = 0;
 
 
 
@@ -108,7 +106,7 @@ namespace Graph
 		 * \param node_id ID of a vertex (counting from 0) to get the degree of.
 		 * \return The degree of a given vertex.
 		 */
-		virtual const Degree get_node_degree(std::size_t node_id) = 0;
+		virtual Degree get_node_degree(std::size_t node_id) = 0;
 
 
 
@@ -120,7 +118,7 @@ namespace Graph
 		 * \param destination End vertex of an edge.
 		 * \return Weight value of the connection.
 		 */
-		virtual const uint32_t get_edge(std::size_t source, std::size_t destination) = 0;
+		virtual uint32_t get_edge(std::size_t source, std::size_t destination) = 0;
 
 
 
@@ -128,7 +126,7 @@ namespace Graph
 		/**
 		 * \brief Common function definition for type getter.
 		 */
-		virtual const Type get_type() = 0;
+		virtual Type get_type() = 0;
 
 
 

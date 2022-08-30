@@ -31,7 +31,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="../../logo.jpg"/></td>
   <td id="projectalign">
-   <div id="projectname">Graphs<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">Graphs<span id="projectnumber">&#160;0.1</span>
    </div>
    <div id="projectbrief">Simple House of Graphs compliant graph software</div>
   </td>
@@ -99,10 +99,10 @@ $(document).ready(function(){initNavTree('d6/d50/class_data_1_1_generator.html',
 
 <p>This is the complete list of members for <a class="el" href="../../d6/d50/class_data_1_1_generator.html">Data::Generator</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a42766a88c5289f7300335063cc488598">make_list</a>(std::string output_file_path, uint32_t vertex_amount)</td><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html">Data::Generator</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a1e229182fec568afa2a37ddd6c95a49c">make_pixel_map</a>(std::string output_file_path, uint32_t length, uint32_t width)</td><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html">Data::Generator</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a08f1ce8da9a9c79393868a2430006d11">make_throughtput_matrix</a>(std::string graph_file_path, std::string output_file_path)</td><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html">Data::Generator</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a72499601ed1ce577bf3c3dcd00e0860b">make_weighted_matrix</a>(std::string output_file_path, uint32_t vertex_amount)</td><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html">Data::Generator</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a3e0c69af79b38692062124848828e649">make_list</a>(std::ostream &amp;stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc=1)</td><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html">Data::Generator</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#aca5fa2861406cec3eda1d1bd6ff7321b">make_matrix</a>(std::ostream &amp;stream, uint32_t vertex_amount, const Limits &amp;limits, Graph::Type type, std::uint8_t density_psc=1)</td><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html">Data::Generator</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a39388325bf8b5cc3ec8cc5cf343310f4">make_pixel_map</a>(std::ostream &amp;stream, uint32_t length, uint32_t width)</td><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html">Data::Generator</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html#a52c6a97e8fc8ec84150c3c878acbae4b">make_throughtput_matrix</a>(std::ostream &amp;stream, std::ifstream &amp;matrix_src, const Limits &amp;limits, Graph::Type type)</td><td class="entry"><a class="el" href="../../d6/d50/class_data_1_1_generator.html">Data::Generator</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

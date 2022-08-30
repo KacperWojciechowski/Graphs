@@ -19,7 +19,7 @@ namespace Graph
 	 * The representation is based on the STL vector class. It does provide a
 	 * standard graph interface stated by the Graph virtual class. 
 	 */
-	class Matrix : public Graph
+	class Matrix : public Graph_t
 	{
 	public:
 
@@ -33,16 +33,16 @@ namespace Graph
 		/* Common interface */
 		void print();
 
-		void add_edge(std::size_t source, std::size_t destination, uint32_t weight);
+		void make_edge(std::size_t source, std::size_t destination, uint32_t weight);
 		void add_node();
 
 		void remove_edge(std::size_t source, std::size_t destination);
 		void remove_node(std::size_t node_id);
 
-		const std::size_t get_nodes_amount();
-		const Degree get_node_degree(std::size_t node_id);
-		const uint32_t get_edge(std::size_t source, std::size_t destination);
-		const Type get_type();
+		std::size_t get_nodes_amount();
+		Degree get_node_degree(std::size_t node_id);
+		uint32_t get_edge(std::size_t source, std::size_t destination);
+		Type get_type();
 
 		void save_graphml(std::ostream& stream, std::string name);
 
@@ -65,12 +65,13 @@ namespace Graph
 		void load_graphml_file(std::fstream& file);
 		void calculate_degrees();
 
-		/* Objects containing the graph */
-		std::vector<std::vector<uint32_t>> matrix;
-		std::vector<std::vector<uint32_t>> throughtput;
-		std::vector<Degree> degrees;
-
-		/* Graph type information */
-		Type type;
+		/* Objects containing the graph*/
+		std::vector<std::vector<uint32_t>> matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/
+		std::vector<std::vector<uint32_t>> throughtput; /**< Structure containing the throughtput matrix corresponding to the adjacency matrix. This matrix
+															 has to be of the same dimentions as the adjacency matrix. This feature is exclusive to the matrix 
+															 representation. */
+		std::vector<Degree> degrees;					/**< Vector of structures storing the degrees of each vertex in Graph::Degree structures. The type of
+															 the graph decides which members of the structure should be used. */
+		Type type;										/**< Enum signifying the type of the graph. */
 	};
 }

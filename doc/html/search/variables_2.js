@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x_0',['x',['../d3/d16/struct_data_1_1coord.html#a30e1d63b6b97ff20adae06daceee8664',1,'Data::coord']]]
+  ['list_0',['list',['../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b',1,'Graph::List']]]
 ];

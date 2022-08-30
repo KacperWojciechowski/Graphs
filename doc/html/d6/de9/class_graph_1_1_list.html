@@ -31,7 +31,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="../../logo.jpg"/></td>
   <td id="projectalign">
-   <div id="projectname">Graphs<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">Graphs<span id="projectnumber">&#160;0.1</span>
    </div>
    <div id="projectbrief">Simple House of Graphs compliant graph software</div>
   </td>
@@ -96,6 +96,8 @@ $(document).ready(function(){initNavTree('d6/de9/class_graph_1_1_list.html','../
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="../../d6/d43/class_graph_1_1_list-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Graph::List Class Reference</div></div>
 </div><!--header-->
@@ -111,15 +113,21 @@ Inheritance diagram for Graph::List:</div>
  <div class="center">
   <img src="../../d6/de9/class_graph_1_1_list.png" usemap="#Graph::List_map" alt=""/>
   <map id="Graph::List_map" name="Graph::List_map">
-<area href="../../d6/d4f/class_graph_1_1_graph.html" title="Abstract class stating the common interface for each of the graph representation." alt="Graph::Graph" shape="rect" coords="0,0,88,24"/>
+<area href="../../d3/deb/class_graph_1_1_graph__t.html" title="Abstract class stating the common interface for each of the graph representation." alt="Graph::Graph_t" shape="rect" coords="0,0,98,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d87/struct_graph_1_1_list_1_1_node.html">Node</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure containing the information regarding the connection between a given vertex and its adjacent vertex.  <a href="../../d6/d87/struct_graph_1_1_list_1_1_node.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a60c7c1f8600d3b89ee5d8b1ab0ffa68c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a60c7c1f8600d3b89ee5d8b1ab0ffa68c">List</a> (std::string file_path, std::string name, <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a> type)</td></tr>
-<tr class="memdesc:a60c7c1f8600d3b89ee5d8b1ab0ffa68c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor creating the graph from file.  <a href="../../d6/de9/class_graph_1_1_list.html#a60c7c1f8600d3b89ee5d8b1ab0ffa68c">More...</a><br /></td></tr>
-<tr class="separator:a60c7c1f8600d3b89ee5d8b1ab0ffa68c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60f2cc594add5c4a70b32c9718b7ca65"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a60f2cc594add5c4a70b32c9718b7ca65">List</a> (const std::string &amp;file_path, <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a> <a class="el" href="../../d6/de9/class_graph_1_1_list.html#a3900bb15c47f06569b9a2de77a6e3d2e">type</a>)</td></tr>
+<tr class="memdesc:a60f2cc594add5c4a70b32c9718b7ca65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor creating the graph from file.  <a href="../../d6/de9/class_graph_1_1_list.html#a60f2cc594add5c4a70b32c9718b7ca65">More...</a><br /></td></tr>
+<tr class="separator:a60f2cc594add5c4a70b32c9718b7ca65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a958cdfd61ab7e34c31e00f1a85fc079f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a958cdfd61ab7e34c31e00f1a85fc079f">List</a> (<a class="el" href="../../dc/de1/class_graph_1_1_matrix.html">Matrix</a> &amp;matrix)</td></tr>
 <tr class="memdesc:a958cdfd61ab7e34c31e00f1a85fc079f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor creating the adjacency list object based on the adjacency matrix object.  <a href="../../d6/de9/class_graph_1_1_list.html#a958cdfd61ab7e34c31e00f1a85fc079f">More...</a><br /></td></tr>
 <tr class="separator:a958cdfd61ab7e34c31e00f1a85fc079f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,9 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5c40d7a296ad6f41914843c09b1ef313"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a5c40d7a296ad6f41914843c09b1ef313">print</a> ()</td></tr>
 <tr class="memdesc:a5c40d7a296ad6f41914843c09b1ef313"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function printing information regarding the graph.  <a href="../../d6/de9/class_graph_1_1_list.html#a5c40d7a296ad6f41914843c09b1ef313">More...</a><br /></td></tr>
 <tr class="separator:a5c40d7a296ad6f41914843c09b1ef313"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57dc515473fbb31889bc51a59560d701"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a57dc515473fbb31889bc51a59560d701">add_edge</a> (std::size_t source, std::size_t destination, uint32_t weight)</td></tr>
-<tr class="memdesc:a57dc515473fbb31889bc51a59560d701"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function adding a connection between two given vertices.  <a href="../../d6/de9/class_graph_1_1_list.html#a57dc515473fbb31889bc51a59560d701">More...</a><br /></td></tr>
-<tr class="separator:a57dc515473fbb31889bc51a59560d701"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaef0516e0039e1a433d8edbef4a72de6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#aaef0516e0039e1a433d8edbef4a72de6">make_edge</a> (std::size_t source, std::size_t destination, uint32_t weight)</td></tr>
+<tr class="memdesc:aaef0516e0039e1a433d8edbef4a72de6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function adding a connection between two given vertices.  <a href="../../d6/de9/class_graph_1_1_list.html#aaef0516e0039e1a433d8edbef4a72de6">More...</a><br /></td></tr>
+<tr class="separator:aaef0516e0039e1a433d8edbef4a72de6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac4ab303faf71a30792c6d431f240714"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#aac4ab303faf71a30792c6d431f240714">add_node</a> ()</td></tr>
 <tr class="memdesc:aac4ab303faf71a30792c6d431f240714"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function adding a new vertex to the graph structure.  <a href="../../d6/de9/class_graph_1_1_list.html#aac4ab303faf71a30792c6d431f240714">More...</a><br /></td></tr>
 <tr class="separator:aac4ab303faf71a30792c6d431f240714"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,75 +154,95 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af39782688cefc4b94cec525de0cad405"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#af39782688cefc4b94cec525de0cad405">remove_node</a> (std::size_t node_id)</td></tr>
 <tr class="memdesc:af39782688cefc4b94cec525de0cad405"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function for removing a vertex from the graph structure.  <a href="../../d6/de9/class_graph_1_1_list.html#af39782688cefc4b94cec525de0cad405">More...</a><br /></td></tr>
 <tr class="separator:af39782688cefc4b94cec525de0cad405"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5200e14bc56cd74feb2a9ca1964f730"><td class="memItemLeft" align="right" valign="top">const std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#aa5200e14bc56cd74feb2a9ca1964f730">get_nodes_amount</a> ()</td></tr>
-<tr class="memdesc:aa5200e14bc56cd74feb2a9ca1964f730"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for vertices amount.  <a href="../../d6/de9/class_graph_1_1_list.html#aa5200e14bc56cd74feb2a9ca1964f730">More...</a><br /></td></tr>
-<tr class="separator:aa5200e14bc56cd74feb2a9ca1964f730"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae456002c6713a8effd149fb0ffe4358"><td class="memItemLeft" align="right" valign="top">const std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#aae456002c6713a8effd149fb0ffe4358">get_node_degree</a> (std::size_t node_id)</td></tr>
-<tr class="memdesc:aae456002c6713a8effd149fb0ffe4358"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for vertex degree.  <a href="../../d6/de9/class_graph_1_1_list.html#aae456002c6713a8effd149fb0ffe4358">More...</a><br /></td></tr>
-<tr class="separator:aae456002c6713a8effd149fb0ffe4358"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a5ea23d4a4b2f4b18bbc6e0da6af8de"><td class="memItemLeft" align="right" valign="top">const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a1a5ea23d4a4b2f4b18bbc6e0da6af8de">get_edge</a> (std::size_t source, std::size_t destination)</td></tr>
-<tr class="memdesc:a1a5ea23d4a4b2f4b18bbc6e0da6af8de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the weight of the edge between two given vertices.  <a href="../../d6/de9/class_graph_1_1_list.html#a1a5ea23d4a4b2f4b18bbc6e0da6af8de">More...</a><br /></td></tr>
-<tr class="separator:a1a5ea23d4a4b2f4b18bbc6e0da6af8de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f17bdfa1e59fcb79ca8b2c2fd2f7b98"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a1f17bdfa1e59fcb79ca8b2c2fd2f7b98">get_name</a> ()</td></tr>
-<tr class="memdesc:a1f17bdfa1e59fcb79ca8b2c2fd2f7b98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the name of the graph.  <a href="../../d6/de9/class_graph_1_1_list.html#a1f17bdfa1e59fcb79ca8b2c2fd2f7b98">More...</a><br /></td></tr>
-<tr class="separator:a1f17bdfa1e59fcb79ca8b2c2fd2f7b98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3be578b82ffcc1136e4c9d5976bb22a3"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a3be578b82ffcc1136e4c9d5976bb22a3">get_type</a> ()</td></tr>
-<tr class="memdesc:a3be578b82ffcc1136e4c9d5976bb22a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the type of the graph.  <a href="../../d6/de9/class_graph_1_1_list.html#a3be578b82ffcc1136e4c9d5976bb22a3">More...</a><br /></td></tr>
-<tr class="separator:a3be578b82ffcc1136e4c9d5976bb22a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85e52c34c9f61a3138d321b172b6e7a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a85e52c34c9f61a3138d321b172b6e7a4">save_graphml</a> (std::string output_file_path)</td></tr>
-<tr class="memdesc:a85e52c34c9f61a3138d321b172b6e7a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function saving current graph structure into a .GRAPHML format file.  <a href="../../d6/de9/class_graph_1_1_list.html#a85e52c34c9f61a3138d321b172b6e7a4">More...</a><br /></td></tr>
-<tr class="separator:a85e52c34c9f61a3138d321b172b6e7a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af401c129c5e5185ecebb9b81ce4b2ec4"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#af401c129c5e5185ecebb9b81ce4b2ec4">get_nodes_amount</a> ()</td></tr>
+<tr class="memdesc:af401c129c5e5185ecebb9b81ce4b2ec4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for vertices amount.  <a href="../../d6/de9/class_graph_1_1_list.html#af401c129c5e5185ecebb9b81ce4b2ec4">More...</a><br /></td></tr>
+<tr class="separator:af401c129c5e5185ecebb9b81ce4b2ec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9aae5c3d481526b7e1892b4dd7a8e39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html">Degree</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#ad9aae5c3d481526b7e1892b4dd7a8e39">get_node_degree</a> (std::size_t node_id)</td></tr>
+<tr class="memdesc:ad9aae5c3d481526b7e1892b4dd7a8e39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for vertex degree.  <a href="../../d6/de9/class_graph_1_1_list.html#ad9aae5c3d481526b7e1892b4dd7a8e39">More...</a><br /></td></tr>
+<tr class="separator:ad9aae5c3d481526b7e1892b4dd7a8e39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39fe59b34278f72cb03d6f68340984b3"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a39fe59b34278f72cb03d6f68340984b3">get_edge</a> (std::size_t source, std::size_t destination)</td></tr>
+<tr class="memdesc:a39fe59b34278f72cb03d6f68340984b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the weight of the edge between two given vertices.  <a href="../../d6/de9/class_graph_1_1_list.html#a39fe59b34278f72cb03d6f68340984b3">More...</a><br /></td></tr>
+<tr class="separator:a39fe59b34278f72cb03d6f68340984b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a386bbfc49e6e82e0963d7f8872583ce0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a386bbfc49e6e82e0963d7f8872583ce0">get_type</a> ()</td></tr>
+<tr class="memdesc:a386bbfc49e6e82e0963d7f8872583ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the type of the graph.  <a href="../../d6/de9/class_graph_1_1_list.html#a386bbfc49e6e82e0963d7f8872583ce0">More...</a><br /></td></tr>
+<tr class="separator:a386bbfc49e6e82e0963d7f8872583ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9e7e80227be6e2e9931b5cac020b037"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#ab9e7e80227be6e2e9931b5cac020b037">save_graphml</a> (std::ostream &amp;stream, std::string name)</td></tr>
+<tr class="memdesc:ab9e7e80227be6e2e9931b5cac020b037"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function saving current graph structure into a .GRAPHML format file.  <a href="../../d6/de9/class_graph_1_1_list.html#ab9e7e80227be6e2e9931b5cac020b037">More...</a><br /></td></tr>
+<tr class="separator:ab9e7e80227be6e2e9931b5cac020b037"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3478b78c8393c9df8d440b52ca9c23c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d6/de9/class_graph_1_1_list.html">List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#af3478b78c8393c9df8d440b52ca9c23c">change_to_line_graph</a> ()</td></tr>
 <tr class="separator:af3478b78c8393c9df8d440b52ca9c23c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d9ea3acf27e89fb55b1154c39704279"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a2d9ea3acf27e89fb55b1154c39704279">print</a> ()=0</td></tr>
-<tr class="memdesc:a2d9ea3acf27e89fb55b1154c39704279"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comomn function definition for printing the representation of a graph.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a2d9ea3acf27e89fb55b1154c39704279">More...</a><br /></td></tr>
-<tr class="separator:a2d9ea3acf27e89fb55b1154c39704279"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a587d9faf53c1c7ef2ab777286ad3b2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a7a587d9faf53c1c7ef2ab777286ad3b2">add_edge</a> (std::size_t source, std::size_t destination, uint32_t weight)=0</td></tr>
-<tr class="memdesc:a7a587d9faf53c1c7ef2ab777286ad3b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for adding an edge to the graph object.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a7a587d9faf53c1c7ef2ab777286ad3b2">More...</a><br /></td></tr>
-<tr class="separator:a7a587d9faf53c1c7ef2ab777286ad3b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c914910e897be9b2e54666c7fdfe5d2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a2c914910e897be9b2e54666c7fdfe5d2">add_node</a> ()=0</td></tr>
-<tr class="memdesc:a2c914910e897be9b2e54666c7fdfe5d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for adding a vertex to the graph object.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a2c914910e897be9b2e54666c7fdfe5d2">More...</a><br /></td></tr>
-<tr class="separator:a2c914910e897be9b2e54666c7fdfe5d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac24d41014c6af76a3ae88cc1af712fa1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#ac24d41014c6af76a3ae88cc1af712fa1">remove_edge</a> (std::size_t source, std::size_t destionation)=0</td></tr>
-<tr class="memdesc:ac24d41014c6af76a3ae88cc1af712fa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for removing an edge from the graph object.  <a href="../../d6/d4f/class_graph_1_1_graph.html#ac24d41014c6af76a3ae88cc1af712fa1">More...</a><br /></td></tr>
-<tr class="separator:ac24d41014c6af76a3ae88cc1af712fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f0c681abec0386380e7acba39502469"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a0f0c681abec0386380e7acba39502469">remove_node</a> (std::size_t node_id)=0</td></tr>
-<tr class="memdesc:a0f0c681abec0386380e7acba39502469"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for removing a vertex from the graph object.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a0f0c681abec0386380e7acba39502469">More...</a><br /></td></tr>
-<tr class="separator:a0f0c681abec0386380e7acba39502469"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1e7b616909df5e5dba8b59af3a79e31"><td class="memItemLeft" align="right" valign="top">virtual const std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#ae1e7b616909df5e5dba8b59af3a79e31">get_nodes_amount</a> ()=0</td></tr>
-<tr class="memdesc:ae1e7b616909df5e5dba8b59af3a79e31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for acquiring the vertices amount in the graph object.  <a href="../../d6/d4f/class_graph_1_1_graph.html#ae1e7b616909df5e5dba8b59af3a79e31">More...</a><br /></td></tr>
-<tr class="separator:ae1e7b616909df5e5dba8b59af3a79e31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b4a80eb13b0f3c779680ea1aebc5623"><td class="memItemLeft" align="right" valign="top">virtual const std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a9b4a80eb13b0f3c779680ea1aebc5623">get_node_degree</a> (std::size_t node_id)=0</td></tr>
-<tr class="memdesc:a9b4a80eb13b0f3c779680ea1aebc5623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for acquiring the degree of given vertex.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a9b4a80eb13b0f3c779680ea1aebc5623">More...</a><br /></td></tr>
-<tr class="separator:a9b4a80eb13b0f3c779680ea1aebc5623"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a395f577e2cadf0b567eab81d4f862cd5"><td class="memItemLeft" align="right" valign="top">virtual const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a395f577e2cadf0b567eab81d4f862cd5">get_edge</a> (std::size_t source, std::size_t destination)=0</td></tr>
-<tr class="memdesc:a395f577e2cadf0b567eab81d4f862cd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for acquiring the weight of an edge between two vertices.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a395f577e2cadf0b567eab81d4f862cd5">More...</a><br /></td></tr>
-<tr class="separator:a395f577e2cadf0b567eab81d4f862cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16c4f61031af5a7d2e6741f4b1482337"><td class="memItemLeft" align="right" valign="top">virtual const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a16c4f61031af5a7d2e6741f4b1482337">get_name</a> ()=0</td></tr>
-<tr class="memdesc:a16c4f61031af5a7d2e6741f4b1482337"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for name getter.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a16c4f61031af5a7d2e6741f4b1482337">More...</a><br /></td></tr>
-<tr class="separator:a16c4f61031af5a7d2e6741f4b1482337"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1103dccbc51c184fcc5e800d6de522fd"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a1103dccbc51c184fcc5e800d6de522fd">get_type</a> ()=0</td></tr>
-<tr class="memdesc:a1103dccbc51c184fcc5e800d6de522fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for type getter.  <a href="../../d6/d4f/class_graph_1_1_graph.html#a1103dccbc51c184fcc5e800d6de522fd">More...</a><br /></td></tr>
-<tr class="separator:a1103dccbc51c184fcc5e800d6de522fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9fc006e1a5d4bcb9c00409a2d1b540b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#ac9fc006e1a5d4bcb9c00409a2d1b540b">save_graphml</a> (std::string output_file_path)=0</td></tr>
-<tr class="memdesc:ac9fc006e1a5d4bcb9c00409a2d1b540b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definintion for saving the graph into a .GRAPHML format file.  <a href="../../d6/d4f/class_graph_1_1_graph.html#ac9fc006e1a5d4bcb9c00409a2d1b540b">More...</a><br /></td></tr>
-<tr class="separator:ac9fc006e1a5d4bcb9c00409a2d1b540b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eb6ba40c0e77b07748686a75dbcfe67"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a7eb6ba40c0e77b07748686a75dbcfe67">print</a> ()=0</td></tr>
+<tr class="memdesc:a7eb6ba40c0e77b07748686a75dbcfe67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comomn function definition for printing the representation of a graph.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a7eb6ba40c0e77b07748686a75dbcfe67">More...</a><br /></td></tr>
+<tr class="separator:a7eb6ba40c0e77b07748686a75dbcfe67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45e76ba9d00bfa3c7bac573f26d039b6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a45e76ba9d00bfa3c7bac573f26d039b6">make_edge</a> (std::size_t source, std::size_t destination, uint32_t weight)=0</td></tr>
+<tr class="memdesc:a45e76ba9d00bfa3c7bac573f26d039b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for adding an edge to the graph object.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a45e76ba9d00bfa3c7bac573f26d039b6">More...</a><br /></td></tr>
+<tr class="separator:a45e76ba9d00bfa3c7bac573f26d039b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafbfb9620410170f041f7029d44fc53f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#aafbfb9620410170f041f7029d44fc53f">add_node</a> ()=0</td></tr>
+<tr class="memdesc:aafbfb9620410170f041f7029d44fc53f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for adding a vertex to the graph object.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#aafbfb9620410170f041f7029d44fc53f">More...</a><br /></td></tr>
+<tr class="separator:aafbfb9620410170f041f7029d44fc53f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83d065e834fdfe85355e1b8c9c92e4b5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a83d065e834fdfe85355e1b8c9c92e4b5">remove_edge</a> (std::size_t source, std::size_t destionation)=0</td></tr>
+<tr class="memdesc:a83d065e834fdfe85355e1b8c9c92e4b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for removing an edge from the graph object.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a83d065e834fdfe85355e1b8c9c92e4b5">More...</a><br /></td></tr>
+<tr class="separator:a83d065e834fdfe85355e1b8c9c92e4b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9052ce6ec566c3abc9ccd838b9823552"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a9052ce6ec566c3abc9ccd838b9823552">remove_node</a> (std::size_t node_id)=0</td></tr>
+<tr class="memdesc:a9052ce6ec566c3abc9ccd838b9823552"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for removing a vertex from the graph object.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a9052ce6ec566c3abc9ccd838b9823552">More...</a><br /></td></tr>
+<tr class="separator:a9052ce6ec566c3abc9ccd838b9823552"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cb0af273dceed41ec4a0193c29bf4e7"><td class="memItemLeft" align="right" valign="top">virtual std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a2cb0af273dceed41ec4a0193c29bf4e7">get_nodes_amount</a> ()=0</td></tr>
+<tr class="memdesc:a2cb0af273dceed41ec4a0193c29bf4e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for acquiring the vertices amount in the graph object.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a2cb0af273dceed41ec4a0193c29bf4e7">More...</a><br /></td></tr>
+<tr class="separator:a2cb0af273dceed41ec4a0193c29bf4e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1762c449e7716d1ce191ee8daefdfad3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html">Degree</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a1762c449e7716d1ce191ee8daefdfad3">get_node_degree</a> (std::size_t node_id)=0</td></tr>
+<tr class="memdesc:a1762c449e7716d1ce191ee8daefdfad3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for acquiring the degree of given vertex.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a1762c449e7716d1ce191ee8daefdfad3">More...</a><br /></td></tr>
+<tr class="separator:a1762c449e7716d1ce191ee8daefdfad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9acc86aeaf34f54a99bc772563ae9e2"><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#af9acc86aeaf34f54a99bc772563ae9e2">get_edge</a> (std::size_t source, std::size_t destination)=0</td></tr>
+<tr class="memdesc:af9acc86aeaf34f54a99bc772563ae9e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for acquiring the weight of an edge between two vertices.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#af9acc86aeaf34f54a99bc772563ae9e2">More...</a><br /></td></tr>
+<tr class="separator:af9acc86aeaf34f54a99bc772563ae9e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcaf81afc8fb47aef4f773c1ed416b3f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#adcaf81afc8fb47aef4f773c1ed416b3f">get_type</a> ()=0</td></tr>
+<tr class="memdesc:adcaf81afc8fb47aef4f773c1ed416b3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for type getter.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#adcaf81afc8fb47aef4f773c1ed416b3f">More...</a><br /></td></tr>
+<tr class="separator:adcaf81afc8fb47aef4f773c1ed416b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88a55dc3ef39d7339ffb44b4713cb153"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a88a55dc3ef39d7339ffb44b4713cb153">save_graphml</a> (std::ostream &amp;stream, std::string name)=0</td></tr>
+<tr class="memdesc:a88a55dc3ef39d7339ffb44b4713cb153"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definintion for saving the graph into a .GRAPHML format file.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a88a55dc3ef39d7339ffb44b4713cb153">More...</a><br /></td></tr>
+<tr class="separator:a88a55dc3ef39d7339ffb44b4713cb153"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ad0bec7ee5bed87a60b0b5bf6503488f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#ad0bec7ee5bed87a60b0b5bf6503488f8">load_lst_file</a> (std::fstream &amp;file)</td></tr>
+<tr class="memdesc:ad0bec7ee5bed87a60b0b5bf6503488f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function loading the data from .lst file into the object.  <a href="../../d6/de9/class_graph_1_1_list.html#ad0bec7ee5bed87a60b0b5bf6503488f8">More...</a><br /></td></tr>
+<tr class="separator:ad0bec7ee5bed87a60b0b5bf6503488f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a849f725f7a29aabd2fb049c7cfe7dddf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a849f725f7a29aabd2fb049c7cfe7dddf">load_graphml_file</a> (std::fstream &amp;file)</td></tr>
+<tr class="memdesc:a849f725f7a29aabd2fb049c7cfe7dddf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function loading the data from .GRAPHML file.  <a href="../../d6/de9/class_graph_1_1_list.html#a849f725f7a29aabd2fb049c7cfe7dddf">More...</a><br /></td></tr>
+<tr class="separator:a849f725f7a29aabd2fb049c7cfe7dddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcd533ffc69d17a70472a68a61cee4bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#adcd533ffc69d17a70472a68a61cee4bc">calculate_degrees</a> ()</td></tr>
+<tr class="memdesc:adcd533ffc69d17a70472a68a61cee4bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function for calculating the degrees of each vertex.  <a href="../../d6/de9/class_graph_1_1_list.html#adcd533ffc69d17a70472a68a61cee4bc">More...</a><br /></td></tr>
+<tr class="separator:adcd533ffc69d17a70472a68a61cee4bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:abd0a86cc45cfced742b4f8ba76bcaa9b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::list&lt; <a class="el" href="../../d6/d87/struct_graph_1_1_list_1_1_node.html">Node</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b">list</a></td></tr>
+<tr class="memdesc:abd0a86cc45cfced742b4f8ba76bcaa9b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d6/de9/class_graph_1_1_list.html" title="Class representing a graph in the adjacency list form.">List</a> structure of the graph.  <a href="../../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b">More...</a><br /></td></tr>
+<tr class="separator:abd0a86cc45cfced742b4f8ba76bcaa9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abef17270c063efae94f48f147780af37"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html">Degree</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#abef17270c063efae94f48f147780af37">degrees</a></td></tr>
+<tr class="memdesc:abef17270c063efae94f48f147780af37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector containing degrees of each vertex.  <a href="../../d6/de9/class_graph_1_1_list.html#abef17270c063efae94f48f147780af37">More...</a><br /></td></tr>
+<tr class="separator:abef17270c063efae94f48f147780af37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3900bb15c47f06569b9a2de77a6e3d2e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de9/class_graph_1_1_list.html#a3900bb15c47f06569b9a2de77a6e3d2e">type</a></td></tr>
+<tr class="memdesc:a3900bb15c47f06569b9a2de77a6e3d2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum signifying the type of the graph.  <a href="../../d6/de9/class_graph_1_1_list.html#a3900bb15c47f06569b9a2de77a6e3d2e">More...</a><br /></td></tr>
+<tr class="separator:a3900bb15c47f06569b9a2de77a6e3d2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="memitem:aa81c7010bfa5634ba029577d4797e87e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#aa81c7010bfa5634ba029577d4797e87e">load_graphml_file</a> (std::fstream &amp;file)=0</td></tr>
-<tr class="memdesc:aa81c7010bfa5634ba029577d4797e87e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for loading the graph from a .GRAPHML format file.  <a href="../../d6/d4f/class_graph_1_1_graph.html#aa81c7010bfa5634ba029577d4797e87e">More...</a><br /></td></tr>
-<tr class="separator:aa81c7010bfa5634ba029577d4797e87e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af45f12a165802f94bf05d57be96cfb09"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#af45f12a165802f94bf05d57be96cfb09">calculate_degrees</a> ()=0</td></tr>
-<tr class="memdesc:af45f12a165802f94bf05d57be96cfb09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for calculating the degrees of each vertex inside the graph object.  <a href="../../d6/d4f/class_graph_1_1_graph.html#af45f12a165802f94bf05d57be96cfb09">More...</a><br /></td></tr>
-<tr class="separator:af45f12a165802f94bf05d57be96cfb09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84a28ef31dda764c53934d6cc4b3d7f4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a84a28ef31dda764c53934d6cc4b3d7f4">load_graphml_file</a> (std::fstream &amp;file)=0</td></tr>
+<tr class="memdesc:a84a28ef31dda764c53934d6cc4b3d7f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for loading the graph from a .GRAPHML format file.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a84a28ef31dda764c53934d6cc4b3d7f4">More...</a><br /></td></tr>
+<tr class="separator:a84a28ef31dda764c53934d6cc4b3d7f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ee1ffd82bf90902d5855ea0d486a8cd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a3ee1ffd82bf90902d5855ea0d486a8cd">calculate_degrees</a> ()=0</td></tr>
+<tr class="memdesc:a3ee1ffd82bf90902d5855ea0d486a8cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common function definition for calculating the degrees of each vertex inside the graph object.  <a href="../../d3/deb/class_graph_1_1_graph__t.html#a3ee1ffd82bf90902d5855ea0d486a8cd">More...</a><br /></td></tr>
+<tr class="separator:a3ee1ffd82bf90902d5855ea0d486a8cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Class representing a graph in the adjacency list form. </p>
-<p >The representation is based on the STL list and vector classes. It does provide a standard graph interface stated by the <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html" title="Abstract class stating the common interface for each of the graph representation.">Graph</a> virtual class. </p>
+<p >The representation is based on the STL list and vector classes. It does provide a standard graph interface stated by the <a class="el" href="../../d7/dfb/namespace_graph.html">Graph</a> virtual class. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d3/db5/add_node_list_8cpp-example.html#_a1">add_node_list.cpp</a>, <a class="el" href="../../d5/d68/create_list_from_graphml_8cpp-example.html#_a1">create_list_from_graphml.cpp</a>, <a class="el" href="../../d9/dd8/create_list_from_lst_8cpp-example.html#_a1">create_list_from_lst.cpp</a>, <a class="el" href="../../d8/d9b/make_edge_list_insert_8cpp-example.html#_a1">make_edge_list_insert.cpp</a>, <a class="el" href="../../d7/da2/make_edge_list_override_8cpp-example.html#_a1">make_edge_list_override.cpp</a>, <a class="el" href="../../d1/d95/remove_edge_list_8cpp-example.html#_a1">remove_edge_list.cpp</a>, <a class="el" href="../../d9/dc2/remove_node_list_8cpp-example.html#_a1">remove_node_list.cpp</a>, and <a class="el" href="../../d4/d29/save_list_to_graphml_8cpp-example.html#_a1">save_list_to_graphml.cpp</a>.</dd>
+</dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a60c7c1f8600d3b89ee5d8b1ab0ffa68c" name="a60c7c1f8600d3b89ee5d8b1ab0ffa68c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60c7c1f8600d3b89ee5d8b1ab0ffa68c">&#9670;&nbsp;</a></span>List() <span class="overload">[1/5]</span></h2>
+<a id="a60f2cc594add5c4a70b32c9718b7ca65" name="a60f2cc594add5c4a70b32c9718b7ca65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60f2cc594add5c4a70b32c9718b7ca65">&#9670;&nbsp;</a></span>List() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,14 +250,8 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">Graph::List::List </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>file_path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -249,9 +271,8 @@ Additional Inherited Members</h2></td></tr>
 <p >The constructor accepts the path to a file in supported format. If format is incorrect or the file cannot be accessed, an exception is returned.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">file_path</td><td>Path of the data source file. </td></tr>
-    <tr><td class="paramname">name</td><td>Name of the graph (user-given). </td></tr>
-    <tr><td class="paramname">type</td><td>Type of the graph (from the <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0" title="Enum class stating the type of the graph.">Graph::Type</a> enum).</td></tr>
+    <tr><td class="paramname">file_path</td><td><a class="el" href="../../d7/d30/class_graph_1_1_path.html" title="Class storing information regarding found path by path-searching algorithm.">Path</a> of the data source file. </td></tr>
+    <tr><td class="paramname">type</td><td>Type of the graph (from the <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0" title="Enum class stating the type of the graph.">Graph::Type</a> enum). In case of reading from graphML file this parameter is ignored.</td></tr>
   </table>
   </dd>
 </dl>
@@ -260,8 +281,12 @@ Additional Inherited Members</h2></td></tr>
 <li>std::runtime_error - when given file cannot be accessed. </li>
 </ul>
 </dd></dl>
-<dl class="section attention"><dt>Attention</dt><dd>Supported formats are .lst and .GRAPHML. The .lst representation does not contain weights, so a weight of 1 is assumed for each connection if using this file format as a data source. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd>House of Graphs for .lst adjacency list file reference. </dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Supported formats are .lst and .GRAPHML. The .lst representation does not contain weights, so a weight of 1 is assumed for each connection if using this file format as a data source.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://hog.grinvin.org/Formats.action">Here </a> for House of Graphs adjacency <a class="el" href="../../d6/de9/class_graph_1_1_list.html#abd0a86cc45cfced742b4f8ba76bcaa9b" title="List structure of the graph.">list</a> format guideline. </dd>
+<dd>
+<a href="http://graphml.graphdrawing.org/primer/graphml-primer.html">Here </a> for GraphML format guideline.</dd></dl>
+<p><a class="el" href="../../d9/dd8/create_list_from_lst_8cpp-example.html">Example of using .lst file as data source</a><br  />
+ <a class="el" href="../../d5/d68/create_list_from_graphml_8cpp-example.html">Example of using .GRAPHML file as data source</a> </p>
 
 </div>
 </div>
@@ -370,60 +395,6 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a57dc515473fbb31889bc51a59560d701" name="a57dc515473fbb31889bc51a59560d701"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57dc515473fbb31889bc51a59560d701">&#9670;&nbsp;</a></span>add_edge()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Graph::List::add_edge </td>
-          <td>(</td>
-          <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>source</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>destination</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>weight</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Function adding a connection between two given vertices. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">source</td><td>ID of the source vertex. </td></tr>
-    <tr><td class="paramname">destination</td><td>ID of the end vertex. </td></tr>
-    <tr><td class="paramname">weight</td><td>Weight of the connection. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a7a587d9faf53c1c7ef2ab777286ad3b2">Graph::Graph</a>.</p>
-
-</div>
-</div>
 <a id="aac4ab303faf71a30792c6d431f240714" name="aac4ab303faf71a30792c6d431f240714"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aac4ab303faf71a30792c6d431f240714">&#9670;&nbsp;</a></span>add_node()</h2>
 
@@ -448,9 +419,42 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Function adding a new vertex to the graph structure. </p>
-<p >Added vertex is initially isolated, so any connections to it need to be added manually. </p>
+<p >Added vertex is initially isolated, so any connections to it need to be added manually.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d1/d7d/add__node__list_8cpp.html">add_node_list.cpp</a> "Example of adding an isolated vertex" </dd></dl>
 
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a2c914910e897be9b2e54666c7fdfe5d2">Graph::Graph</a>.</p>
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#aafbfb9620410170f041f7029d44fc53f">Graph::Graph_t</a>.</p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d3/db5/add_node_list_8cpp-example.html#a4">add_node_list.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="adcd533ffc69d17a70472a68a61cee4bc" name="adcd533ffc69d17a70472a68a61cee4bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcd533ffc69d17a70472a68a61cee4bc">&#9670;&nbsp;</a></span>calculate_degrees()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Graph::List::calculate_degrees </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Function for calculating the degrees of each vertex. </p>
+<p >This function is for internal use only. </p>
+
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a3ee1ffd82bf90902d5855ea0d486a8cd">Graph::Graph_t</a>.</p>
 
 </div>
 </div>
@@ -471,8 +475,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a1a5ea23d4a4b2f4b18bbc6e0da6af8de" name="a1a5ea23d4a4b2f4b18bbc6e0da6af8de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a5ea23d4a4b2f4b18bbc6e0da6af8de">&#9670;&nbsp;</a></span>get_edge()</h2>
+<a id="a39fe59b34278f72cb03d6f68340984b3" name="a39fe59b34278f72cb03d6f68340984b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39fe59b34278f72cb03d6f68340984b3">&#9670;&nbsp;</a></span>get_edge()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -481,7 +485,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const uint32_t Graph::List::get_edge </td>
+          <td class="memname">uint32_t Graph::List::get_edge </td>
           <td>(</td>
           <td class="paramtype">std::size_t&#160;</td>
           <td class="paramname"><em>source</em>, </td>
@@ -516,12 +520,12 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Weight of the connection. </dd></dl>
 
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a395f577e2cadf0b567eab81d4f862cd5">Graph::Graph</a>.</p>
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#af9acc86aeaf34f54a99bc772563ae9e2">Graph::Graph_t</a>.</p>
 
 </div>
 </div>
-<a id="a1f17bdfa1e59fcb79ca8b2c2fd2f7b98" name="a1f17bdfa1e59fcb79ca8b2c2fd2f7b98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f17bdfa1e59fcb79ca8b2c2fd2f7b98">&#9670;&nbsp;</a></span>get_name()</h2>
+<a id="ad9aae5c3d481526b7e1892b4dd7a8e39" name="ad9aae5c3d481526b7e1892b4dd7a8e39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9aae5c3d481526b7e1892b4dd7a8e39">&#9670;&nbsp;</a></span>get_node_degree()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -530,37 +534,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string Graph::List::get_name </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Getter for the name of the graph. </p>
-<dl class="section return"><dt>Returns</dt><dd>The name of the graph. </dd></dl>
-
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a16c4f61031af5a7d2e6741f4b1482337">Graph::Graph</a>.</p>
-
-</div>
-</div>
-<a id="aae456002c6713a8effd149fb0ffe4358" name="aae456002c6713a8effd149fb0ffe4358"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae456002c6713a8effd149fb0ffe4358">&#9670;&nbsp;</a></span>get_node_degree()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::size_t Graph::List::get_node_degree </td>
+          <td class="memname"><a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html">Graph::Degree</a> Graph::List::get_node_degree </td>
           <td>(</td>
           <td class="paramtype">std::size_t&#160;</td>
           <td class="paramname"><em>node_id</em></td><td>)</td>
@@ -581,14 +555,14 @@ Additional Inherited Members</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Degree of the vertex as const. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html" title="Structure containing the degree information of given vertex.">Degree</a> of the vertex as const. </dd></dl>
 
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a9b4a80eb13b0f3c779680ea1aebc5623">Graph::Graph</a>.</p>
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a1762c449e7716d1ce191ee8daefdfad3">Graph::Graph_t</a>.</p>
 
 </div>
 </div>
-<a id="aa5200e14bc56cd74feb2a9ca1964f730" name="aa5200e14bc56cd74feb2a9ca1964f730"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5200e14bc56cd74feb2a9ca1964f730">&#9670;&nbsp;</a></span>get_nodes_amount()</h2>
+<a id="af401c129c5e5185ecebb9b81ce4b2ec4" name="af401c129c5e5185ecebb9b81ce4b2ec4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af401c129c5e5185ecebb9b81ce4b2ec4">&#9670;&nbsp;</a></span>get_nodes_amount()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -597,7 +571,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::size_t Graph::List::get_nodes_amount </td>
+          <td class="memname">std::size_t Graph::List::get_nodes_amount </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -613,12 +587,12 @@ Additional Inherited Members</h2></td></tr>
 <p>Getter for vertices amount. </p>
 <dl class="section return"><dt>Returns</dt><dd>Amount of vertices as const. </dd></dl>
 
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#ae1e7b616909df5e5dba8b59af3a79e31">Graph::Graph</a>.</p>
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a2cb0af273dceed41ec4a0193c29bf4e7">Graph::Graph_t</a>.</p>
 
 </div>
 </div>
-<a id="a3be578b82ffcc1136e4c9d5976bb22a3" name="a3be578b82ffcc1136e4c9d5976bb22a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3be578b82ffcc1136e4c9d5976bb22a3">&#9670;&nbsp;</a></span>get_type()</h2>
+<a id="a386bbfc49e6e82e0963d7f8872583ce0" name="a386bbfc49e6e82e0963d7f8872583ce0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a386bbfc49e6e82e0963d7f8872583ce0">&#9670;&nbsp;</a></span>get_type()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -627,7 +601,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a> Graph::List::get_type </td>
+          <td class="memname"><a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Graph::Type</a> Graph::List::get_type </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -643,7 +617,143 @@ Additional Inherited Members</h2></td></tr>
 <p>Getter for the type of the graph. </p>
 <dl class="section return"><dt>Returns</dt><dd>The type of the graph as const. </dd></dl>
 
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a1103dccbc51c184fcc5e800d6de522fd">Graph::Graph</a>.</p>
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#adcaf81afc8fb47aef4f773c1ed416b3f">Graph::Graph_t</a>.</p>
+
+</div>
+</div>
+<a id="a849f725f7a29aabd2fb049c7cfe7dddf" name="a849f725f7a29aabd2fb049c7cfe7dddf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a849f725f7a29aabd2fb049c7cfe7dddf">&#9670;&nbsp;</a></span>load_graphml_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Graph::List::load_graphml_file </td>
+          <td>(</td>
+          <td class="paramtype">std::fstream &amp;&#160;</td>
+          <td class="paramname"><em>file</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Function loading the data from .GRAPHML file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>Reference to the file object of the data source.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>Exceptions to guard against:<ul>
+<li>std::runtime_error When weight is less or equal to 0. </li>
+</ul>
+</dd></dl>
+
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a84a28ef31dda764c53934d6cc4b3d7f4">Graph::Graph_t</a>.</p>
+
+</div>
+</div>
+<a id="ad0bec7ee5bed87a60b0b5bf6503488f8" name="ad0bec7ee5bed87a60b0b5bf6503488f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0bec7ee5bed87a60b0b5bf6503488f8">&#9670;&nbsp;</a></span>load_lst_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Graph::List::load_lst_file </td>
+          <td>(</td>
+          <td class="paramtype">std::fstream &amp;&#160;</td>
+          <td class="paramname"><em>file</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Function loading the data from .lst file into the object. </p>
+<p >This function is for internal use only. To create an object containig data from .lst file, use the specified constructor.</p>
+<dl class="section see"><dt>See also</dt><dd>List::List(std::string file_path, std::string name, Graph::Type type)</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>Reference to the file object of the data source. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aaef0516e0039e1a433d8edbef4a72de6" name="aaef0516e0039e1a433d8edbef4a72de6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaef0516e0039e1a433d8edbef4a72de6">&#9670;&nbsp;</a></span>make_edge()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Graph::List::make_edge </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>destination</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>weight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Function adding a connection between two given vertices. </p>
+<p >If the graph type is undirected, the connection will be inserted both ways.</p>
+<dl class="section warning"><dt>Warning</dt><dd>If an edge between given vertices already exists, the weight of the connection will be overwritten, and second edge will not be added.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">source</td><td>ID of the source vertex. </td></tr>
+    <tr><td class="paramname">destination</td><td>ID of the end vertex. </td></tr>
+    <tr><td class="paramname">weight</td><td>Weight of the connection.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Example of adding an edge between two vertices<br  />
+Example of modifying the weight of an existing edge </p>
+
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a45e76ba9d00bfa3c7bac573f26d039b6">Graph::Graph_t</a>.</p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d8/d9b/make_edge_list_insert_8cpp-example.html#a4">make_edge_list_insert.cpp</a>, and <a class="el" href="../../d7/da2/make_edge_list_override_8cpp-example.html#a4">make_edge_list_override.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -677,11 +787,13 @@ Additional Inherited Members</h2></td></tr>
 <li>ID of the vertex</li>
 <li>IDs of adjacent vertexes</li>
 <li>Weights of the connections</li>
-<li>Degree of each vertex</li>
+<li><a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html" title="Structure containing the degree information of given vertex.">Degree</a> of each vertex</li>
 </ul>
-<dl class="section note"><dt>Note</dt><dd><a class="el" href="../../de/d75/namespace_data.html">Data</a> is displayed in format "degree: ___, ID: adj_vert_ID {weight}, adj_vert_ID {weight}, ..." </dd></dl>
+<dl class="section note"><dt>Note</dt><dd><a class="el" href="../../de/d75/namespace_data.html">Data</a> is displayed in format "degree: ____*, ID: adj_vert_ID {weight}, adj_vert_ID {weight}, ...", but the degree field varies based on the graph type. In case of undirected graph, only one value is shown. In case of directed graphs, indegree and outdegree is shown in format "in|out". </dd></dl>
 
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a2d9ea3acf27e89fb55b1154c39704279">Graph::Graph</a>.</p>
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a7eb6ba40c0e77b07748686a75dbcfe67">Graph::Graph_t</a>.</p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d3/db5/add_node_list_8cpp-example.html#a3">add_node_list.cpp</a>, <a class="el" href="../../d5/d68/create_list_from_graphml_8cpp-example.html#a3">create_list_from_graphml.cpp</a>, <a class="el" href="../../d9/dd8/create_list_from_lst_8cpp-example.html#a3">create_list_from_lst.cpp</a>, <a class="el" href="../../d8/d9b/make_edge_list_insert_8cpp-example.html#a3">make_edge_list_insert.cpp</a>, <a class="el" href="../../d7/da2/make_edge_list_override_8cpp-example.html#a3">make_edge_list_override.cpp</a>, <a class="el" href="../../d1/d95/remove_edge_list_8cpp-example.html#a3">remove_edge_list.cpp</a>, <a class="el" href="../../d9/dc2/remove_node_list_8cpp-example.html#a3">remove_node_list.cpp</a>, and <a class="el" href="../../d4/d29/save_list_to_graphml_8cpp-example.html#a3">save_list_to_graphml.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -720,6 +832,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Function removing a connection between two given adjacency vertices. </p>
+<p >If the graph is undirected, the connection will be removed both ways.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">source</td><td>ID of the beginning vertex. </td></tr>
@@ -728,11 +841,14 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 <dl class="section warning"><dt>Warning</dt><dd>Exceptions to guard against:<ul>
-<li>std::out_of_range - When any of the given IDs is out of bounds for the adjacency list. </li>
+<li>std::out_of_range - When any of the given IDs is out of bounds for the adjacency list.</li>
 </ul>
 </dd></dl>
+<p><a class="el" href="../../d1/d95/remove_edge_list_8cpp-example.html">Example of removing an edge from graph structure</a> </p>
 
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#ac24d41014c6af76a3ae88cc1af712fa1">Graph::Graph</a>.</p>
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a83d065e834fdfe85355e1b8c9c92e4b5">Graph::Graph_t</a>.</p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d1/d95/remove_edge_list_8cpp-example.html#a4">remove_edge_list.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -770,16 +886,19 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section warning"><dt>Warning</dt><dd>Removal of a vertex causes the re-enumeration of each subsequent vertex, by decreasing their indexes by 1.</dd>
 <dd>
 Exception to guard against:<ul>
-<li>std::out_of_range - when given vertex ID is out of bounds for the list. </li>
+<li>std::out_of_range - when given vertex ID is out of bounds for the list.</li>
 </ul>
 </dd></dl>
+<p><a class="el" href="../../d9/dc2/remove_node_list_8cpp-example.html">Example of removing a vertex from graph structure</a> </p>
 
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#a0f0c681abec0386380e7acba39502469">Graph::Graph</a>.</p>
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a9052ce6ec566c3abc9ccd838b9823552">Graph::Graph_t</a>.</p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d9/dc2/remove_node_list_8cpp-example.html#a4">remove_node_list.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
-<a id="a85e52c34c9f61a3138d321b172b6e7a4" name="a85e52c34c9f61a3138d321b172b6e7a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85e52c34c9f61a3138d321b172b6e7a4">&#9670;&nbsp;</a></span>save_graphml()</h2>
+<a id="ab9e7e80227be6e2e9931b5cac020b037" name="ab9e7e80227be6e2e9931b5cac020b037"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9e7e80227be6e2e9931b5cac020b037">&#9670;&nbsp;</a></span>save_graphml()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -790,9 +909,19 @@ Exception to guard against:<ul>
         <tr>
           <td class="memname">void Graph::List::save_graphml </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>output_file_path</em></td><td>)</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -803,14 +932,94 @@ Exception to guard against:<ul>
 </div><div class="memdoc">
 
 <p>Function saving current graph structure into a .GRAPHML format file. </p>
+<p >This format does contain the weights of the edges.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">output_file_path</td><td>Path to the output file. </td></tr>
+    <tr><td class="paramname">stream</td><td>Stream to which the graphML data format should be saved to. </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the graph (user-given).</td></tr>
   </table>
   </dd>
 </dl>
+<p><a class="el" href="../../d4/d29/save_list_to_graphml_8cpp-example.html">Example of saving current graph structure in .GRAPHML format</a> </p>
 
-<p>Implements <a class="el" href="../../d6/d4f/class_graph_1_1_graph.html#ac9fc006e1a5d4bcb9c00409a2d1b540b">Graph::Graph</a>.</p>
+<p>Implements <a class="el" href="../../d3/deb/class_graph_1_1_graph__t.html#a88a55dc3ef39d7339ffb44b4713cb153">Graph::Graph_t</a>.</p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="../../d4/d29/save_list_to_graphml_8cpp-example.html#a4">save_list_to_graphml.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="abef17270c063efae94f48f147780af37" name="abef17270c063efae94f48f147780af37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abef17270c063efae94f48f147780af37">&#9670;&nbsp;</a></span>degrees</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html">Degree</a>&gt; Graph::List::degrees</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Vector containing degrees of each vertex. </p>
+<p >Degrees are stored within the <a class="el" href="../../d2/d9f/struct_graph_1_1_degree.html" title="Structure containing the degree information of given vertex.">Graph::Degree</a> structure, and the type field decides which fields of the structure should be used. </p>
+
+</div>
+</div>
+<a id="abd0a86cc45cfced742b4f8ba76bcaa9b" name="abd0a86cc45cfced742b4f8ba76bcaa9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd0a86cc45cfced742b4f8ba76bcaa9b">&#9670;&nbsp;</a></span>list</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::list&lt;<a class="el" href="../../d6/d87/struct_graph_1_1_list_1_1_node.html">Node</a>&gt; &gt; Graph::List::list</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="../../d6/de9/class_graph_1_1_list.html" title="Class representing a graph in the adjacency list form.">List</a> structure of the graph. </p>
+<p >Consists of the std::vector containing std::lists of neighbour vertices for a given vertex. </p>
+
+</div>
+</div>
+<a id="a3900bb15c47f06569b9a2de77a6e3d2e" name="a3900bb15c47f06569b9a2de77a6e3d2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3900bb15c47f06569b9a2de77a6e3d2e">&#9670;&nbsp;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d7/dfb/namespace_graph.html#aa4b8785265efefb668f2931c8f18c8e0">Type</a> Graph::List::type</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enum signifying the type of the graph. </p>
 
 </div>
 </div>

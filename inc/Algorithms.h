@@ -3,9 +3,34 @@
 #include <cstdint>
 #include <map>
 #include <vector>
+#include <iostream>
 
 namespace Graph
 {
+	/**
+	 * \brief Class storing information regarding found path by path-searching algorithm.
+	 */
+	class Path
+	{
+	public:
+		Path(std::vector<std::size_t> path, uint32_t distance, uint32_t throughtput);
+		Path(Path& p);
+		Path(Path&& p);
+
+	
+		friend std::ostream& operator << (std::ostream& stream, Path& p);
+
+		std::vector<std::size_t> get_path();
+		uint32_t get_distance();
+		uint32_t get_throughtput();
+
+	private: 
+		std::vector<std::size_t> path;  /**< Vector containing the path in order. */
+		uint32_t distance;				/**< Summed distance from the start to the end. */
+		uint32_t throughtput;			/**< Minimal throughtput of the path. This member is used with the throughtput belman-ford
+											 algorithm, and equals 0 for normal algorithms */
+	};
+
 	/**
 	 * \brief Class for storing data from path-searching algorithms. 
 	 * 
@@ -18,6 +43,7 @@ namespace Graph
 		std::vector<uint32_t> distance; /**< The distance value from start vertex to any given vertex */
 	
 		void print();
+		std::vector<Path> path(std::size_t start, std::size_t end);
 	};
 
 	/*
@@ -38,6 +64,9 @@ namespace Graph
 	 * or try to get optimal results for the algorithm by running it multiple times with permutations, as does the
 	 * Data::Benchmark class. For the latter purpose, the use of Data::Benchmark class is recommended, as it provides
 	 * API to automate the process.
+	 * 
+	 * \note The permutation feature allows the same permutation to be generated multiple times. As such, the minimal color
+	 *		 acquired from this function might still not be an optimal value.
 	 */
 	class Algorithms
 	{
@@ -48,40 +77,46 @@ namespace Graph
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the greedy algorithm rules.
 		 * 
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime. This value is also passed to the core coloring function.
+		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
+		 *					False by default.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual int32_t greedy_coloring(bool log) = 0;
+		virtual int32_t greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr) = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the LF algorithm rules. 
 		 * 
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime. This value is also passed to the core coloring function.
+		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
+		 *					False by default.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual int32_t lf_coloring(bool log) = 0;
+		virtual int32_t lf_coloring(bool permutate = false, std::ostream* log_stream = nullptr) = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the SL algorithm rules.
 		 * 
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime. This value is also passed to the core coloring function.
+		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
+		 *					False by default.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual int32_t sl_coloring(bool log) = 0;
+		virtual int32_t sl_coloring(bool permutate = false, std::ostream* log_stream = nullptr) = 0;
 
 		/**
-		 * Common definition of the function providing the Belman-Ford path-searching algorithm implementation.
+		 * Common definition of the function providing the Belman-Ford point-to-all path-searching algorithm implementation.
 		 * 
-		 * \param start_vertex Numer of vertex (starting from 0) from which the search for paths to all other
+		 * \param start ID of the vertex (starting from 0) from which the search for paths to all other
 		 * vertices should begin.
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Data::Roadmap structure containing all necessary informations regarding the found paths.
 		 */
-		virtual Roadmap belman_ford(std::size_t start_vertex, bool log) = 0;
+		virtual Roadmap belman_ford(std::size_t start, std::ostream* log_stream = nullptr) = 0;
 
 	protected:
 
@@ -93,10 +128,10 @@ namespace Graph
 		 * (once provided the right order of vertices according to their own rules).
 		 * 
 		 * \param m Map containing the created ordering of vertices.
-		 * \param log Flag stating whether the function should produce logs on the standard output
-		 * during its runtime.
+		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
+		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual int32_t greedy_coloring_core(std::map<int, int>& m, bool log) = 0;
+		virtual int32_t greedy_coloring_core(std::map<int, int>& m, std::ostream* log_stream = nullptr) = 0;
 	};
 }

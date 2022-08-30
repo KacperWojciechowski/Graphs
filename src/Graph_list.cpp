@@ -10,8 +10,8 @@
  * or the file cannot be accessed, an exception is returned. 
  * 
  * \param file_path Path of the data source file.
- * \param name Name of the graph (user-given).
- * \param type Type of the graph (from the Graph::Type enum).
+ * \param type Type of the graph (from the Graph::Type enum). In case of reading from graphML file
+ *			   this parameter is ignored.
  * 
  * \warning Exceptions to guard against:
  *		- std::invalid_argument - when given file extension is not supported.
@@ -19,9 +19,14 @@
  * \attention Supported formats are .lst and .GRAPHML. The .lst representation does not
  *			  contain weights, so a weight of 1 is assumed for each connection if using
  *			  this file format as a data source. 
- * \see House of Graphs for .lst adjacency list file reference.
+ * 
+ * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for House of Graphs adjacency list format guideline.
+ * \see <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html"> Here </a> for GraphML format guideline.
+ * 
+ * \ref create_list_from_lst.cpp "Example of using .lst file as data source"\n 
+ * \ref create_list_from_graphml.cpp "Example of using .GRAPHML file as data source"
  */
-Graph::List::List(std::string file_path, Type type)
+Graph::List::List(const std::string& file_path, Type type)
 	: type(type)
 {
 	// loading the .lst file
@@ -205,7 +210,7 @@ void Graph::List::load_graphml_file(std::fstream& file)
 	}
 	else
 	{
-		this->type = Type::undefined;
+		throw std::runtime_error("Unsupported graph type");
 	}
 
 	// obtain vertices count
@@ -402,7 +407,7 @@ void Graph::List::print()
 
 	std::cout << "{" << std::endl;
 
-	for (std::size_t index = 0; auto element : this->list)
+	for (std::size_t index = 0; auto& element : this->list)
 	{
 		// display degrees
 		if (this->type == Type::undirected)
@@ -433,14 +438,19 @@ void Graph::List::print()
 /**
  * \brief Function adding a connection between two given vertices.
  * 
+ * If the graph type is undirected, the connection will be inserted both ways.
+ * 
  * \warning If an edge between given vertices already exists, the weight of the 
  *			connection will be overwritten, and second edge will not be added.
  * 
  * \param source ID of the source vertex.
  * \param destination ID of the end vertex.
  * \param weight Weight of the connection.
+ * 
+ * \ref add_edge_list_insert.cpp "Example of adding an edge between two vertices"\n
+ * \ref add_edge_list_override.cpp "Example of modifying the weight of an existing edge"
  */
-void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t weight)
+void Graph::List::make_edge(std::size_t source, std::size_t destination, uint32_t weight)
 {
 	// validate arguments
 	if (source >= this->list.size() || destination >= this->list.size())
@@ -518,6 +528,7 @@ void Graph::List::add_edge(std::size_t source, std::size_t destination, uint32_t
  * Added vertex is initially isolated, so any connections to it need
  * to be added manually.
  * 
+ * \see add_node_list.cpp "Example of adding an isolated vertex"
  */
 void Graph::List::add_node()
 {
@@ -531,11 +542,15 @@ void Graph::List::add_node()
 /**
  * \brief Function removing a connection between two given adjacency vertices.
  * 
+ * If the graph is undirected, the connection will be removed both ways.
+ * 
  * \param source ID of the beginning vertex.
  * \param destination ID of the end vertex.
  * 
  * \warning Exceptions to guard against:
  *		- std::out_of_range - When any of the given IDs is out of bounds for the adjacency list.
+ * 
+ * \ref remove_edge_list.cpp "Example of removing an edge from graph structure"
  */
 void Graph::List::remove_edge(std::size_t source, std::size_t destination)
 {
@@ -590,6 +605,8 @@ void Graph::List::remove_edge(std::size_t source, std::size_t destination)
  * 
  * \warning Exception to guard against:
  *			- std::out_of_range - when given vertex ID is out of bounds for the list.
+ * 
+ * \ref remove_node_list.cpp "Example of removing a vertex from graph structure"
  */
 void Graph::List::remove_node(std::size_t node_id)
 {
@@ -653,7 +670,7 @@ void Graph::List::remove_node(std::size_t node_id)
  * 
  * \return Amount of vertices as const.
  */
-const std::size_t Graph::List::get_nodes_amount()
+std::size_t Graph::List::get_nodes_amount()
 {
 	return this->list.size();
 }
@@ -667,7 +684,7 @@ const std::size_t Graph::List::get_nodes_amount()
  * \param node_id ID of the vertex which degree should be returned.
  * \return Degree of the vertex as const.
  */
-const Graph::Degree Graph::List::get_node_degree(std::size_t node_id)
+Graph::Degree Graph::List::get_node_degree(std::size_t node_id)
 {
 	// validate the parameter
 	if (node_id >= this->degrees.size())
@@ -691,7 +708,7 @@ const Graph::Degree Graph::List::get_node_degree(std::size_t node_id)
  * \param destination ID of the end vertex of the edge.
  * \return Weight of the connection.
  */
-const uint32_t Graph::List::get_edge(std::size_t source, std::size_t destination)
+uint32_t Graph::List::get_edge(std::size_t source, std::size_t destination)
 {
 	uint32_t ret = 0;
 
@@ -719,7 +736,7 @@ const uint32_t Graph::List::get_edge(std::size_t source, std::size_t destination
  * 
  * \return The type of the graph as const.
  */
-const Graph::Type Graph::List::get_type()
+Graph::Type Graph::List::get_type()
 {
 	return this->type;
 }
@@ -730,24 +747,29 @@ const Graph::Type Graph::List::get_type()
 /**
  * \brief Function saving current graph structure  into a .GRAPHML format file.
  * 
- * \param output_file_path Path to the output file.
+ * This format does contain the weights of the edges.
+ * 
+ * \param stream Stream to which the graphML data format should be saved to.
+ * \param name Name of the graph (user-given).
+ * 
+ * \ref save_list_to_graphml.cpp "Example of saving current graph structure in .GRAPHML format"
  */
 void Graph::List::save_graphml(std::ostream& stream, std::string name)
 {
 	// header
 	stream << "<?xml version=\"1.0\"";
-	stream << " encoding=\"UTF-8\"?>" << std::endl;
+	stream << " encoding=\"UTF-8\"?>\n";
 
 	// xml schema
 	stream << "<graphml xmlns=";
-	stream << "\"http://graphml.graphdrawing.org/xmlns\"" << std::endl;
-	stream << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" << std::endl;
-	stream << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns" << std::endl;
-	stream << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">" << std::endl;
+	stream << "\"http://graphml.graphdrawing.org/xmlns\"\n";
+	stream << "	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+	stream << "	xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns\n";
+	stream << "	http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n";
 
 	// weight data info
-	stream << "\t<key id=\"d0\" for=\"edge\"" << std::endl;
-	stream << "\t\tattr.name=\"weight\" attr.type=\"integer\"/>" << std::endl;
+	stream << "\t<key id=\"d0\" for=\"edge\"\n";
+	stream << "\t\tattr.name=\"weight\" attr.type=\"integer\"/>\n";
 
 	// graph type data
 	stream << "\t<graph id=";
@@ -756,14 +778,10 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 	switch (this->type)
 	{
 	case Type::directed:
-		stream << "\"directed\">" << std::endl;
+		stream << "\"directed\">\n";
 		break;
 	case Type::undirected:
-		stream << "\"undirected\">" << std::endl;
-		break;
-		// in case of undefined type, directed type is assumed
-	case Type::undefined:
-		stream << "\"directed\">\n";
+		stream << "\"undirected\">\n";
 		break;
 	}
 
@@ -771,7 +789,7 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 	for (std::size_t i = 0; i < this->list.size(); i++)
 	{
 		stream << "\t\t<node id=\"n" << i;
-		stream << "\"/>" << std::endl;
+		stream << "\"/>\n";
 	}
 
 	// edge data including weight
@@ -785,13 +803,13 @@ void Graph::List::save_graphml(std::ostream& stream, std::string name)
 			}
 			stream << "\t\t<edge source=\"n" << i;
 			stream << "\" target=\"n" << itr->ID;
-			stream << "\">" << std::endl;
-			stream << "\t\t\t<data key=\"d0\">" + std::to_string(itr->weight) + "</data>" << std::endl;
-			stream << "\t\t</edge>" << std::endl;
+			stream << "\">\n";
+			stream << "\t\t\t<data key=\"d0\">" + std::to_string(itr->weight) + "</data>\n";
+			stream << "\t\t</edge>\n";
 		}
 	}
 
 	// close the tags and the file
-	stream << "\t</graph>" << std::endl;
-	stream << "</graphml>";
+	stream << "\t</graph>\n";
+	stream << "</graphml>" << std::flush;
 }

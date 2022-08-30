@@ -55,3 +55,4 @@ bld/
 [Ll]ogs/
 
 .vs/
+src/main.cpp

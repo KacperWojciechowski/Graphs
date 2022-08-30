@@ -26,7 +26,7 @@
  * \ref create_list_from_lst.cpp "Example of using .lst file as data source"\n 
  * \ref create_list_from_graphml.cpp "Example of using .GRAPHML file as data source"
  */
-Graph::List::List(std::string file_path, Type type)
+Graph::List::List(const std::string& file_path, Type type)
 	: type(type)
 {
 	// loading the .lst file
@@ -670,7 +670,7 @@ void Graph::List::remove_node(std::size_t node_id)
  * 
  * \return Amount of vertices as const.
  */
-const std::size_t Graph::List::get_nodes_amount()
+std::size_t Graph::List::get_nodes_amount()
 {
 	return this->list.size();
 }
@@ -684,7 +684,7 @@ const std::size_t Graph::List::get_nodes_amount()
  * \param node_id ID of the vertex which degree should be returned.
  * \return Degree of the vertex as const.
  */
-const Graph::Degree Graph::List::get_node_degree(std::size_t node_id)
+Graph::Degree Graph::List::get_node_degree(std::size_t node_id)
 {
 	// validate the parameter
 	if (node_id >= this->degrees.size())
@@ -708,7 +708,7 @@ const Graph::Degree Graph::List::get_node_degree(std::size_t node_id)
  * \param destination ID of the end vertex of the edge.
  * \return Weight of the connection.
  */
-const uint32_t Graph::List::get_edge(std::size_t source, std::size_t destination)
+uint32_t Graph::List::get_edge(std::size_t source, std::size_t destination)
 {
 	uint32_t ret = 0;
 
@@ -736,7 +736,7 @@ const uint32_t Graph::List::get_edge(std::size_t source, std::size_t destination
  * 
  * \return The type of the graph as const.
  */
-const Graph::Type Graph::List::get_type()
+Graph::Type Graph::List::get_type()
 {
 	return this->type;
 }

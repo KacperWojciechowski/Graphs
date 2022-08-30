@@ -55,6 +55,4 @@ bld/
 [Ll]ogs/
 
 .vs/
-
-# main source code
 src/main.cpp

@@ -23,7 +23,7 @@ namespace Graph
 	{
 	public:
 		/* Constructors */
-		List(std::string file_path, Type type);
+		List(const std::string& file_path, Type type);
 
 		List(Matrix& matrix);
 		List(Data::PixelMap& map);
@@ -39,10 +39,10 @@ namespace Graph
 		void remove_edge(std::size_t source, std::size_t destination);
 		void remove_node(std::size_t node_id);
 
-		const std::size_t get_nodes_amount();
-		const Degree get_node_degree(std::size_t node_id);
-		const uint32_t get_edge(std::size_t source, std::size_t destination);
-		const Type get_type();
+		std::size_t get_nodes_amount();
+		Degree get_node_degree(std::size_t node_id);
+		uint32_t get_edge(std::size_t source, std::size_t destination);
+		Type get_type();
 
 		void save_graphml(std::ostream& stream, std::string name);
 

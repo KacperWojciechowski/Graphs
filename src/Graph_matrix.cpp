@@ -407,7 +407,7 @@ void Graph::Matrix::remove_node(std::size_t node_id)
  * 
  * \return Amount of vertices in the graph structure.
  */
-const std::size_t Graph::Matrix::get_nodes_amount()
+std::size_t Graph::Matrix::get_nodes_amount()
 {
 	return this->matrix.size();
 }
@@ -424,7 +424,7 @@ const std::size_t Graph::Matrix::get_nodes_amount()
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.
  */
-const Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
+Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
 {
 	if (node_id >= this->degrees.size())
 	{
@@ -451,7 +451,7 @@ const Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
  * \warning Exception to guard against:
  *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
  */
-const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
+uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
 {
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
 	{
@@ -471,7 +471,7 @@ const uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destinati
  * 
  * \return Graph::Type enum defining the type of the graph.
  */
-const Graph::Type Graph::Matrix::get_type()
+Graph::Type Graph::Matrix::get_type()
 {
 	return this->type;
 }

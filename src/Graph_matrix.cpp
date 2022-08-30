@@ -164,7 +164,7 @@ void Graph::Matrix::print()
 	// display adjacency matrix
 	std::cout << "[" << std::endl;
 
-	for (std::size_t index = 0; auto row : this->matrix)
+	for (std::size_t index = 0; auto& row : this->matrix)
 	{
 		for (auto itr2 = row.begin(); itr2 != row.end(); itr2++)
 		{
@@ -914,9 +914,9 @@ void Graph::Matrix::calculate_degrees()
 	}
 
 	// iterate through the whole adjacency matrix to calculate degree of each node
-	for (std::size_t index1 = 0; auto row : this->matrix)
+	for (std::size_t index1 = 0; auto& row : this->matrix)
 	{
-		for (std::size_t index2 = 0; auto element : row)
+		for (std::size_t index2 = 0; auto& element : row)
 		{
 			// if connection was found, increase the degree
 			if (element != 0)

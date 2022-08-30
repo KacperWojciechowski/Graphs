@@ -536,8 +536,8 @@ void Graph::List::make_edge(std::size_t source, std::size_t destination, uint32_
  */
 void Graph::List::add_node()
 {
-	this->list.push_back({});
-	this->degrees.push_back({ 0, 0, 0 });
+	this->list.emplace_back(0);
+	this->degrees.emplace_back( 0, 0, 0 );
 }
 
 

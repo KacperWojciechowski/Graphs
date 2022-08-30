@@ -103,10 +103,10 @@ Graph::Matrix::Matrix(GraphBase& graph)
 	this->type = graph.get_type();
 	std::size_t count = graph.get_nodes_amount();
 
+	this->matrix.resize(count);
 
 	for (std::size_t i = 0; i < count; i++)
 	{
-		this->matrix.emplace_back(0);
 		this->degrees.emplace_back(graph.get_node_degree(i));
 
 		for (std::size_t j = 0; j < count; j++)
@@ -299,15 +299,7 @@ void Graph::Matrix::add_node()
 	std::size_t size = this->matrix[0].size();
 
 	// add new row to the matrix
-	this->matrix.emplace_back(0);
-
-	// fill the new row with zeros
-	std::size_t index = this->matrix.size() - 1;
-
-	for (std::size_t i = 0; i < size; i++)
-	{
-		this->matrix[index].emplace_back(0);
-	}
+	this->matrix.emplace_back(this->matrix.size() + 1);
 
 	// add new vertex to the degrees vector
 	this->degrees.emplace_back( 0, 0, 0 );
@@ -620,12 +612,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 
 	for (std::size_t i = 0; i < size; i++)
 	{
-		mat.emplace_back(0);
-		index = mat.size() - 1;
-		for (std::size_t j = 0; j < size; j++)
-		{
-			mat[index].emplace_back(0);
-		}
+		mat.emplace_back(size);
 	}
 
 	Data::coord coordinates;
@@ -688,8 +675,6 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 void Graph::Matrix::load_throughtput(std::string file_path)
 {
 	int32_t value;
-	//std::vector<int32_t> v;
-	std::size_t index;
 
 	// check for the right file format
 	if (file_path.find(".mat") != std::string::npos)
@@ -699,18 +684,17 @@ void Graph::Matrix::load_throughtput(std::string file_path)
 
 		if (file.good())
 		{
+			// create empty rows
+			this->throughtput.resize(this->matrix.size());
+
 			// read each value from the throughtput matrix
 			for (std::size_t i = 0; i < this->matrix.size(); i++)
 			{
-				// add a row to the throughtput matrix
-				this->throughtput.emplace_back(0);
-				index = this->throughtput.size() - 1;
-
-				// load each value to the added row
+				// load each value to the respective row
 				for (std::size_t j = 0; j < this->matrix[i].size(); j++)
 				{
 					file >> value;
-					this->throughtput[index].emplace_back(value);
+					this->throughtput[i].emplace_back(value);
 				}
 			}
 		}
@@ -778,12 +762,12 @@ void Graph::Matrix::load_mat_file(std::istream& file)
 
 	// load the matrix
 	int32_t temp;
-	std::size_t index;
+
+	// create empty rows
+	this->matrix.resize(vertices);
 
 	for (std::size_t i = 0; i < vertices; i++)
 	{
-		this->matrix.emplace_back(0);
-		index = this->matrix.size();
 		for (std::size_t j = 0; j < vertices; j++)
 		{
 			file >> temp;
@@ -791,7 +775,7 @@ void Graph::Matrix::load_mat_file(std::istream& file)
 			{
 				throw std::runtime_error("Weight less than zero");
 			}
-			this->matrix[index - 1].emplace_back(static_cast<uint32_t>(temp));
+			this->matrix[i].emplace_back(static_cast<uint32_t>(temp));
 		}
 	}
 }
@@ -857,17 +841,17 @@ void Graph::Matrix::load_graphml_file(std::istream& file)
 	}
 
 	// obtain vertices count
+	std::size_t count = 0;
+
 	for (rapidxml::xml_node<>* vertex = graph_node->first_node("node"); vertex; vertex = vertex->next_sibling("node"))
 	{
-		this->matrix.emplace_back(0);
+		count++;
 	}
 
-	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
+	// create sufficient matrix
+	for (std::size_t i = 0; i < count; i++)
 	{
-		for (std::size_t i = 0; i < this->matrix.size(); i++)
-		{
-			itr->emplace_back(0);
-		}
+		this->matrix.emplace_back(count);
 	}
 
 	// obtain edges

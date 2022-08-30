@@ -16,16 +16,16 @@
  * only with positive weights.
  * 
  * \note Limits are expressed as a left open interval (limits.min; limits.max>.
- * \note Density prescaller does not guarantee any specific density, but manipulate the chance of generating an edge for each field.
- *		 The chance of generating an edge when using a prescaller is expressed as 1/x * (max - min) / (max - min + 1),
- *		 where x denotes the prescaller value, max denotes the upper weight limit, and min denotes the lower weight limit.
+ * \note Density prescaler does not guarantee any specific density, but manipulate the chance of generating an edge for each field.
+ *		 The chance of generating an edge when using a prescaler is expressed as 1/x * (max - min) / (max - min + 1),
+ *		 where x denotes the prescaler value, max denotes the upper weight limit, and min denotes the lower weight limit.
  * 
  * \param stream Output stream to save generated matrix to.
  * \param vertex_amount Desired amount of vertices within the graph.
  * \param limits Upper and lower limits for the weight values.
  * \param type Type of the graph from Graph::Type enum.
- * \param density_psc Prescaller for graph density manipulation. Allows user to decrease the chance 
- *					  an edge will be generated, by increasing the prescaller. Assumes value of 1 by default,
+ * \param density_psc Prescaler for graph density manipulation. Allows user to decrease the chance 
+ *					  an edge will be generated, by increasing the prescaler. Assumes value of 1 by default,
  *					  which does not cause any modification.
  * 
  * \ref matrix_generator.cpp "Example of generating a randomized matrix"
@@ -114,15 +114,15 @@ void Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
  * generates either undirected or directed connections. This function generates mostly
  * dense graphs.
  * 
- * \note Density prescaller does not guarantee any specific density, but manipulate the chance of generating an edge for each field.
- *		 The chance of generating an edge when using a prescaller is expressed as 1/x * (va - 1) / va,
- *		 where x denotes the prescaller value, and va denotes the vertices amount.
+ * \note Density prescaler does not guarantee any specific density, but manipulate the chance of generating an edge for each field.
+ *		 The chance of generating an edge when using a prescaler is expressed as 1/x * (va - 1) / va,
+ *		 where x denotes the prescaler value, and va denotes the vertices amount.
  * 
  * \param stream Output stream to save generated list to
  * \param vertex_amount Desired amount of vertices within the graph
  * \param type Type of the graph from Graph::Type enum
- * \param density_psc Prescaller for graph density manipulation. Allows user to decrease the chance 
- *					  an edge will be generated, by increasing the prescaller. Assumes value of 1 by default,
+ * \param density_psc Prescaler for graph density manipulation. Allows user to decrease the chance 
+ *					  an edge will be generated, by increasing the prescaler. Assumes value of 1 by default,
  *					  which does not cause any modification.
  * 
  * \ref list_generator.cpp "Example of generating a randomized list"

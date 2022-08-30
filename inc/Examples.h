@@ -260,9 +260,25 @@
  * The structure is saved in an output stream provided by the user, and as such this function can be used both for saving
  * in file, and for displaying the result in a standard output.
  * 
+ * \note In this example, prescaler of 2 indicates multiplying the chances of creating an edge by 50%.
  * \note To display the result in the standard output, pass std::cout reference as an argument.
  * 
  * \see Data::Generator::make_list()
+ */
+
+/**
+ * \example matrix_generator.cpp
+ * 
+ * An example of generating a randomized adjacency matrix in the .mat format.
+ * 
+ * This example shows how to use Data::Generator class to generate randomized adjacency matrix representation of a graph.
+ * The structure is saved in an output stream provided by the user, and as such this function can be used both for saving
+ * in file, and for displaying the result in a standard output.
+ * 
+ * \note In this example, prescaler of 2 indicates multiplying the chances of creating an edge by 50%.
+ * \note To display the result in the standard output, pass std::cout reference as an argument.
+ * 
+ * \see Data::Generator::make_matrix()
  */
 
 

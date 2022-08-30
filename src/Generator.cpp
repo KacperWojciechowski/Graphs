@@ -7,20 +7,127 @@
 #include <algorithm>
 
 /**
- * Function generating a random graph in a list representation, of a given type. 
+ * Function generating a random graph of given type in a matrix representation.
+ * 
+ * The generated format is compliant with .mat format provided by House of Graphs. Each
+ * number in the data file structure represents a weight of an edge. The value of zero
+ * represents no edge between two vertices. Undirected graphs will result in being represented
+ * as a symmetric matrix, with the diagonal as a symmetry axis. This function generates graphs
+ * only with positive weights.
+ * 
+ * \note Limits are expressed as a left open interval (limits.min; limits.max>.
+ * \note Density prescaller does not guarantee any specific density, but manipulate the chance of generating an edge for each field.
+ *		 The chance of generating an edge when using a prescaller is expressed as 1/x * (max - min) / (max - min + 1),
+ *		 where x denotes the prescaller value, max denotes the upper weight limit, and min denotes the lower weight limit.
+ * 
+ * \param stream Output stream to save generated matrix to.
+ * \param vertex_amount Desired amount of vertices within the graph.
+ * \param limits Upper and lower limits for the weight values.
+ * \param type Type of the graph from Graph::Type enum.
+ * \param density_psc Prescaller for graph density manipulation. Allows user to decrease the chance 
+ *					  an edge will be generated, by increasing the prescaller. Assumes value of 1 by default,
+ *					  which does not cause any modification.
+ * 
+ * \ref matrix_generator.cpp "Example of generating a randomized matrix"
+ */
+void Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc)
+{
+	std::vector<std::vector<std::size_t>> matrix;
+	std::size_t val;
+
+	srand(static_cast<uint32_t>(time(NULL)));
+
+	// calculate the divider for modulo division
+	std::size_t divider = limits.max - limits.min + 1;
+
+	// create an empty matrix
+	for (std::size_t i = 0; i < vertex_amount; i++)
+	{
+		matrix.push_back({});
+		for (std::size_t j = 0; j < vertex_amount; j++)
+		{
+			matrix[i].push_back(0);
+		}
+	}
+
+	// fill matrix with random weights
+	if (type == Graph::Type::directed)
+	{
+		for (std::size_t i = 0; i < vertex_amount; i++)
+		{
+			for (std::size_t j = 0; j < vertex_amount; j++)
+			{
+				val = rand() % density_psc == 0 ? rand() % divider : 0;
+				if (val != 0)
+				{
+					val += limits.min;
+				}
+				matrix[i][j] = val;
+			}
+		}
+	}
+	else
+	{
+		for (std::size_t i = 0; i < vertex_amount; i++)
+		{
+			for (std::size_t j = i; j < vertex_amount; j++)
+			{
+				val = rand() % density_psc == 0 ? rand() % divider : 0;
+				if (val != 0)
+				{
+					val += limits.min;
+				}
+				matrix[i][j] = val;
+				matrix[j][i] = val;
+			}
+		}
+	}
+
+	// output the resulting matrix to the stream
+	for (std::size_t index1 = 0; auto& row : matrix)
+	{
+		for (std::size_t index2 = 0; auto& element : row)
+		{
+			stream << element;
+			if (index2 < row.size() - 1)
+			{
+				stream << ' ';
+				index2++;
+			}
+		}
+		if (index1 < matrix.size() - 1)
+		{
+			stream << '\n';
+		}
+	}
+	stream << std::flush;
+}
+
+
+
+
+/**
+ * Function generating a random graph in a list of given type representation. 
  * 
  * The generated format is compliant with .lst format provided by House of Graphs, and
  * as such, uses vertex indexes starting with 1. Depending of the graph type, this function
  * generates either undirected or directed connections. This function generates mostly
  * dense graphs.
  * 
+ * \note Density prescaller does not guarantee any specific density, but manipulate the chance of generating an edge for each field.
+ *		 The chance of generating an edge when using a prescaller is expressed as 1/x * (va - 1) / va,
+ *		 where x denotes the prescaller value, and va denotes the vertices amount.
+ * 
  * \param stream Output stream to save generated list to
  * \param vertex_amount Desired amount of vertices within the graph
  * \param type Type of the graph from Graph::Type enum
+ * \param density_psc Prescaller for graph density manipulation. Allows user to decrease the chance 
+ *					  an edge will be generated, by increasing the prescaller. Assumes value of 1 by default,
+ *					  which does not cause any modification.
  * 
  * \ref list_generator.cpp "Example of generating a randomized list"
  */
-void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type)
+void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc)
 {
 	std::vector<std::vector<std::size_t>> list;
 	std::size_t count;
@@ -42,10 +149,10 @@ void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
 		// generate indexes of each adjacent vertex
 		for (std::size_t j = 0; j < count; j++)
 		{
-			val = rand() % vertex_amount;
+			val = rand() % density_psc == 0 ? rand() % vertex_amount : 0;
 			
 			// prevent duplicates from appearing
-			if (std::find(list[i].begin(), list[i].end(), val) == list[i].end())
+			if (std::find(list[i].begin(), list[i].end(), val) == list[i].end() && val != 0)
 			{
 				list[i].push_back(val);
 

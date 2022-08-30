@@ -6,6 +6,12 @@
 
 namespace Data
 {
+	struct Limits
+	{
+		std::size_t min;
+		std::size_t max;
+	};
+
 	/**
 	 * \brief Class responsible for generating various data sources supported by this library.
 	 * 
@@ -17,11 +23,11 @@ namespace Data
 	{
 	public:
 		// matrix graph generation
-		void make_weighted_matrix(std::ostream& stream, uint32_t vertex_amount, Graph::Type type);
-		void make_throughtput_matrix(std::ostream& stream, std::string output_file_path, Graph::Type type);
+		void make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc = 1);
+		void make_throughtput_matrix(std::ostream& stream, std::istream& matrix_src, const Limits& limits, Graph::Type type);
 
 		// list graph generation
-		void make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type);
+		void make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc = 1);
 
 		// pixel map generationd
 		void make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width);

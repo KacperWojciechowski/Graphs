@@ -5,27 +5,23 @@
 #include <list>
 
 #include "PixelMap.h"
-#include "Graph_matrix.h"
-#include "Graph.h"
+#include "GraphBase.h"
 
 namespace Graph
 {
-	// forward declaration
-	class Matrix;
-
 	/**
 	 * \brief Class representing a graph in the adjacency list form.
 	 * 
 	 * The representation is based on the STL list and vector classes. It does provide a
 	 * standard graph interface stated by the Graph virtual class.
 	 */
-	class List : public Graph_t
+	class List : public GraphBase
 	{
 	public:
 		/* Constructors */
 		List(const std::string& file_path, Type type);
 
-		List(Matrix& matrix);
+		List(GraphBase& matrix);
 		List(Data::PixelMap& map);
 
 		List(List& l);
@@ -63,8 +59,8 @@ namespace Graph
 		};
 
 		/* Load functions for specific file formats */
-		void load_lst_file(std::fstream& file);
-		void load_graphml_file(std::fstream& file);
+		void load_lst_file(std::istream& file);
+		void load_graphml_file(std::istream& file);
 		void calculate_degrees();
 
 		/* Objects containing the graph information */

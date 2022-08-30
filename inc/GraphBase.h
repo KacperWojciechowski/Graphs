@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <cstdint>
 #include <string>
 
@@ -33,7 +34,7 @@ namespace Graph
 	/**
 	 * \brief Abstract class stating the common interface for each of the graph representation.
 	 */
-	class Graph_t
+	class GraphBase
 	{
 	public:
 
@@ -150,7 +151,7 @@ namespace Graph
 		 * 
 		 * \param file Reference to the std::fstream object of the graphml file.
 		 */
-		virtual void load_graphml_file(std::fstream& file) = 0;
+		virtual void load_graphml_file(std::istream& file) = 0;
 
 
 

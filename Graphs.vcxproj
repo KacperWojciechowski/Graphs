@@ -143,7 +143,7 @@
     <ClInclude Include="inc\Coord.h" />
     <ClInclude Include="inc\Examples.h" />
     <ClInclude Include="inc\Generator.h" />
-    <ClInclude Include="inc\Graph.h" />
+    <ClInclude Include="inc\GraphBase.h" />
     <ClInclude Include="inc\Algorithms.h" />
     <ClInclude Include="inc\Graph_list.h" />
     <ClInclude Include="inc\Graph_matrix.h" />

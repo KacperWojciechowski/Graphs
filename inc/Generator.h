@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 
-#include "../inc/Graph.h"
+#include "../inc/GraphBase.h"
 
 namespace Data
 {

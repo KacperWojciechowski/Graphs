@@ -3,23 +3,20 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include <fstream>
-#include <map>
 
-#include <iostream>
-
-#include "Graph.h"
+#include "GraphBase.h"
 #include "Algorithms.h"
 
 namespace Graph
 {
+
 	/**
 	 * @brief This class provides an adjacency matrix graph representation.
 	 * 
 	 * The representation is based on the STL vector class. It does provide a
 	 * standard graph interface stated by the Graph virtual class. 
 	 */
-	class Matrix : public Graph_t
+	class Matrix : public GraphBase
 	{
 	public:
 
@@ -27,6 +24,8 @@ namespace Graph
 		Matrix(std::string file_path, Type type);
 		Matrix(std::vector<std::vector<uint32_t>>& mat, Type type);
 		
+		Matrix(GraphBase& l);
+
 		Matrix(Matrix& m);
 		Matrix(Matrix&& m) noexcept;
 
@@ -61,8 +60,8 @@ namespace Graph
 	
 	private:
 		/* Load functions for specific file formats */
-		void load_mat_file(std::fstream& file);
-		void load_graphml_file(std::fstream& file);
+		void load_mat_file(std::istream& file);
+		void load_graphml_file(std::istream& file);
 		void calculate_degrees();
 
 		/* Objects containing the graph*/

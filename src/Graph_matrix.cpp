@@ -1,8 +1,7 @@
 #include "../inc/Graph_matrix.h"
 
-#include <stdexcept>
-#include <iostream>
 #include <iomanip>
+#include <fstream>
 
 #include "../lib/rapidxml/rapidxml.hpp"
 #include "../inc/Coord.h"
@@ -35,7 +34,7 @@ Graph::Matrix::Matrix(std::string file_path, Type type)
 	// loading the .mat file
 	if (file_path.find(".mat", 0) != std::string::npos)
 	{
-		std::fstream file(file_path, std::ios::in);
+		std::ifstream file(file_path);
 		if (file.good())
 		{
 			this->load_mat_file(file);
@@ -86,6 +85,22 @@ Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, Type type)
 	type(type)
 {
 	this->calculate_degrees();
+}
+
+
+
+
+/**
+ * Conversion constructor allowing to create a Graph::Matrix object based on Graph::List object.
+ * 
+ * This constructor allows user to switch graph representation by converting adjacency list to
+ * adjacency matrix.
+ * 
+ * \param l Reference to the source Graph::List object.
+ */
+Graph::Matrix::Matrix(GraphBase& l)
+{ 
+	
 }
 
 
@@ -713,7 +728,7 @@ void Graph::Matrix::load_throughtput(std::string file_path)
  * \warning Exception to guard against:
  *		- std::runtime_error - when loaded weight of the connection is less or equal to 0.
  */
-void Graph::Matrix::load_mat_file(std::fstream& file)
+void Graph::Matrix::load_mat_file(std::istream& file)
 {
 	std::string line;
 	std::size_t vertices = 0;
@@ -782,7 +797,7 @@ void Graph::Matrix::load_mat_file(std::fstream& file)
  *		- std::runtime_error - When loaded weight of the connection is less or equal to 0.
  * 
  */
-void Graph::Matrix::load_graphml_file(std::fstream& file)
+void Graph::Matrix::load_graphml_file(std::istream& file)
 {
 	// create the document and nodes instances
 	auto document = std::make_unique< rapidxml::xml_document<>>();

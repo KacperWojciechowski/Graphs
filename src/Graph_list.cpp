@@ -2,6 +2,7 @@
 #include "..\lib\rapidxml\rapidxml.hpp"
 
 #include <iomanip>
+#include <fstream>
 
 /**
  * \brief Constructor creating the graph from file.
@@ -32,7 +33,7 @@ Graph::List::List(const std::string& file_path, Type type)
 	// loading the .lst file
 	if (file_path.find(".lst", 0) != std::string::npos)
 	{
-		std::fstream file(file_path, std::ios::in);
+		std::ifstream file(file_path);
 		if (file.good())
 		{
 			this->load_lst_file(file);
@@ -76,26 +77,25 @@ Graph::List::List(const std::string& file_path, Type type)
  * 
  * \param matrix Reference to the Graph::Matrix object.
  */
-Graph::List::List(Matrix& matrix)
+Graph::List::List(GraphBase& graph)
 {
 	// get general graph info
-	this->type = matrix.get_type();
+	this->type = graph.get_type();
 	
 	// build list based on the matrix
-	for (std::size_t i = 0; i < matrix.get_nodes_amount(); i++)
+	for (std::size_t i = 0; i < graph.get_nodes_amount(); i++)
 	{
 		this->list.push_back({});
+		this->degrees.push_back(graph.get_node_degree(i));
 
-		for (std::size_t j = 0; j < matrix.get_nodes_amount(); j++)
+		for (std::size_t j = 0; j < graph.get_nodes_amount(); j++)
 		{
-			if (matrix.get_edge(i, j) != 0)
+			if (graph.get_edge(i, j) != 0)
 			{
-				this->list[i].push_back({ j, matrix.get_edge(i, j) });
+				this->list[i].push_back({ j, graph.get_edge(i, j) });
 			}
 		}
 	}
-
-	this->calculate_degrees();
 }
 
 
@@ -112,7 +112,7 @@ Graph::List::List(Matrix& matrix)
  * \param file Reference to the file object of the data source.
  * 
  */
-void Graph::List::load_lst_file(std::fstream& file)
+void Graph::List::load_lst_file(std::istream& file)
 {
 	std::string line;
 	size_t pos;
@@ -167,7 +167,7 @@ void Graph::List::load_lst_file(std::fstream& file)
  * \warning Exceptions to guard against:
  *		- std::runtime_error When weight is less or equal to 0.
  */
-void Graph::List::load_graphml_file(std::fstream& file)
+void Graph::List::load_graphml_file(std::istream& file)
 {
 	// create the document and nodes instances
 	auto document = std::make_unique< rapidxml::xml_document<>>();

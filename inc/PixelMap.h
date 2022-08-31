@@ -18,6 +18,8 @@ namespace Data
 	class PixelMap
 	{
 	public:
+		static constexpr uint8_t GAP = 0; /**< A non-wall field within the pixel map structure */
+		static constexpr uint8_t WALL = 1; /**< A wall field within the pixel map structure */
 
 		// constructors
 		PixelMap(std::istream& stream);

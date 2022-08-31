@@ -17,6 +17,9 @@ namespace Data
 	{
 		std::size_t x; /**< x coordinate of a vertex / starting vertex of an edge */
 		std::size_t y; /**< y coordinate of a vertex / ending vertex of an edge */
+
+		std::size_t& row = x; /**< alias for the row coordinate of a matrix structure */
+		std::size_t& col = y; /**< alias for the column coordinate of a matrix structure */
 	};
 
 	std::size_t find_index(std::vector<coord>& nodes, coord _coord);

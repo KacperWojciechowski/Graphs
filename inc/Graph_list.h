@@ -4,8 +4,9 @@
 #include <vector>
 #include <list>
 
-#include "PixelMap.h"
-#include "GraphBase.h"
+#include "..\inc\PixelMap.h"
+#include "..\inc\GraphBase.h"
+#include "..\inc\PixelMap.h"
 
 namespace Graph
 {

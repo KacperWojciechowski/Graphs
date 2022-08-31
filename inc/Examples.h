@@ -297,7 +297,16 @@
  * \see Data::Generator::make_throughtput_matrix() 
  */
 
-
-
-
-
+/**
+ * \example create_pixel_map.cpp
+ * 
+ * An example of creating a Data::PixelMap object.
+ * 
+ * This example shows how to create a Data::PixelMap object. The function reads the matrix contained within the data source,
+ * such as a file, and creates a matrix structure based on it. The source matrix does not have to be square. Due to a fact 
+ * that this function accepts an std::istream reference as a data source, the user can use a file, or a standard input as a data source.
+ * 
+ * \note To use the standard input as data source, pass std::cin reference. End loading the data by typing empty line.
+ * 
+ * \see Data::PixelMap::PixelMap()
+ */

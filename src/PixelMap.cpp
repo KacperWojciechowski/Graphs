@@ -7,7 +7,12 @@
  * As this constructor accepts a stream reference, it allows user to load data from a file
  * or from a standard input stream.
  * 
+ * \warning Exception to guard against:
+ *			- std::runtime_error - A row is deviating from the length set by the first row.
+ * 
  * \param stream Input stream to read the data from.
+ * 
+ * \ref create_pixel_map.cpp "Example of creating a Data::PixelMap object"
  */
 Data::PixelMap::PixelMap(std::istream& stream)
 {
@@ -43,8 +48,40 @@ Data::PixelMap::PixelMap(std::istream& stream)
 			{
 				this->map[index].emplace_back(extract_val());
 			}
+
+			if (this->map[index].size() != this->map[0].size())
+			{
+				throw std::runtime_error("Deviating row length");
+			}
 		}
 	}
+}
+
+
+
+
+/**
+ * Simple copy constructor.
+ * 
+ * \param p l-value reference to a Data::PixelMap object.
+ */
+Data::PixelMap::PixelMap(PixelMap& p)
+	: map(p.map)
+{
+}
+
+
+
+
+/**
+ * Simple move constructor.
+ * 
+ * \param p r-value reference to a Data::PixelMap object.
+ */
+Data::PixelMap::PixelMap(PixelMap&& p) noexcept
+	: map(p.map)
+{
+	p.map.clear();
 }
 
 
@@ -66,4 +103,44 @@ void Data::PixelMap::print()
 		std::cout << '\n';
 	}
 	std::cout << "]" << std::endl;
+}
+
+
+
+
+/**
+ * Row count getter.
+ * 
+ * \return Number of rows within the structure.
+ */
+size_t Data::PixelMap::get_rows()
+{
+	return this->map.size();
+}
+
+
+
+
+/**
+ * Columns count getter.
+ * 
+ * \return Number of columns within the structure.
+ */
+size_t Data::PixelMap::get_columns()
+{
+	return this->map[0].size();
+}
+
+
+
+
+/**
+ * Field value getter.
+ * 
+ * \param coord Coordinates of the field.
+ * \return 
+ */
+uint8_t Data::PixelMap::get_field(Data::coord _coord)
+{
+	return this->map[_coord.x][_coord.y];
 }

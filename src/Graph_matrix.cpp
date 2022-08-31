@@ -723,7 +723,8 @@ void Graph::Matrix::load_throughtput(std::string file_path)
  * \param file Reference to the std::fstream data source file object.
  * 
  * \warning Exception to guard against:
- *		- std::runtime_error - when loaded weight of the connection is less or equal to 0.
+ *		- std::runtime_error - A row length deviates from the length set by the first row,
+ *							   or the adjacency matrix contains a negative value.
  */
 void Graph::Matrix::load_mat_file(std::istream& file)
 {
@@ -734,9 +735,15 @@ void Graph::Matrix::load_mat_file(std::istream& file)
 	// function extracting the weight value from a row of adjacency matrix
 	auto extract_val = [&line, &pos]() -> uint32_t
 	{
-		uint32_t val;
+		int32_t val;
 
-		val = std::stoul(line);
+		val = std::stoi(line);
+		
+		if (val < 0)
+		{
+			throw std::runtime_error("Negative weight of an edge");
+		}
+
 		pos = line.find(' ');
 
 		if (pos != std::string::npos)
@@ -756,6 +763,11 @@ void Graph::Matrix::load_mat_file(std::istream& file)
 		while (pos != std::string::npos)
 		{
 			this->matrix[index].emplace_back(extract_val());
+		}
+
+		if (this->matrix[index].size() != this->matrix[0].size())
+		{
+			throw std::runtime_error("Deviating row length");
 		}
 	}
 }

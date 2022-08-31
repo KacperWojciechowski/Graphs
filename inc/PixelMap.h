@@ -1,5 +1,7 @@
 #pragma once
 
+#include "..\inc\Coord.h"
+
 #include <cstdint>
 #include <vector>
 #include <iostream>
@@ -21,14 +23,14 @@ namespace Data
 		PixelMap(std::istream& stream);
 
 		PixelMap(PixelMap& p);
-		PixelMap(PixelMap&& p);
+		PixelMap(PixelMap&& p) noexcept;
 
 		// interface
 		void print();
 
 		size_t get_rows();
 		size_t get_columns();
-		uint8_t get_field(uint32_t x, uint32_t y);
+		uint8_t get_field(Data::coord _coord);
 
 	private:
 		std::vector<std::vector<uint8_t>> map; /**< Structure containing the map. Consists of std::vector of std::vector objects. Each

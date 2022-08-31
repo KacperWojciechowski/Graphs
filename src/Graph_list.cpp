@@ -111,10 +111,12 @@ Graph::List::List(GraphBase& graph)
  * This function is for internal use only. To create an object containig data
  * from .lst file, use the specified constructor.
  * 
+ * \warning Exception to guard against:
+ *			- std::runtime_error - A row length deviates from the length set by the first row.
+ * 
  * \see List::List(std::string file_path, std::string name, Graph::Type type)
  * 
  * \param file Reference to the file object of the data source.
- * 
  */
 void Graph::List::load_lst_file(std::istream& file)
 {
@@ -152,6 +154,11 @@ void Graph::List::load_lst_file(std::istream& file)
 			while (pos != std::string::npos)
 			{
 				this->list[index].emplace_back(extract_val(), weight);
+			}
+
+			if (this->list[index].size() != this->list[0].size())
+			{
+				throw std::runtime_error("Deviating row length");
 			}
 		}
 	}

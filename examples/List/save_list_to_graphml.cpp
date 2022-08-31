@@ -8,5 +8,9 @@ int main()
     list.print();
     
     std::ofstream file("samples\\saved_graphML.GRAPHML");
-    list.save_graphml(file, "Graph");
+   
+    if (file.good())
+    {
+        list.save_graphml(file, "Graph");
+    }
 }

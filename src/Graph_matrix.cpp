@@ -187,10 +187,10 @@ void Graph::Matrix::print()
 	std::cout << std::endl;
 	
 	// display vertices count
-	std::cout << "Vertices = " << this->matrix.size() << std::endl;
+	std::cout << "Vertices = " << this->matrix.size() << '\n';
 
 	// display adjacency matrix
-	std::cout << "[" << std::endl;
+	std::cout << "[\n";
 
 	for (std::size_t index = 0; auto& row : this->matrix)
 	{
@@ -200,12 +200,12 @@ void Graph::Matrix::print()
 		}
 		if (this->type == Type::undirected)
 		{
-			std::cout << "  degree: " << this->degrees[index].deg << std::endl;
+			std::cout << "  degree: " << this->degrees[index].deg << '\n';
 		}
 		else
 		{
 			std::cout << "  degrees: (in|out) " << this->degrees[index].in_deg
-				<< " | " << this->degrees[index].out_deg << std::endl;
+				<< " | " << this->degrees[index].out_deg << '\n';
 		}
 		index++;
 	}
@@ -723,59 +723,51 @@ void Graph::Matrix::load_throughtput(std::string file_path)
  * \param file Reference to the std::fstream data source file object.
  * 
  * \warning Exception to guard against:
- *		- std::runtime_error - when loaded weight of the connection is less or equal to 0.
+ *		- std::runtime_error - A row length deviates from the length set by the first row,
+ *							   or the adjacency matrix contains a negative value.
  */
 void Graph::Matrix::load_mat_file(std::istream& file)
 {
 	std::string line;
 	std::size_t vertices = 0;
+	std::size_t pos;
 	
-	// read a line from file
-	std::getline(file, line);
-
-	// reset offset and current position in line
-	std::size_t offset = 0;
-	std::size_t pos = 0;
-
-	// read the vertices count to use in further loading of data
-	while (true)
+	// function extracting the weight value from a row of adjacency matrix
+	auto extract_val = [&line, &pos]() -> uint32_t
 	{
-		// search for the next space character from the offset position
-		pos = line.find(' ', offset);
+		int32_t val;
 
-		// if such character was found, then it means the line contains next vertex
+		val = std::stoi(line);
+		
+		if (val < 0)
+		{
+			throw std::runtime_error("Negative weight of an edge");
+		}
+
+		pos = line.find(' ');
+
 		if (pos != std::string::npos)
 		{
-			vertices++;
-			offset = pos + 1;
+			line = line.substr(pos + 1);
 		}
-		// if space was not found, this means there is only one more vertex left in the line
-		else
-		{
-			vertices++;
-			break;
-		}
-	}
 
-	// move to the beginning of the file for matrix load
-	file.seekg(std::ios_base::beg);
+		return val;
+	};
 
-	// load the matrix
-	int32_t temp;
-
-	// create empty rows
-	this->matrix.resize(vertices);
-
-	for (std::size_t i = 0; i < vertices; i++)
+	// build the matrix
+	for (std::size_t index = 0; std::getline(file, line); index++)
 	{
-		for (std::size_t j = 0; j < vertices; j++)
+		this->matrix.emplace_back(0);
+		pos = 0;
+
+		while (pos != std::string::npos)
 		{
-			file >> temp;
-			if (temp < 0)
-			{
-				throw std::runtime_error("Weight less than zero");
-			}
-			this->matrix[i].emplace_back(static_cast<uint32_t>(temp));
+			this->matrix[index].emplace_back(extract_val());
+		}
+
+		if (this->matrix[index].size() != this->matrix[0].size())
+		{
+			throw std::runtime_error("Deviating row length");
 		}
 	}
 }
@@ -895,8 +887,8 @@ void Graph::Matrix::load_graphml_file(std::istream& file)
 				weight = atoi(key->value());
 			}
 		}
-		index1 = static_cast<std::size_t>(atoi(id1.c_str()));
-		index2 = static_cast<std::size_t>(atoi(id2.c_str()));
+		index1 = static_cast<std::size_t>(std::stoi(id1));
+		index2 = static_cast<std::size_t>(std::stoi(id2));
 		
 		this->matrix[index1][index2] = weight;
 

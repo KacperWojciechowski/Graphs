@@ -111,50 +111,54 @@ Graph::List::List(GraphBase& graph)
  * This function is for internal use only. To create an object containig data
  * from .lst file, use the specified constructor.
  * 
+ * \warning Exception to guard against:
+ *			- std::runtime_error - A row length deviates from the length set by the first row.
+ * 
  * \see List::List(std::string file_path, std::string name, Graph::Type type)
  * 
  * \param file Reference to the file object of the data source.
- * 
  */
 void Graph::List::load_lst_file(std::istream& file)
 {
 	std::string line;
 	size_t pos;
+	std::uint32_t weight = 1;
 
 	std::size_t amount = 0;
 
-	// calculate the amount of lines in the file
-	while (!file.eof())
+	// function extracting subsequent neighbouring vertices IDs
+	auto extract_val = [&line, &pos]() -> std::size_t
 	{
-		std::getline(file, line);
-		amount++;
-	}
-	
-	file.clear();
-	file.seekg(std::ios_base::beg);
+		std::size_t val;
 
-	Node vertex;
+		val = static_cast<std::size_t>(std::stoul(line) - 1);
+		pos = line.find(' ');
+		if (pos != std::string::npos)
+		{
+			line = line.substr(pos + 1);
+		}
+		return val;
+	};
 
-	// extract each of the adjacent vertices
-	for (std::size_t i = 0; i < amount; i++)
+	// build the adjacency list
+	for (std::size_t index = 0; std::getline(file, line); index++)
 	{
-		std::getline(file, line);
-
 		if (line != "")
 		{
 			this->list.emplace_back(0);
-
-			pos = line.find(' ');
-
-			auto itr = std::next(this->list.begin(), this->list.size() - 1);
+			pos = 0;
+		
+			// omit the first identifier
+			line = line.substr(line.find(' ') + 1);
 
 			while (pos != std::string::npos)
 			{
-				line = line.substr(pos + 1);
-				vertex.ID = static_cast<std::size_t>(atoi(line.c_str())) - 1;
-				vertex.weight = 1;
-				itr->emplace_back(vertex);
-				pos = line.find(' ');
+				this->list[index].emplace_back(extract_val(), weight);
+			}
+
+			if (this->list[index].size() != this->list[0].size())
+			{
+				throw std::runtime_error("Deviating row length");
 			}
 		}
 	}
@@ -261,12 +265,12 @@ void Graph::List::load_graphml_file(std::istream& file)
 		{
 			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
 			{
-				weight = atoi(key->value());
+				weight = std::atoi(key->value());
 			}
 		}
 
-		index1 = static_cast<std::size_t>(atoi(id1.c_str()));
-		index2 = static_cast<std::size_t>(atoi(id2.c_str()));
+		index1 = static_cast<std::size_t>(std::stoi(id1));
+		index2 = static_cast<std::size_t>(std::stoi(id2));
 
 		this->list[index1].emplace_back( index2, weight );
 
@@ -404,12 +408,12 @@ void Graph::List::print()
 		break;
 	}
 
-	std::cout << std::endl;
+	std::cout << '\n';
 
 	// display vertices count
-	std::cout << "Vertices = " << this->list.size() << std::endl;
+	std::cout << "Vertices = " << this->list.size() << '\n';
 
-	std::cout << "{" << std::endl;
+	std::cout << "{\n";
 
 	for (std::size_t index = 0; auto& element : this->list)
 	{
@@ -430,7 +434,7 @@ void Graph::List::print()
 			std::cout << itr2->ID << " {" << itr2->weight << "}, ";
 		}
 		index++;
-		std::cout << std::endl;
+		std::cout << '\n';
 	}
 
 	std::cout << "}" << std::endl;

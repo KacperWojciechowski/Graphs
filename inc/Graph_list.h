@@ -14,6 +14,8 @@ namespace Graph
 	 * 
 	 * The representation is based on the STL list and vector classes. It does provide a
 	 * standard graph interface stated by the Graph virtual class.
+	 * 
+	 * \warning This class requires from the graph to have only non-negative weights of the edges.
 	 */
 	class List : public GraphBase
 	{

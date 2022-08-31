@@ -151,7 +151,7 @@ void Graph::List::load_lst_file(std::istream& file)
 			while (pos != std::string::npos)
 			{
 				line = line.substr(pos + 1);
-				vertex.ID = static_cast<std::size_t>(atoi(line.c_str())) - 1;
+				vertex.ID = static_cast<std::size_t>(std::stoi(line)) - 1;
 				vertex.weight = 1;
 				itr->emplace_back(vertex);
 				pos = line.find(' ');
@@ -261,12 +261,12 @@ void Graph::List::load_graphml_file(std::istream& file)
 		{
 			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
 			{
-				weight = atoi(key->value());
+				weight = std::atoi(key->value());
 			}
 		}
 
-		index1 = static_cast<std::size_t>(atoi(id1.c_str()));
-		index2 = static_cast<std::size_t>(atoi(id2.c_str()));
+		index1 = static_cast<std::size_t>(std::stoi(id1));
+		index2 = static_cast<std::size_t>(std::stoi(id2));
 
 		this->list[index1].emplace_back( index2, weight );
 
@@ -404,12 +404,12 @@ void Graph::List::print()
 		break;
 	}
 
-	std::cout << std::endl;
+	std::cout << '\n';
 
 	// display vertices count
-	std::cout << "Vertices = " << this->list.size() << std::endl;
+	std::cout << "Vertices = " << this->list.size() << '\n';
 
-	std::cout << "{" << std::endl;
+	std::cout << "{\n";
 
 	for (std::size_t index = 0; auto& element : this->list)
 	{
@@ -430,7 +430,7 @@ void Graph::List::print()
 			std::cout << itr2->ID << " {" << itr2->weight << "}, ";
 		}
 		index++;
-		std::cout << std::endl;
+		std::cout << '\n';
 	}
 
 	std::cout << "}" << std::endl;

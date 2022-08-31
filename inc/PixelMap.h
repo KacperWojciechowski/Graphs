@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <vector>
-#include <string>
+#include <iostream>
 
 namespace Data
 {
@@ -18,10 +18,10 @@ namespace Data
 	public:
 
 		// constructors
-		PixelMap(std::string file_path);
+		PixelMap(std::istream& stream);
 
-		PixelMap(PixelMap& p) = delete;
-		PixelMap(PixelMap&& p) = delete;
+		PixelMap(PixelMap& p);
+		PixelMap(PixelMap&& p);
 
 		// interface
 		void print();

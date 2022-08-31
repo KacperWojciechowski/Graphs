@@ -187,10 +187,10 @@ void Graph::Matrix::print()
 	std::cout << std::endl;
 	
 	// display vertices count
-	std::cout << "Vertices = " << this->matrix.size() << std::endl;
+	std::cout << "Vertices = " << this->matrix.size() << '\n';
 
 	// display adjacency matrix
-	std::cout << "[" << std::endl;
+	std::cout << "[\n";
 
 	for (std::size_t index = 0; auto& row : this->matrix)
 	{
@@ -200,12 +200,12 @@ void Graph::Matrix::print()
 		}
 		if (this->type == Type::undirected)
 		{
-			std::cout << "  degree: " << this->degrees[index].deg << std::endl;
+			std::cout << "  degree: " << this->degrees[index].deg << '\n';
 		}
 		else
 		{
 			std::cout << "  degrees: (in|out) " << this->degrees[index].in_deg
-				<< " | " << this->degrees[index].out_deg << std::endl;
+				<< " | " << this->degrees[index].out_deg << '\n';
 		}
 		index++;
 	}
@@ -895,8 +895,8 @@ void Graph::Matrix::load_graphml_file(std::istream& file)
 				weight = atoi(key->value());
 			}
 		}
-		index1 = static_cast<std::size_t>(atoi(id1.c_str()));
-		index2 = static_cast<std::size_t>(atoi(id2.c_str()));
+		index1 = static_cast<std::size_t>(std::stoi(id1));
+		index2 = static_cast<std::size_t>(std::stoi(id2));
 		
 		this->matrix[index1][index2] = weight;
 

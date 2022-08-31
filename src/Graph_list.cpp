@@ -120,41 +120,38 @@ void Graph::List::load_lst_file(std::istream& file)
 {
 	std::string line;
 	size_t pos;
+	std::uint32_t weight = 1;
 
 	std::size_t amount = 0;
 
-	// calculate the amount of lines in the file
-	while (!file.eof())
+	// function extracting subsequent neighbouring vertices IDs
+	auto extract_val = [&line, &pos]() -> std::size_t
 	{
-		std::getline(file, line);
-		amount++;
-	}
-	
-	file.clear();
-	file.seekg(std::ios_base::beg);
+		std::size_t val;
 
-	Node vertex;
+		val = static_cast<std::size_t>(std::stoul(line) - 1);
+		pos = line.find(' ');
+		if (pos != std::string::npos)
+		{
+			line = line.substr(pos + 1);
+		}
+		return val;
+	};
 
-	// extract each of the adjacent vertices
-	for (std::size_t i = 0; i < amount; i++)
+	// build the adjacency list
+	for (std::size_t index = 0; std::getline(file, line); index++)
 	{
-		std::getline(file, line);
-
 		if (line != "")
 		{
 			this->list.emplace_back(0);
-
-			pos = line.find(' ');
-
-			auto itr = std::next(this->list.begin(), this->list.size() - 1);
+			pos = 0;
+		
+			// omit the first identifier
+			line = line.substr(line.find(' ') + 1);
 
 			while (pos != std::string::npos)
 			{
-				line = line.substr(pos + 1);
-				vertex.ID = static_cast<std::size_t>(std::stoi(line)) - 1;
-				vertex.weight = 1;
-				itr->emplace_back(vertex);
-				pos = line.find(' ');
+				this->list[index].emplace_back(extract_val(), weight);
 			}
 		}
 	}

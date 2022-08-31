@@ -20,7 +20,6 @@ Data::PixelMap::PixelMap(std::istream& stream)
 	auto extract_val = [&line, &pos]() -> std::uint8_t
 	{
 		std::uint32_t val;
-		std::size_t temp;
 
 		val = std::stoi(line);
 		pos = line.find(' ');

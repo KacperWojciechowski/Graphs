@@ -6,5 +6,9 @@ int main()
     Data::Generator gen;
     
     std::ofstream file("samples\\saved_matrix.mat");
-    gen.make_matrix(file, 10, {5, 10}, Graph::Type::undirected, 2);
+
+    if (file.good())
+    {
+        gen.make_matrix(file, 10, {5, 10}, Graph::Type::undirected, 2);
+    }
 }

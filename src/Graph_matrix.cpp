@@ -729,53 +729,33 @@ void Graph::Matrix::load_mat_file(std::istream& file)
 {
 	std::string line;
 	std::size_t vertices = 0;
+	std::size_t pos;
 	
-	// read a line from file
-	std::getline(file, line);
-
-	// reset offset and current position in line
-	std::size_t offset = 0;
-	std::size_t pos = 0;
-
-	// read the vertices count to use in further loading of data
-	while (true)
+	// function extracting the weight value from a row of adjacency matrix
+	auto extract_val = [&line, &pos]() -> uint32_t
 	{
-		// search for the next space character from the offset position
-		pos = line.find(' ', offset);
+		uint32_t val;
 
-		// if such character was found, then it means the line contains next vertex
+		val = std::stoul(line);
+		pos = line.find(' ');
+
 		if (pos != std::string::npos)
 		{
-			vertices++;
-			offset = pos + 1;
+			line = line.substr(pos + 1);
 		}
-		// if space was not found, this means there is only one more vertex left in the line
-		else
-		{
-			vertices++;
-			break;
-		}
-	}
 
-	// move to the beginning of the file for matrix load
-	file.seekg(std::ios_base::beg);
+		return val;
+	};
 
-	// load the matrix
-	int32_t temp;
-
-	// create empty rows
-	this->matrix.resize(vertices);
-
-	for (std::size_t i = 0; i < vertices; i++)
+	// build the matrix
+	for (std::size_t index = 0; std::getline(file, line); index++)
 	{
-		for (std::size_t j = 0; j < vertices; j++)
+		this->matrix.emplace_back(0);
+		pos = 0;
+
+		while (pos != std::string::npos)
 		{
-			file >> temp;
-			if (temp < 0)
-			{
-				throw std::runtime_error("Weight less than zero");
-			}
-			this->matrix[i].emplace_back(static_cast<uint32_t>(temp));
+			this->matrix[index].emplace_back(extract_val());
 		}
 	}
 }

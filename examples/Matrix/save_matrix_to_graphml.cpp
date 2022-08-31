@@ -8,6 +8,8 @@ int main()
     matrix.print();
 
     std::ofstream file("samples\\saved_graphML.GRAPHML");
-
-    matrix.save_graphml(file, "Graph");
+    if (file.good())
+    {
+        matrix.save_graphml(file, "Graph");
+    }
 }

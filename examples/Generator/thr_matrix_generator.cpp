@@ -6,8 +6,12 @@
 int main() {
 	Data::Generator gen;
 
-	std::ifstream file2("samples\\saved_matrix.mat");
-	gen.make_throughtput_matrix(std::cout, file2, { 10, 20 }, Graph::Type::undirected);
-
+	std::ofstream file("samples\\matrixUndirected.mat");
+	std::ifstream file2("samples\\saved_thr_matrix.mat");
+	
+	if (file.good() && file2.good())
+	{
+		gen.make_throughtput_matrix(std::cout, file2, { 10, 20 }, Graph::Type::undirected);
+	}
 	return 0;
 }

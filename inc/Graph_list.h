@@ -36,7 +36,7 @@ namespace Graph
 
 		/* Interface */
 		void print();
-		void make_edge(std::size_t source, std::size_t destination, uint32_t weight);
+		void make_edge(std::size_t source, std::size_t destination, int32_t weight);
 		void add_node();
 
 		void remove_edge(std::size_t source, std::size_t destination);
@@ -44,7 +44,7 @@ namespace Graph
 
 		std::size_t get_nodes_amount();
 		Degree get_node_degree(std::size_t node_id);
-		uint32_t get_edge(std::size_t source, std::size_t destination);
+		int32_t get_edge(std::size_t source, std::size_t destination);
 		Type get_type();
 
 		void save_graphml(std::ostream& stream, std::string name);
@@ -62,7 +62,7 @@ namespace Graph
 		struct Node
 		{
 			std::size_t ID;  /**< Adjacent vertex ID */
-			uint32_t weight; /**< Weight of the connection */
+			int32_t weight; /**< Weight of the connection */
 		};
 
 		/* Load functions for specific file formats */

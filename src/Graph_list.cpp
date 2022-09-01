@@ -545,7 +545,7 @@ void Graph::List::print()
  * \ref add_edge_list_insert.cpp "Example of adding an edge between two vertices"\n
  * \ref add_edge_list_override.cpp "Example of modifying the weight of an existing edge"
  */
-void Graph::List::make_edge(std::size_t source, std::size_t destination, uint32_t weight)
+void Graph::List::make_edge(std::size_t source, std::size_t destination, int32_t weight)
 {
 	// validate arguments
 	if (source >= this->list.size() || destination >= this->list.size())
@@ -803,9 +803,9 @@ Graph::Degree Graph::List::get_node_degree(std::size_t node_id)
  * \param destination ID of the end vertex of the edge.
  * \return Weight of the connection.
  */
-uint32_t Graph::List::get_edge(std::size_t source, std::size_t destination)
+int32_t Graph::List::get_edge(std::size_t source, std::size_t destination)
 {
-	uint32_t ret = 0;
+	int32_t ret = 0;
 
 	if (source >= this->list.size() || destination >= this->list.size())
 	{

@@ -24,7 +24,7 @@ namespace Graph
 
 		/* Constructors */
 		Matrix(std::string file_path, Type type);
-		Matrix(std::vector<std::vector<uint32_t>>& mat, Type type);
+		Matrix(std::vector<std::vector<int32_t>>& mat, Type type);
 		
 		Matrix(GraphBase& l);
 
@@ -34,7 +34,7 @@ namespace Graph
 		/* Common interface */
 		void print();
 
-		void make_edge(std::size_t source, std::size_t destination, uint32_t weight);
+		void make_edge(std::size_t source, std::size_t destination, int32_t weight);
 		void add_node();
 
 		void remove_edge(std::size_t source, std::size_t destination);
@@ -42,7 +42,7 @@ namespace Graph
 
 		std::size_t get_nodes_amount();
 		Degree get_node_degree(std::size_t node_id);
-		uint32_t get_edge(std::size_t source, std::size_t destination);
+		int32_t get_edge(std::size_t source, std::size_t destination);
 		Type get_type();
 
 		void save_graphml(std::ostream& stream, std::string name);
@@ -67,8 +67,8 @@ namespace Graph
 		void calculate_degrees();
 
 		/* Objects containing the graph*/
-		std::vector<std::vector<uint32_t>> matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/
-		std::vector<std::vector<uint32_t>> throughtput; /**< Structure containing the throughtput matrix corresponding to the adjacency matrix. This matrix
+		std::vector<std::vector<int32_t>> matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/
+		std::vector<std::vector<int32_t>> throughtput; /**< Structure containing the throughtput matrix corresponding to the adjacency matrix. This matrix
 															 has to be of the same dimentions as the adjacency matrix. This feature is exclusive to the matrix 
 															 representation. */
 		std::vector<Degree> degrees;					/**< Vector of structures storing the degrees of each vertex in Graph::Degree structures. The type of

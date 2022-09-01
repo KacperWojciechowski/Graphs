@@ -80,7 +80,7 @@ Graph::Matrix::Matrix(std::string file_path, Type type)
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
  */
-Graph::Matrix::Matrix(std::vector<std::vector<uint32_t>>& mat, Type type)
+Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, Type type)
 	: matrix(mat),
 	type(type)
 {
@@ -232,7 +232,7 @@ void Graph::Matrix::print()
  * \ref make_edge_matrix_insert.cpp "Adding a new edge to the graph structure"\n
  * \ref make_edge_matrix_override.cpp "Changing the weight of an existing edge"\n
  */
-void Graph::Matrix::make_edge(std::size_t source, std::size_t destination, uint32_t weight)
+void Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32_t weight)
 {
 	// validate the parameters
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
@@ -471,7 +471,7 @@ Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
  * \warning Exception to guard against:
  *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
  */
-uint32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
+int32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
 {
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
 	{
@@ -605,7 +605,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 	}
 
 	// create sufficient matrix for the line graph and fill it with zeros
-	std::vector<std::vector<uint32_t>> mat;
+	std::vector<std::vector<int32_t>> mat;
 
 	std::size_t size = edges.size();
 	std::size_t index;

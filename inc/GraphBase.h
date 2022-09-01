@@ -56,7 +56,7 @@ namespace Graph
 		 * \param Destination end vertex of an edge.
 		 * \param Weight weight of the connection.
 		 */
-		virtual void make_edge(std::size_t source, std::size_t destination, uint32_t weight) = 0;
+		virtual void make_edge(std::size_t source, std::size_t destination, int32_t weight) = 0;
 
 
 
@@ -119,7 +119,7 @@ namespace Graph
 		 * \param destination End vertex of an edge.
 		 * \return Weight value of the connection.
 		 */
-		virtual uint32_t get_edge(std::size_t source, std::size_t destination) = 0;
+		virtual int32_t get_edge(std::size_t source, std::size_t destination) = 0;
 
 
 

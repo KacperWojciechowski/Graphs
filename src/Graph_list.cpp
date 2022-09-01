@@ -160,25 +160,25 @@ Graph::List::List(Data::PixelMap& map)
 		this->list.emplace_back(0);
 
 		// check upper neighbour
-		if (static_cast<int64_t>(vertex.row()) - 1 >= 0 && is_gap(vertex.row() - 1, vertex.col()))
+		if (vertex.row() > 0 && is_gap(vertex.row() - 1, vertex.col()))
 		{
 			add_to_list(index, vertex.row() - 1, vertex.col());
 		}
 
 		// check left neighbour
-		if (static_cast<int64_t>(vertex.col()) - 1 >= 0 && is_gap(vertex.row(), vertex.col() - 1))
+		if (vertex.col() > 0 && is_gap(vertex.row(), vertex.col() - 1))
 		{
 			add_to_list(index, vertex.row(), vertex.col() - 1);
 		}
 
 		// check lower neighbour
-		if (static_cast<int64_t>(vertex.row()) + 1 < rows && is_gap(vertex.row() + 1, vertex.col()))
+		if (vertex.row() + 1 < rows && is_gap(vertex.row() + 1, vertex.col()))
 		{
 			add_to_list(index, vertex.row() + 1, vertex.col());
 		}
 
 		// check right neighbour
-		if (static_cast<int64_t>(vertex.col()) + 1 < columns && is_gap(vertex.row(), vertex.col() + 1))
+		if (vertex.col() + 1 < columns && is_gap(vertex.row(), vertex.col() + 1))
 		{
 			add_to_list(index, vertex.row(), vertex.col() + 1);
 		}

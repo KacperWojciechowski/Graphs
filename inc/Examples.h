@@ -310,3 +310,24 @@
  * 
  * \see Data::PixelMap::PixelMap()
  */
+
+/**
+ * \example create_list_from_pixelmap.cpp
+ * 
+ * An example of creating a graph in adjacency list representation based on a Data::PixelMap.
+ * 
+ * This example shows how to convert a pixel map into a graph in adjacency list representation using Graph::List class.
+ * In order to create such graph, user must first create a Data::PixelMap object from selected data source (reference below).
+ * To create a graph representation of the map, the pixel map representation reference must be passed as an argument when
+ * constructing the Graph::List object. All connections between adjacent non-wall fields within the map structure are interpreted
+ * as bi-directional, and as such, the graph is assumed to be undirected.
+ * 
+ * \see Data::PixelMap::PixelMap()
+ * 
+ * \see Graph::List::List(Data::PixelMap&)
+ */
+
+
+
+
+

@@ -98,7 +98,7 @@ void Data::PixelMap::print()
 	{
 		for (auto& element : row)
 		{
-			std::cout << std::to_string(element) << ", ";
+			std::cout << std::to_string(element) << " ";
 		}
 		std::cout << '\n';
 	}
@@ -140,7 +140,7 @@ size_t Data::PixelMap::get_columns()
  * \param coord Coordinates of the field.
  * \return 
  */
-uint8_t Data::PixelMap::get_field(Data::coord _coord)
+uint8_t Data::PixelMap::get_field(Data::Coord&& coord)
 {
-	return this->map[_coord.x][_coord.y];
+	return this->map[coord.x][coord.y];
 }

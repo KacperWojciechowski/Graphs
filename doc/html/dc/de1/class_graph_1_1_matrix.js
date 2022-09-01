@@ -2,6 +2,7 @@ var class_graph_1_1_matrix =
 [
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#ac0070d05b1bbb78c61038ce13f651f41", null ],
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#ab5d472b6cb4b031aca60fadbb6694bf8", null ],
+    [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#a676f4383569a3bd671bf54c2b0eaa661", null ],
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#a90f6a138050588337b37c494dae7dc6d", null ],
     [ "Matrix", "dc/de1/class_graph_1_1_matrix.html#a3ca91a0f18813b6cf0a8cbec8f118e76", null ],
     [ "add_node", "dc/de1/class_graph_1_1_matrix.html#aa624af2a2f29f55beeb2866f525e087a", null ],
@@ -11,8 +12,8 @@ var class_graph_1_1_matrix =
     [ "get_node_degree", "dc/de1/class_graph_1_1_matrix.html#a73a8adc8638404f54f0f6076037367b1", null ],
     [ "get_nodes_amount", "dc/de1/class_graph_1_1_matrix.html#a6423632bb067fb1343421c7e92d522a3", null ],
     [ "get_type", "dc/de1/class_graph_1_1_matrix.html#a07ed07fff7c51802725eec5dc72d9c54", null ],
-    [ "load_graphml_file", "dc/de1/class_graph_1_1_matrix.html#ae90db249b764afdbfdbd2fe0fec5b608", null ],
-    [ "load_mat_file", "dc/de1/class_graph_1_1_matrix.html#abe32bda2c4dc0dd829595ee6ef21290c", null ],
+    [ "load_graphml_file", "dc/de1/class_graph_1_1_matrix.html#a6462098a26eb89d8e1f7cd22b48e9ef9", null ],
+    [ "load_mat_file", "dc/de1/class_graph_1_1_matrix.html#aa064a4fb342d41c2334044072d679732", null ],
     [ "load_throughtput", "dc/de1/class_graph_1_1_matrix.html#a6ee30501dc9ceb4042f6479449408512", null ],
     [ "make_edge", "dc/de1/class_graph_1_1_matrix.html#a5d584e32879b4e9f049ef4244e984ebe", null ],
     [ "print", "dc/de1/class_graph_1_1_matrix.html#ae4317f9823368f3c13bc7f8c2d6efd8d", null ],

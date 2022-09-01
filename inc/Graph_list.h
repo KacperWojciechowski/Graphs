@@ -4,9 +4,13 @@
 #include <vector>
 #include <list>
 
-#include "..\inc\PixelMap.h"
 #include "..\inc\GraphBase.h"
-#include "..\inc\PixelMap.h"
+
+// forward declaration of PixelMap class for convertion constructor
+namespace Data
+{
+	class PixelMap;
+}
 
 namespace Graph
 {

@@ -1,5 +1,4 @@
 #include "../inc/Generator.h"
-#include "../inc/Coord.h"
 
 #include <time.h>
 #include <iostream>

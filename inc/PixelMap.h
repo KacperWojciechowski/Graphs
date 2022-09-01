@@ -32,7 +32,7 @@ namespace Data
 
 		size_t get_rows();
 		size_t get_columns();
-		uint8_t get_field(Data::coord _coord);
+		uint8_t get_field(Data::Coord&& coord);
 
 	private:
 		std::vector<std::vector<uint8_t>> map; /**< Structure containing the map. Consists of std::vector of std::vector objects. Each

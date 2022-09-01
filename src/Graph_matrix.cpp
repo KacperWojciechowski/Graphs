@@ -239,7 +239,7 @@ void Graph::Matrix::make_edge(std::size_t source, std::size_t destination, uint3
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
-	if (weight == 0)
+	if (weight <= 0)
 	{
 		throw std::invalid_argument("Weight equal to zero");
 	}
@@ -590,7 +590,7 @@ void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
  */
 Graph::Matrix Graph::Matrix::change_to_line_graph()
 {
-	std::vector<Data::coord> edges;
+	std::vector<Data::Coord> edges;
 
 	// gather all the edges from the adjacency matrix of initial graph
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
@@ -615,7 +615,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
 		mat.emplace_back(size);
 	}
 
-	Data::coord coordinates;
+	Data::Coord coordinates;
 
 	// fill the line graph
 	for (std::size_t i = 0; i < size; i++)

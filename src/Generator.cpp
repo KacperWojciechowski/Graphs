@@ -29,7 +29,7 @@
  * 
  * \ref matrix_generator.cpp "Example of generating a randomized matrix"
  */
-void Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc)
+auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc) const -> void
 {
 	std::vector<std::vector<std::size_t>> matrix;
 	std::size_t val;
@@ -42,26 +42,22 @@ void Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
 	// create an empty matrix
 	for (std::size_t i = 0; i < vertex_amount; i++)
 	{
-		matrix.push_back({});
-		for (std::size_t j = 0; j < vertex_amount; j++)
-		{
-			matrix[i].push_back(0);
-		}
+		matrix.emplace_back(vertex_amount);
 	}
 
 	// fill matrix with random weights
 	if (type == Graph::Type::directed)
 	{
-		for (std::size_t i = 0; i < vertex_amount; i++)
+		for (auto& row : matrix)
 		{
-			for (std::size_t j = 0; j < vertex_amount; j++)
+			for (auto& element : row)
 			{
 				val = rand() % density_psc == 0 ? rand() % divider : 0;
 				if (val != 0)
 				{
 					val += limits.min;
 				}
-				matrix[i][j] = val;
+				element = val;
 			}
 		}
 	}
@@ -98,6 +94,7 @@ void Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
 		{
 			stream << '\n';
 		}
+		index1++;
 	}
 	stream << std::flush;
 }
@@ -130,15 +127,15 @@ void Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
  * 
  * \ref thr_matrix_generator.cpp "Example of generating a throughtput matrix"
  */
-void Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstream& matrix_src, const Limits& limits, Graph::Type type)
+auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstream& matrix_src, const Limits& limits, Graph::Type type) const -> void
 {
-	std::vector<std::vector<std::size_t>> src_matrix;
-	std::vector<std::vector<std::size_t>> dest_matrix;
+	std::vector<std::vector<int32_t>> src_matrix;
+	std::vector<std::vector<int32_t>> dest_matrix;
 	
 	srand(static_cast<uint32_t>(time(NULL)));
 
 	// calculate the divider for modulo division
-	std::size_t divider = limits.max - limits.min + 1;
+	std::int32_t divider = limits.max - limits.min + 1;
 	
 	std::string line;
 	std::size_t pos;
@@ -146,41 +143,42 @@ void Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 	std::size_t index = 0;
 
 	// lambda function extracting the values from read row of the source matrix
-	auto extract_val = [&line, &pos]() -> std::size_t {
+	auto insert_val = [&line, &pos, &src_matrix](std::size_t index) -> void {
 
-		std::int32_t val = atoi(line.c_str());
-		line = line.substr(pos + 1);
-
+		std::int32_t val = std::stoi(line);
+		pos = line.find(' ');
+		
+		if (pos != std::string::npos)
+		{
+			line = line.substr(pos + 1);
+		}
+		
 		if (val < 0)
 		{
 			throw std::runtime_error("Weight less than zero");
 		}
 
-		pos = line.find(' ');
-		return static_cast<std::size_t>(val);
+		src_matrix[index].emplace_back(val);
 	};
 
 	// parse the source matrix file
-	while (!matrix_src.eof())
+	while (std::getline(matrix_src, line))
 	{
-		std::getline(matrix_src, line);
-
 		if (line != "")
 		{
-			src_matrix.push_back({});
+			src_matrix.emplace_back(0);
 
-			pos = line.find(' ');
+			pos = 0;
 
 			while (pos != std::string::npos)
 			{
-				src_matrix[index].push_back(extract_val());
+				insert_val(index);
 			}
-			src_matrix[index].push_back(extract_val());
 			index++;
 		}
 	}
 
-	// verify whether the source matrix is square
+	// verify whether the source matrix is square and create destination matrix
 	for (std::size_t index = 0; auto& row : src_matrix)
 	{
 		if (src_matrix.size() != row.size())
@@ -189,25 +187,20 @@ void Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 		}
 		else
 		{
-			dest_matrix.push_back({});
-
-			for (auto& element : row)
-			{
-				dest_matrix[index].push_back(0);
-			}
+			dest_matrix.emplace_back(row.size());
 			index++;
 		}
 	}
 
-	std::size_t val;
+	std::int32_t val;
+	std::size_t size = src_matrix.size();
 
 	// create the destination matrix
 	if (type == Graph::Type::directed)
 	{
-		for (std::size_t i = 0; i < src_matrix.size(); i++)
+		for (std::size_t i = 0; i < size; i++)
 		{
-			dest_matrix.push_back({});
-			for (std::size_t j = 0; j < src_matrix.size(); j++)
+			for (std::size_t j = 0; j < size; j++)
 			{
 				if (src_matrix[i][j] != 0)
 				{
@@ -218,10 +211,9 @@ void Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 	}
 	else
 	{
-		for (std::size_t i = 0; i < src_matrix.size(); i++)
+		for (std::size_t i = 0; i < size; i++)
 		{
-			dest_matrix.push_back({});
-			for (std::size_t j = i; j < src_matrix.size(); j++)
+			for (std::size_t j = i; j < size; j++)
 			{
 				if (src_matrix[i][j] != 0)
 				{
@@ -279,7 +271,7 @@ void Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
  * 
  * \ref list_generator.cpp "Example of generating a randomized list"
  */
-void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc)
+auto Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc) const -> void
 {
 	std::vector<std::vector<std::size_t>> list;
 	std::size_t count;
@@ -290,7 +282,7 @@ void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
 	// generate empty list
 	for (std::size_t i = 0; i < vertex_amount; i++)
 	{
-		list.push_back({});
+		list.emplace_back(0);
 	}
 	
 	// generate row of the data source file
@@ -306,20 +298,20 @@ void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
 			// prevent duplicates from appearing
 			if (std::find(list[i].begin(), list[i].end(), val) == list[i].end() && val != 0)
 			{
-				list[i].push_back(val);
+				list[i].emplace_back(val);
 
 				if (i != val && type == Graph::Type::undirected)
 				{
-					list[val].push_back(i);
+					list[val].emplace_back(i);
 				}
 			}
 		}
 	}
 
 	// sort the list
-	for (auto itr = list.begin(); itr != list.end(); itr++)
+	for (auto& row : list)
 	{
-		std::sort(itr->begin(), itr->end());
+		std::sort(row.begin(), row.end());
 	}
 
 	// save the structure
@@ -359,7 +351,7 @@ void Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
  * 
  * \ref pixel_map_generator.cpp "Example of generating the pixel map data source"
  */
-void Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width)
+auto Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width) const -> void
 {
 	srand(static_cast<unsigned int>(time(NULL)));
 

@@ -25,6 +25,17 @@ namespace Graph
 	class List : public GraphBase
 	{
 	public:
+		/**
+		 * \brief Structure containing the information regarding the connection
+		 * between a given vertex and its adjacent vertex.
+		*/
+		struct Node
+		{
+			std::size_t ID;  /**< Adjacent vertex ID */
+			int32_t weight; /**< Weight of the connection */
+		};
+
+
 		/* Constructors */
 		List(const std::string& file_path, Type type);
 
@@ -35,40 +46,28 @@ namespace Graph
 		List(List&& l) noexcept;
 
 		/* Interface */
-		void print();
-		void make_edge(std::size_t source, std::size_t destination, int32_t weight);
-		void add_node();
+		auto print() const -> void;
+		auto make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void;
+		auto add_node() -> void;
 
-		void remove_edge(std::size_t source, std::size_t destination);
-		void remove_node(std::size_t node_id);
+		auto remove_edge(std::size_t source, std::size_t destination) -> void;
+		auto remove_node(std::size_t node_id) -> void;
 
-		std::size_t get_nodes_amount();
-		Degree get_node_degree(std::size_t node_id);
-		int32_t get_edge(std::size_t source, std::size_t destination);
-		Type get_type();
+		auto get_nodes_amount() const -> std::size_t;
+		auto get_node_degree(std::size_t node_id) const -> Degree;
+		auto get_edge(std::size_t source, std::size_t destination) const -> int32_t;
+		auto get_type() const -> Type;
 
-		void save_graphml(std::ostream& stream, std::string name);
+		auto save_graphml(std::ostream& stream, std::string name) const -> void;
 
-		List change_to_line_graph();
+		auto change_to_line_graph() const -> List;
 
 	private:
 
-		/* Adjacent vertex structure */
-
-		/**
-		 * \brief Structure containing the information regarding the connection
-		 * between a given vertex and its adjacent vertex.
-		 */
-		struct Node
-		{
-			std::size_t ID;  /**< Adjacent vertex ID */
-			int32_t weight; /**< Weight of the connection */
-		};
-
 		/* Load functions for specific file formats */
-		void load_lst_file(std::istream& file);
-		void load_graphml_file(std::istream& file);
-		void calculate_degrees();
+		auto load_lst_file(std::istream& file) -> void;
+		auto load_graphml_file(std::istream& file) -> void;
+		auto calculate_degrees() -> void;
 
 		/* Objects containing the graph information */
 

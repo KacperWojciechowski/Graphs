@@ -91,7 +91,7 @@ Data::PixelMap::PixelMap(PixelMap&& p) noexcept
  * Print function displaying the map structure on the standard output.
  * 
  */
-void Data::PixelMap::print()
+auto Data::PixelMap::print() const -> void
 {
 	std::cout << "[\n";
 	for (auto& row : this->map)
@@ -113,7 +113,7 @@ void Data::PixelMap::print()
  * 
  * \return Number of rows within the structure.
  */
-size_t Data::PixelMap::get_rows()
+auto Data::PixelMap::get_rows() const -> std::size_t
 {
 	return this->map.size();
 }
@@ -126,7 +126,7 @@ size_t Data::PixelMap::get_rows()
  * 
  * \return Number of columns within the structure.
  */
-size_t Data::PixelMap::get_columns()
+auto Data::PixelMap::get_columns() const -> std::size_t
 {
 	return this->map[0].size();
 }
@@ -140,7 +140,7 @@ size_t Data::PixelMap::get_columns()
  * \param coord Coordinates of the field.
  * \return 
  */
-uint8_t Data::PixelMap::get_field(Data::Coord&& coord)
+auto Data::PixelMap::get_field(Data::Coord&& coord) const-> uint8_t
 {
 	return this->map[coord.x][coord.y];
 }

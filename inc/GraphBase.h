@@ -44,7 +44,7 @@ namespace Graph
 		 * \brief Comomn function definition for printing the representation of a graph.
 		 * 
 		 */
-		virtual void print() = 0;
+		virtual auto print() const -> void = 0;
 
 
 
@@ -56,7 +56,7 @@ namespace Graph
 		 * \param Destination end vertex of an edge.
 		 * \param Weight weight of the connection.
 		 */
-		virtual void make_edge(std::size_t source, std::size_t destination, int32_t weight) = 0;
+		virtual auto make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void = 0;
 
 
 
@@ -65,7 +65,7 @@ namespace Graph
 		 * \brief Common function definition for adding a vertex to the graph object.
 		 * 
 		 */
-		virtual void add_node() = 0;
+		virtual auto add_node() -> void = 0;
 
 
 
@@ -76,7 +76,7 @@ namespace Graph
 		 * \param Source source vertex of an edge.
 		 * \param Destionation end vertex of an edge.
 		 */
-		virtual void remove_edge(std::size_t source, std::size_t destionation) = 0;
+		virtual auto remove_edge(std::size_t source, std::size_t destionation) -> void = 0;
 
 
 
@@ -86,7 +86,7 @@ namespace Graph
 		 * 
 		 * \param node_id ID of the vertex (counting from 0) to remove.
 		 */
-		virtual void remove_node(std::size_t node_id) = 0;
+		virtual auto remove_node(std::size_t node_id) -> void = 0;
 
 
 
@@ -96,7 +96,7 @@ namespace Graph
 		 * 
 		 * \return The amount of the vertices in a graph object.
 		 */
-		virtual std::size_t get_nodes_amount() = 0;
+		virtual auto get_nodes_amount() const -> std::size_t = 0;
 
 
 
@@ -107,7 +107,7 @@ namespace Graph
 		 * \param node_id ID of a vertex (counting from 0) to get the degree of.
 		 * \return The degree of a given vertex.
 		 */
-		virtual Degree get_node_degree(std::size_t node_id) = 0;
+		virtual auto get_node_degree(std::size_t node_id) const -> Degree = 0;
 
 
 
@@ -119,7 +119,7 @@ namespace Graph
 		 * \param destination End vertex of an edge.
 		 * \return Weight value of the connection.
 		 */
-		virtual int32_t get_edge(std::size_t source, std::size_t destination) = 0;
+		virtual auto get_edge(std::size_t source, std::size_t destination) const -> int32_t = 0;
 
 
 
@@ -127,7 +127,7 @@ namespace Graph
 		/**
 		 * \brief Common function definition for type getter.
 		 */
-		virtual Type get_type() = 0;
+		virtual auto get_type() const -> Type = 0;
 
 
 
@@ -139,7 +139,7 @@ namespace Graph
 		 * 
 		 * \param output_file_path Path of the destination file.
 		 */
-		virtual void save_graphml(std::ostream& stream, std::string name) = 0;
+		virtual auto save_graphml(std::ostream& stream, std::string name) const -> void = 0;
 
 
 
@@ -151,7 +151,7 @@ namespace Graph
 		 * 
 		 * \param file Reference to the std::fstream object of the graphml file.
 		 */
-		virtual void load_graphml_file(std::istream& file) = 0;
+		virtual auto load_graphml_file(std::istream& file) -> void = 0;
 
 
 
@@ -162,6 +162,6 @@ namespace Graph
 		 * \brief Common function definition for calculating the degrees of each vertex inside the graph object.
 		 *  
 		 */
-		virtual void calculate_degrees() = 0;
+		virtual auto calculate_degrees() -> void = 0;
 	};
 }

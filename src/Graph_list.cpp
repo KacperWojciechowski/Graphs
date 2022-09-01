@@ -1,4 +1,6 @@
 #include "..\inc\Graph_list.h"
+#include "..\inc\PixelMap.h"
+
 #include "..\lib\rapidxml\rapidxml.hpp"
 
 #include <iomanip>
@@ -100,6 +102,91 @@ Graph::List::List(GraphBase& graph)
 			}
 		}
 	}
+}
+
+
+
+
+/**
+ * Constructor creating a graph of neighbourhood in a pixel map.
+ * 
+ * This constructor creates an adjacency list object representing the neighbourhood
+ * of each non-wall field within a pixel map based on Data::PixelMap object. This
+ * function treats all the connections between adjacent field within the map as bi-directional,
+ * and as such, assumes the graph is undirected.
+ * 
+ * \see Data::PixelMap for pixel map representation reference.
+ * 
+ * \param map Reference to a pixel map representation.
+ * 
+ * \ref create_list_from_pixelmap.cpp "Example of creating a list graph based on pixel map"
+ */
+Graph::List::List(Data::PixelMap& map)
+	: type(Graph::Type::undirected)
+{
+	std::size_t columns = map.get_columns();
+	std::size_t rows = map.get_rows();
+
+	std::vector<Data::Coord> vertices;
+
+	// create a vector of each non-wall field coordinates within the map
+	for (std::size_t i = 0; i < rows; i++)
+	{
+		for (std::size_t j = 0; j < columns; j++)
+		{
+			if (map.get_field({ i, j }) == Data::PixelMap::GAP)
+			{
+				vertices.emplace_back(i, j);
+			}
+		}
+	}
+
+	// auxiliary functions for clean code purpose
+	// Function adding an element to the list of given vertex index.
+	auto add_to_list = [this, &vertices](std::size_t index, std::size_t row, std::size_t col) -> void
+	{
+		this->list[index].emplace_back(Data::find_index(vertices, { row, col }), 1);
+	};
+
+	// Function checking whether an element is a non-wall field
+	auto is_gap = [&map](std::size_t row, std::size_t col) -> bool
+	{
+		return map.get_field({ row, col }) == Data::PixelMap::GAP;
+	};
+
+	// build the list based on the found fields
+	for (std::size_t index = 0; auto & vertex : vertices)
+	{
+		this->list.emplace_back(0);
+
+		// check upper neighbour
+		if (static_cast<int64_t>(vertex.row()) - 1 >= 0 && is_gap(vertex.row() - 1, vertex.col()))
+		{
+			add_to_list(index, vertex.row() - 1, vertex.col());
+		}
+
+		// check left neighbour
+		if (static_cast<int64_t>(vertex.col()) - 1 >= 0 && is_gap(vertex.row(), vertex.col() - 1))
+		{
+			add_to_list(index, vertex.row(), vertex.col() - 1);
+		}
+
+		// check lower neighbour
+		if (static_cast<int64_t>(vertex.row()) + 1 < rows && is_gap(vertex.row() + 1, vertex.col()))
+		{
+			add_to_list(index, vertex.row() + 1, vertex.col());
+		}
+
+		// check right neighbour
+		if (static_cast<int64_t>(vertex.col()) + 1 < columns && is_gap(vertex.row(), vertex.col() + 1))
+		{
+			add_to_list(index, vertex.row(), vertex.col() + 1);
+		}
+
+		index++;
+	}
+
+	this->calculate_degrees();
 }
 
 

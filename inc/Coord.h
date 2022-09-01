@@ -13,11 +13,34 @@ namespace Data
 	 * the starting vertex, while the second coordinate states the ending
 	 * vertex.
 	 */
-	struct coord
-	{
+	struct Coord
+	{ 
 		std::size_t x; /**< x coordinate of a vertex / starting vertex of an edge */
 		std::size_t y; /**< y coordinate of a vertex / ending vertex of an edge */
+
+		Coord() = default;
+		Coord(std::size_t x, std::size_t y);
+
+		auto row() const -> std::size_t const&
+		{
+			return x;
+		}
+
+		auto row() -> std::size_t&
+		{
+			return x;
+		}
+
+		auto col() const -> std::size_t const&
+		{
+			return y;
+		}
+
+		auto col() -> std::size_t&
+		{
+			return y;
+		}
 	};
 
-	std::size_t find_index(std::vector<coord>& nodes, coord _coord);
+	std::size_t find_index(const std::vector<Coord>& nodes, Coord&& _coord);
 }

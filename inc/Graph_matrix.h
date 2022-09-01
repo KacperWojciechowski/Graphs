@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "GraphBase.h"
-#include "Algorithms.h"
+#include "..\inc\GraphBase.h"
+#include "..\inc\Algorithms.h"
 
 namespace Graph
 {

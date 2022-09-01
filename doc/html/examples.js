@@ -19,5 +19,7 @@ var examples =
     [ "save_matrix_to_graphml.cpp", "df/dd3/save_matrix_to_graphml_8cpp-example.html", null ],
     [ "list_generator.cpp", "d3/d98/list_generator_8cpp-example.html", null ],
     [ "matrix_generator.cpp", "d0/d69/matrix_generator_8cpp-example.html", null ],
-    [ "thr_matrix_generator.cpp", "d6/d49/thr_matrix_generator_8cpp-example.html", null ]
+    [ "thr_matrix_generator.cpp", "d6/d49/thr_matrix_generator_8cpp-example.html", null ],
+    [ "create_pixel_map.cpp", "d6/d88/create_pixel_map_8cpp-example.html", null ],
+    [ "create_list_from_pixelmap.cpp", "da/d5d/create_list_from_pixelmap_8cpp-example.html", null ]
 ];

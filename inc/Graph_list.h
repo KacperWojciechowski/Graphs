@@ -25,6 +25,17 @@ namespace Graph
 	class List : public GraphBase
 	{
 	public:
+		/**
+		 * \brief Structure containing the information regarding the connection
+		 * between a given vertex and its adjacent vertex.
+		*/
+		struct Node
+		{
+			std::size_t ID;  /**< Adjacent vertex ID */
+			int32_t weight; /**< Weight of the connection */
+		};
+
+
 		/* Constructors */
 		List(const std::string& file_path, Type type);
 
@@ -52,18 +63,6 @@ namespace Graph
 		auto change_to_line_graph() const -> List;
 
 	private:
-
-		/* Adjacent vertex structure */
-
-		/**
-		 * \brief Structure containing the information regarding the connection
-		 * between a given vertex and its adjacent vertex.
-		 */
-		struct Node
-		{
-			std::size_t ID;  /**< Adjacent vertex ID */
-			int32_t weight; /**< Weight of the connection */
-		};
 
 		/* Load functions for specific file formats */
 		auto load_lst_file(std::istream& file) -> void;

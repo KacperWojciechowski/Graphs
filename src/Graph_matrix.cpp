@@ -166,7 +166,7 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  * \note Based on the type of the graph, the degree is presented either as a single value for undirected graph,
  *		 or as a indegree|outdegree pair for directed graph.
  */
-void Graph::Matrix::print()
+auto Graph::Matrix::print() const -> void
 {
 	// display type information
 	std::cout << "Type = ";
@@ -196,9 +196,9 @@ void Graph::Matrix::print()
 
 	for (std::size_t index = 0; auto& row : this->matrix)
 	{
-		for (auto itr2 = row.begin(); itr2 != row.end(); itr2++)
+		for (auto& element : row)
 		{
-			std::cout << std::setw(3) << std::right << *itr2 << ", ";
+			std::cout << std::setw(3) << std::right << element << ", ";
 		}
 		if (this->type == Type::undirected)
 		{
@@ -234,7 +234,7 @@ void Graph::Matrix::print()
  * \ref make_edge_matrix_insert.cpp "Adding a new edge to the graph structure"\n
  * \ref make_edge_matrix_override.cpp "Changing the weight of an existing edge"\n
  */
-void Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32_t weight)
+auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void
 {
 	// validate the parameters
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
@@ -289,7 +289,7 @@ void Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32
  * 
  * \ref add_node_matrix.cpp "Example of adding an isolated vertex"
  */
-void Graph::Matrix::add_node()
+auto Graph::Matrix::add_node() -> void
 {
 	// add zeros at the end of each row to mark the new vertex to be added
 	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
@@ -323,7 +323,7 @@ void Graph::Matrix::add_node()
  * 
  * \ref remove_edge_matrix.cpp "Example of removing an edge from graph structure"
  */
-void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
+auto Graph::Matrix::remove_edge(std::size_t source, std::size_t destination) -> void
 {
 	// validate the vertices indexes
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
@@ -372,7 +372,7 @@ void Graph::Matrix::remove_edge(std::size_t source, std::size_t destination)
  * 
  * \ref remove_node_matrix.cpp "Example of removing a vertex"
  */
-void Graph::Matrix::remove_node(std::size_t node_id)
+auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 {
 	// validate the vertex ID
 	if (node_id >= this->matrix.size())
@@ -429,7 +429,7 @@ void Graph::Matrix::remove_node(std::size_t node_id)
  * 
  * \return Amount of vertices in the graph structure.
  */
-std::size_t Graph::Matrix::get_nodes_amount()
+auto Graph::Matrix::get_nodes_amount() const -> std::size_t
 {
 	return this->matrix.size();
 }
@@ -446,7 +446,7 @@ std::size_t Graph::Matrix::get_nodes_amount()
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.
  */
-Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
+auto Graph::Matrix::get_node_degree(std::size_t node_id) const -> Graph::Degree
 {
 	if (node_id >= this->degrees.size())
 	{
@@ -473,7 +473,7 @@ Graph::Degree Graph::Matrix::get_node_degree(std::size_t node_id)
  * \warning Exception to guard against:
  *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
  */
-int32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
+auto Graph::Matrix::get_edge(std::size_t source, std::size_t destination) const -> int32_t
 {
 	if (source >= this->matrix.size() || destination >= this->matrix.size())
 	{
@@ -493,7 +493,7 @@ int32_t Graph::Matrix::get_edge(std::size_t source, std::size_t destination)
  * 
  * \return Graph::Type enum defining the type of the graph.
  */
-Graph::Type Graph::Matrix::get_type()
+auto Graph::Matrix::get_type() const -> Graph::Type
 {
 	return this->type;
 }
@@ -512,7 +512,7 @@ Graph::Type Graph::Matrix::get_type()
  * 
  * \ref save_matrix_to_graphml.cpp "Example of saving the graph structure in .GRAPHML file"
  */
-void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
+auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const -> void
 {
 	// header
 	stream << "<?xml version=\"1.0\"";
@@ -551,11 +551,11 @@ void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 	}
 
 	// edge data including weight
-	for (std::size_t i = 0; i < this->matrix.size(); i++)
+	for (std::size_t i = 0; auto& row : this->matrix)
 	{
-		for (std::size_t j = 0; j < this->matrix[i].size(); j++)
+		for (std::size_t j = 0; auto& element : row)
 		{
-			if (this->matrix[i][j] != 0)
+			if (element != 0)
 			{
 				if (this->type == Type::undirected && j < i)
 				{
@@ -564,10 +564,12 @@ void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
 				stream << "\t\t<edge source=\"n" << i;
 				stream << "\" target=\"n" << j;
 				stream << "\">\n";
-				stream << "\t\t\t<data key=\"d0\">" + std::to_string(this->matrix[i][j]) + "</data>\n";
+				stream << "\t\t\t<data key=\"d0\">" + std::to_string(element) + "</data>\n";
 				stream << "\t\t</edge>\n";
 			}
+			j++;
 		}
+		i++;
 	}
 
 	// close the tags and the file
@@ -590,7 +592,7 @@ void Graph::Matrix::save_graphml(std::ostream& stream, std::string name)
  * 
  * \todo Modify the function to support directed graphs.
  */
-Graph::Matrix Graph::Matrix::change_to_line_graph()
+auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
 {
 	std::vector<Data::Coord> edges;
 
@@ -674,7 +676,7 @@ Graph::Matrix Graph::Matrix::change_to_line_graph()
  *		- std::invalid_argument - when the file has an unsupported extension.
  *		- std::runtime_error - when the file could not be accessed.
  */
-void Graph::Matrix::load_throughtput(std::string file_path)
+auto Graph::Matrix::load_throughtput(std::string file_path) -> void
 {
 	int32_t value;
 
@@ -728,7 +730,7 @@ void Graph::Matrix::load_throughtput(std::string file_path)
  *		- std::runtime_error - A row length deviates from the length set by the first row,
  *							   or the adjacency matrix contains a negative value.
  */
-void Graph::Matrix::load_mat_file(std::istream& file)
+auto Graph::Matrix::load_mat_file(std::istream& file) -> void
 {
 	std::string line;
 	std::size_t vertices = 0;
@@ -788,7 +790,7 @@ void Graph::Matrix::load_mat_file(std::istream& file)
  *		- std::runtime_error - When loaded weight of the connection is less or equal to 0.
  * 
  */
-void Graph::Matrix::load_graphml_file(std::istream& file)
+auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 {
 	// create the document and nodes instances
 	auto document = std::make_unique< rapidxml::xml_document<>>();
@@ -911,13 +913,10 @@ void Graph::Matrix::load_graphml_file(std::istream& file)
  * This function is for internal purpose and is not to be called directly by the user.
  * 
  */
-void Graph::Matrix::calculate_degrees()
+auto Graph::Matrix::calculate_degrees() -> void
 {
 	// create the degrees table
-	for (std::size_t i = 0; i < this->matrix.size(); i++)
-	{
-		this->degrees.emplace_back( 0, 0, 0 );
-	}
+	this->degrees.resize(this->matrix.size());
 
 	// iterate through the whole adjacency matrix to calculate degree of each node
 	for (std::size_t index1 = 0; auto& row : this->matrix)

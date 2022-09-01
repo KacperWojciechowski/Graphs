@@ -9,8 +9,8 @@ namespace Data
 {
 	struct Limits
 	{
-		std::size_t min; /**< An upper limit of given interval */
-		std::size_t max; /**< A lower limit of given interval */
+		std::int32_t min; /**< An upper limit of given interval */
+		std::int32_t max; /**< A lower limit of given interval */
 	};
 
 	/**

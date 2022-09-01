@@ -29,6 +29,9 @@ namespace Graph
 		std::size_t in_deg; /**< Indegree for the directed graphs */
 		std::size_t out_deg; /**< Outdegree for the directed graphs */
 		std::size_t deg; /**< Degree for the undirected graphs */
+
+		Degree() = default;
+		Degree(std::size_t in, std::size_t out, std::size_t deg);
 	};
 
 	/**
@@ -56,7 +59,7 @@ namespace Graph
 		 * \param Destination end vertex of an edge.
 		 * \param Weight weight of the connection.
 		 */
-		virtual auto make_edge(std::size_t source, std::size_t destination, int32_t weight) const -> void = 0;
+		virtual auto make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void = 0;
 
 
 
@@ -107,7 +110,7 @@ namespace Graph
 		 * \param node_id ID of a vertex (counting from 0) to get the degree of.
 		 * \return The degree of a given vertex.
 		 */
-		virtual auto get_node_degree(std::size_t node_id) -> Degree = 0;
+		virtual auto get_node_degree(std::size_t node_id) const -> Degree = 0;
 
 
 
@@ -139,7 +142,7 @@ namespace Graph
 		 * 
 		 * \param output_file_path Path of the destination file.
 		 */
-		virtual auto save_graphml(std::ostream& stream, std::string name) -> void = 0;
+		virtual auto save_graphml(std::ostream& stream, std::string name) const -> void = 0;
 
 
 

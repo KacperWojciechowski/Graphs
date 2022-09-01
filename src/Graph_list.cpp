@@ -1,7 +1,9 @@
 #include "..\inc\Graph_list.h"
 #include "..\inc\PixelMap.h"
 
+#pragma warning(push, 0)
 #include "..\lib\rapidxml\rapidxml.hpp"
+#pragma warning(pop)
 
 #include <iomanip>
 #include <fstream>
@@ -85,7 +87,7 @@ Graph::List::List(GraphBase& graph)
 	this->type = graph.get_type();
 	std::size_t count = graph.get_nodes_amount();
 	
-	std::size_t val;
+	int32_t val;
 
 	// build list
 	for (std::size_t i = 0; i < count; i++)
@@ -209,7 +211,6 @@ void Graph::List::load_lst_file(std::istream& file)
 {
 	std::string line;
 	size_t pos;
-	std::uint32_t weight = 1;
 
 	std::size_t amount = 0;
 
@@ -240,7 +241,7 @@ void Graph::List::load_lst_file(std::istream& file)
 
 			while (pos != std::string::npos)
 			{
-				this->list[index].emplace_back(extract_val(), weight);
+				this->list[index].emplace_back(extract_val(), 1);
 			}
 
 			if (this->list[index].size() != this->list[0].size())
@@ -317,7 +318,7 @@ void Graph::List::load_graphml_file(std::istream& file)
 	// obtain edges
 	std::string id1;
 	std::string id2;
-	uint32_t weight;
+	int32_t weight;
 
 	std::size_t index1, index2;
 

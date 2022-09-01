@@ -1,10 +1,12 @@
 #include "../inc/Graph_matrix.h"
+#include "../inc/Coord.h"
 
 #include <iomanip>
 #include <fstream>
 
+#pragma warning(push, 0)
 #include "../lib/rapidxml/rapidxml.hpp"
-#include "../inc/Coord.h"
+#pragma warning(pop)
 
 /**
  * \brief Constructor loading the graph from file.
@@ -733,7 +735,7 @@ void Graph::Matrix::load_mat_file(std::istream& file)
 	std::size_t pos;
 	
 	// function extracting the weight value from a row of adjacency matrix
-	auto extract_val = [&line, &pos]() -> uint32_t
+	auto extract_val = [&line, &pos]() -> int32_t
 	{
 		int32_t val;
 

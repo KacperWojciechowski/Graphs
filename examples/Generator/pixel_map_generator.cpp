@@ -6,7 +6,7 @@ int main()
 {
     Data::Generator gen;
 
-    std::ofstream file("samples\\pixel_map.txt");
+    std::ofstream file("samples\\pixel_map.mat");
     
     if (file.good())
     {

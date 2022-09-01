@@ -94,6 +94,7 @@ auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
 		{
 			stream << '\n';
 		}
+		index1++;
 	}
 	stream << std::flush;
 }
@@ -173,7 +174,6 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 			{
 				insert_val(index);
 			}
-			insert_val(index);
 			index++;
 		}
 	}

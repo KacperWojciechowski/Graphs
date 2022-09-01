@@ -32,39 +32,38 @@ namespace Graph
 		Matrix(Matrix&& m) noexcept;
 
 		/* Common interface */
-		void print();
+		auto print() const -> void;
 
-		void make_edge(std::size_t source, std::size_t destination, int32_t weight);
-		void add_node();
+		auto make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void;
+		auto add_node() -> void;
 
-		void remove_edge(std::size_t source, std::size_t destination);
-		void remove_node(std::size_t node_id);
+		auto remove_edge(std::size_t source, std::size_t destination) -> void;
+		auto remove_node(std::size_t node_id) -> void;
 
-		std::size_t get_nodes_amount();
-		Degree get_node_degree(std::size_t node_id);
-		int32_t get_edge(std::size_t source, std::size_t destination);
-		Type get_type();
+		auto get_nodes_amount() const -> std::size_t;
+		auto get_node_degree(std::size_t node_id) const -> Degree;
+		auto get_edge(std::size_t source, std::size_t destination) const -> int32_t;
+		auto get_type() const -> Type;
 
-		void save_graphml(std::ostream& stream, std::string name);
+		auto save_graphml(std::ostream& stream, std::string name) const -> void;
 
-		Matrix change_to_line_graph();
+		auto change_to_line_graph() const -> Matrix;
 
 		/* Extended interface */
-		void load_throughtput(std::string file_path);
-		void print_throughtput();
+		auto load_throughtput(std::string file_path) -> void;
+		auto print_throughtput() const -> void;
 
 		/* Algorithmic interface*/
 
-
 		/* Extended algorithmic interface */
-		Roadmap throughtput_belman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, bool log);
+		auto throughtput_bellman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, bool log) -> Roadmap;
 	
 	
 	private:
 		/* Load functions for specific file formats */
-		void load_mat_file(std::istream& file);
-		void load_graphml_file(std::istream& file);
-		void calculate_degrees();
+		auto load_mat_file(std::istream& file) -> void;
+		auto load_graphml_file(std::istream& file) -> void;
+		auto calculate_degrees() -> void;
 
 		/* Objects containing the graph*/
 		std::vector<std::vector<int32_t>> matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/

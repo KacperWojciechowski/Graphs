@@ -24,13 +24,13 @@ namespace Data
 	{
 	public:
 		// matrix graph generation
-		void make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc = 1);
-		void make_throughtput_matrix(std::ostream& stream, std::ifstream& matrix_src, const Limits& limits, Graph::Type type);
+		auto make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc = 1) const -> void;
+		auto make_throughtput_matrix(std::ostream& stream, std::ifstream& matrix_src, const Limits& limits, Graph::Type type) const -> void;
 
 		// list graph generation
-		void make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc = 1);
+		auto make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc = 1) const -> void;
 
 		// pixel map generationd
-		void make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width);
+		auto make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width) const -> void;
 	};
 }

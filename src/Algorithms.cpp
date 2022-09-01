@@ -8,7 +8,7 @@
  * \note In order to follow the full path, the user needs to recreate the path
  *		 based on the stored data.
  */
-void Graph::Roadmap::print()
+auto Graph::Roadmap::print() const -> void
 {
 	for (std::size_t index = 0; auto element : this->distance)
 	{

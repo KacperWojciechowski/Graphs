@@ -28,11 +28,11 @@ namespace Data
 		PixelMap(PixelMap&& p) noexcept;
 
 		// interface
-		void print();
+		auto print() const -> void;
 
-		size_t get_rows();
-		size_t get_columns();
-		uint8_t get_field(Data::Coord&& coord);
+		auto get_rows() const -> std::size_t;
+		auto get_columns() const -> std::size_t;
+		auto get_field(Data::Coord&& coord) const -> uint8_t;
 
 	private:
 		std::vector<std::vector<uint8_t>> map; /**< Structure containing the map. Consists of std::vector of std::vector objects. Each

@@ -29,9 +29,6 @@ namespace Graph
 		std::size_t in_deg; /**< Indegree for the directed graphs */
 		std::size_t out_deg; /**< Outdegree for the directed graphs */
 		std::size_t deg; /**< Degree for the undirected graphs */
-
-		Degree() = default;
-		Degree(std::size_t in, std::size_t out, std::size_t deg);
 	};
 
 	/**

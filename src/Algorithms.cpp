@@ -11,7 +11,7 @@
  */
 auto Graph::Roadmap::print() const -> void
 {
-	for (std::size_t index = 0; auto element : this->distance)
+	for (std::size_t index = 0; auto element : this->distances)
 	{
 		// print distance
 		std::cout << "Distance: " << element << std::endl;
@@ -48,9 +48,56 @@ auto Graph::Roadmap::print() const -> void
  * \param end Destination vertex of the path.
  * \return
  */
-auto Graph::Roadmap::path(std::size_t end) const -> std::vector<Path>
+auto Graph::Roadmap::paths(std::size_t end) const -> std::vector<Path>
 {
+	std::vector<Path> ret;
+	std::vector<std::size_t> path;
+	int32_t thr = this->throughtputs[end];
 
+	this->path_search(ret, path, thr, this->distances[end], end);
+
+	for (auto& log : ret)
+	{
+		std::reverse(log.path.begin(), log.path.end());
+	}
+	return ret;
+}
+
+
+
+
+/**
+ * Recursive function for path building.
+ * 
+ * \param paths Reference to a vector containing all the found paths.
+ * \param path Reference to a vector containing currently explored path.
+ * \param thr Throughtput of the currently explored path.
+ * \param distance Distance shared by all the found paths.
+ * \param v Currently explored vertex.
+ * \return 
+ */
+auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t& thr, int32_t const& distance, std::size_t v) const -> void
+{
+	path.emplace_back(v);
+
+	if (thr > this->throughtputs[v])
+	{
+		thr = this->throughtputs[v];
+	}
+
+	if (this->prev_node[v].empty())
+	{
+		paths.emplace_back(path, thr, distance);
+		path.pop_back();
+	}
+	else
+	{
+		for (auto& vertex : this->prev_node[v])
+		{
+			path_search(paths, path, thr, distance, vertex);
+		}
+		path.pop_back();
+	}
 }
 
 

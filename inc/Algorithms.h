@@ -33,14 +33,14 @@ namespace Graph
 	{
 		std::vector<std::vector<std::size_t>> prev_node; /**< Vector of possible previous vertices with the same distance */
 		std::vector<int32_t> distances; /**< The distance value from start vertex to any given vertex */
-		std::vector<std::vector<int32_t>> throughtputs;
+		std::vector<int32_t> throughtputs;
 		std::size_t start;
 	
 		auto print() const -> void;
-		auto path(std::size_t end) const -> std::vector<Path>;
+		auto paths(std::size_t end) const -> std::vector<Path>;
 
 	private:
-		auto find_path() -> std::size_t;
+		auto path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t& thr, int32_t const& distance, std::size_t v) const -> void;
 	};
 
 	/*

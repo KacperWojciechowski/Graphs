@@ -1,5 +1,6 @@
 #include "../inc/Algorithms.h"
 
+#include <algorithm>
 #include <iostream>
 
 /**
@@ -49,19 +50,7 @@ auto Graph::Roadmap::print() const -> void
  */
 auto Graph::Roadmap::path(std::size_t end) const -> std::vector<Path>
 {
-	std::vector<Path> ret;
 
-	std::size_t vertex = end;
-
-	for (auto& path : this->prev_node[end])
-	{
-
-	}
-	while (vertex != this->start)
-	{
-		ret.emplace_back(vertex);
-		vertex = this->path
-	}
 }
 
 

@@ -745,6 +745,49 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 	// optimization flag checking whether a change was found in
 	// current interation
 	bool change_found;
+	bool log = false;
+
+	auto log_step = [&ret]() -> void
+	{
+		// distance information
+		std::cout << "Distances: \n";
+
+		for (auto& dist : ret.distances)
+		{
+			if (dist == std::numeric_limits<int32_t>::max())
+			{
+				std::cout << "Inf, ";
+			}
+			else
+			{
+				std::cout << dist << ", ";
+			}
+		}
+
+		// previous vertices information
+		std::cout << "\nPrevious: \n";
+
+		for (std::size_t index = 0; auto & vec : ret.prev_node)
+		{
+			if (!vec.empty())
+			{
+				std::cout << index << ": ";
+
+				for (auto& vertex : vec)
+				{
+					std::cout << vertex << ", ";
+				}
+
+				std::cout << '\n';
+			}
+			index++;
+		}
+		// flush the output
+		std::cout << std::endl;
+	};
+
+	// log initial state
+	log_step();
 
 	// iterate |V| - 1 times
 	for (std::size_t i = 1; i < vertices_count; i++)
@@ -760,66 +803,44 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 				// if there is no edge, continue the search
 				if (element == 0)
 				{
+					index2++;
 					continue;
 				}
 				// if there is an edge, process the connection, safeguarding from overflow
 				else if(ret.distances[index] < std::numeric_limits<int32_t>::max() - element)
 				{
+					auto vec = std::next(ret.prev_node.begin(), index2);
+
 					// if the new distance is smaller, erase previous vertices and update the distance 
 					if (ret.distances[index2] > ret.distances[index] + element)
 					{
 						change_found = true;
 						ret.distances[index2] = ret.distances[index] + element;
-						ret.prev_node[index2].clear();
-						ret.prev_node[index2].emplace_back(index);
+						vec->clear();
+						vec->emplace_back(index);
+						log = true;
 					}
 					// else if the distance is equal, add new previous vertex to the vector
-					else if (ret.distances[index2] == ret.distances[index] + element)
+					else if (ret.distances[index2] == ret.distances[index] + element
+							&& std::find(vec->begin(), vec->end(), index) == vec->end())
 					{
 						change_found = true;
 						ret.prev_node[index2].emplace_back(index);
+						log = true;
 					}
 				}
 				
+				// if log stream was provided and change was made, log subsequent step
+				if (log_stream && log)
+				{
+					// reset current stuff-to-log flag
+					log = false;
+					log_step();
+					
+				}
 				index2++;
 			}
 			index++;
-		}
-
-		// if log stream was provided produce logs
-		if (log_stream)
-		{
-			// distance information
-			std::cout << "Distances: \n";
-
-			for (auto& dist : ret.distances)
-			{
-				if (dist == std::numeric_limits<int32_t>::max())
-				{
-					std::cout << "Inf, ";
-				}
-				else
-				{
-					std::cout << dist << ", ";
-				}
-			}
-
-			// previous vertices information
-			std::cout << "\nPrevious: \n";
-
-			for (std::size_t index = 0; auto & vec : ret.prev_node)
-			{
-				for (auto& vertex : vec)
-				{
-					std::cout << vertex << ", ";
-				}
-				if (!vec.empty())
-				{
-					std::cout << '\n';
-				}
-			}
-			// flush the output
-			std::cout << std::endl;
 		}
 
 		// if no change was found in current iteration, end the process

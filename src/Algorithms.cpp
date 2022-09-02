@@ -4,6 +4,22 @@
 #include <iostream>
 
 /**
+ * Constructor creating internal vectors of given size.
+ * 
+ * \param vertex_count Amount of vertices in the graph structure.
+ */
+Graph::Roadmap::Roadmap(std::size_t vertex_count)
+	: prev_node(vertex_count),
+	distances(vertex_count, std::numeric_limits<int32_t>::max()),
+	throughtputs(vertex_count, std::numeric_limits<int32_t>::max()),
+	start(0)
+{
+}
+
+
+
+
+/**
  * \brief Function displaying the data stored within the Roadmap class.
  * 
  * \note In order to follow the full path, the user needs to recreate the path
@@ -76,14 +92,9 @@ auto Graph::Roadmap::paths(std::size_t end) const -> std::vector<Path>
  * \param v Currently explored vertex.
  * \return 
  */
-auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t& thr, int32_t const& distance, std::size_t v) const -> void
+auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t const& thr, int32_t const& distance, std::size_t v) const -> void
 {
 	path.emplace_back(v);
-
-	if (thr > this->throughtputs[v])
-	{
-		thr = this->throughtputs[v];
-	}
 
 	if (this->prev_node[v].empty())
 	{
@@ -136,5 +147,7 @@ auto Graph::operator<<(std::ostream& stream, Path&& p) -> std::ostream&
 	}
 	stream << '\n';
 	stream << std::flush;
+
+	return stream;
 }
 

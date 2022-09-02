@@ -720,6 +720,122 @@ auto Graph::Matrix::load_throughtput(std::string file_path) -> void
 
 
 /**
+ * Implementation of Bellman-Ford patch searching algorithm in one-to-all variant.
+ * 
+ * This function implements a Bellman-Ford algorithm for SSP problem. It creates predecessing
+ * vectors and calculates distance from selected starting vertex to all other vertices within
+ * the graph structure.
+ * 
+ * \param start Vertex from which to start the path searching.
+ * \param log_stream Stream deciding whether this function should output logs. If passed a nullptr,
+ *					 the function will not produce any logs. Nullptr by default.
+ * \return A structure containing predecessing vectors and distance information.
+ * 
+ * \see Graph::Roadmap for returned structure reference
+ */
+auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stream) -> Roadmap
+{
+	std::size_t vertices_count = this->matrix.size();
+
+	Roadmap ret(this->matrix.size());
+
+	// set starting distance to zero
+	ret.distances[start] = 0;
+
+	// optimization flag checking whether a change was found in
+	// current interation
+	bool change_found;
+
+	// iterate |V| - 1 times
+	for (std::size_t i = 1; i < vertices_count; i++)
+	{
+		// assume change is not found
+		change_found = false;
+
+		// iterate over all the edges
+		for (std::size_t index = 0; auto & row : this->matrix)
+		{
+			for (std::size_t index2 = 0; auto & element : row)
+			{
+				// if there is no edge, continue the search
+				if (element == 0)
+				{
+					continue;
+				}
+				// if there is an edge, process the connection, safeguarding from overflow
+				else if(ret.distances[index] < std::numeric_limits<int32_t>::max() - element)
+				{
+					// if the new distance is smaller, erase previous vertices and update the distance 
+					if (ret.distances[index2] > ret.distances[index] + element)
+					{
+						change_found = true;
+						ret.distances[index2] = ret.distances[index] + element;
+						ret.prev_node[index2].clear();
+						ret.prev_node[index2].emplace_back(index);
+					}
+					// else if the distance is equal, add new previous vertex to the vector
+					else if (ret.distances[index2] == ret.distances[index] + element)
+					{
+						change_found = true;
+						ret.prev_node[index2].emplace_back(index);
+					}
+				}
+				
+				index2++;
+			}
+			index++;
+		}
+
+		// if log stream was provided produce logs
+		if (log_stream)
+		{
+			// distance information
+			std::cout << "Distances: \n";
+
+			for (auto& dist : ret.distances)
+			{
+				if (dist == std::numeric_limits<int32_t>::max())
+				{
+					std::cout << "Inf, ";
+				}
+				else
+				{
+					std::cout << dist << ", ";
+				}
+			}
+
+			// previous vertices information
+			std::cout << "\nPrevious: \n";
+
+			for (std::size_t index = 0; auto & vec : ret.prev_node)
+			{
+				for (auto& vertex : vec)
+				{
+					std::cout << vertex << ", ";
+				}
+				if (!vec.empty())
+				{
+					std::cout << '\n';
+				}
+			}
+			// flush the output
+			std::cout << std::endl;
+		}
+
+		// if no change was found in current iteration, end the process
+		if (!change_found)
+		{
+			break;
+		}
+	}
+
+	return ret;
+}
+
+
+
+
+/**
  * \brief Function loads the data from .mat file into the matrix object.
  * 
  * This function is an internal function and is not to be called directly by the user.

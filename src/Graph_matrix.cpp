@@ -380,9 +380,13 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 		throw std::out_of_range("ID out of bounds");
 	}
 
+	
+
 	// remove the column of the deleted vertex and update degree of each vertex if necessary
 	for (std::size_t i = 0; i < this->matrix.size(); i++)
 	{
+		auto itr = this->matrix[i].begin();
+
 		// find and decrease all degrees of vertices that have an incoming edge from the deleted vertex
 		if (i == node_id)
 		{
@@ -411,14 +415,23 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 			}
 		}
 		
-		// remove the column and degree structure of deleted vertex
-		this->matrix[i].erase(std::next(this->matrix[i].begin(), node_id));
+		// remove the column of deleted vertex
+		std::ranges::advance(itr, node_id);
+		this->matrix[i].erase(itr);
 	}
+
+	// iterators for quicker access
+	auto mat_itr = this->matrix.begin();
+	auto deg_itr = this->degrees.begin();
+
+	// access the row of deleted vertex and degree of deleted vertes
+	std::ranges::advance(mat_itr, node_id);
+	std::ranges::advance(deg_itr, node_id);
 
 	// remove the row of the deleted vertex and remove the degree counter
 	// for the deleted vertex
-	this->matrix.erase(std::next(this->matrix.begin(), node_id));
-	this->degrees.erase(std::next(this->degrees.begin(), node_id));
+	this->matrix.erase(mat_itr);
+	this->degrees.erase(deg_itr);
 }
 
 
@@ -720,11 +733,12 @@ auto Graph::Matrix::load_throughtput(std::string file_path) -> void
 
 
 /**
- * Implementation of Bellman-Ford patch searching algorithm in one-to-all variant.
+ * Implementation of modified Bellman-Ford path searching algorithm in one-to-all variant.
  * 
- * This function implements a Bellman-Ford algorithm for SSP problem. It creates predecessing
- * vectors and calculates distance from selected starting vertex to all other vertices within
- * the graph structure.
+ * This function implements a Bellman-Ford algorithm for SSP problem. The process is optimized by checking 
+ * whether a difference was found in previous iterations. If no change occured, all subsequent iterations will 
+ * not improve the result, so they are optimized out. As a result, the function creates predecessing vectors 
+ * and calculates distance from selected starting vertex to all other vertices within the graph structure.
  * 
  * \param start Vertex from which to start the path searching.
  * \param log_stream Stream deciding whether this function should output logs. If passed a nullptr,
@@ -747,6 +761,24 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 	bool change_found;
 	bool log = false;
 
+	// vector containing all edges present in the graph
+	std::vector<Data::Coord> edges;
+
+	// extract all the edges present in the graph
+	for (std::size_t index = 0; auto & row : this->matrix)
+	{
+		for (std::size_t index2 = 0; auto & element : row)
+		{
+			if (element != 0)
+			{
+				edges.emplace_back(index, index2);
+			}
+			index2++;
+		}
+		index++;
+	}
+
+	// function logging the step in current iteration
 	auto log_step = [&ret]() -> void
 	{
 		// distance information
@@ -769,16 +801,20 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 
 		for (std::size_t index = 0; auto & vec : ret.prev_node)
 		{
-			if (!vec.empty())
-			{
-				std::cout << index << ": ";
+			std::cout << index << ": ";
 
+			if (!vec.empty())
+			{	
 				for (auto& vertex : vec)
 				{
 					std::cout << vertex << ", ";
 				}
 
 				std::cout << '\n';
+			}
+			else
+			{
+				std::cout << "None\n";
 			}
 			index++;
 		}
@@ -795,52 +831,52 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 		// assume change is not found
 		change_found = false;
 
-		// iterate over all the edges
-		for (std::size_t index = 0; auto & row : this->matrix)
+		// iterate over all present edges
+		for (auto& edge : edges)
 		{
-			for (std::size_t index2 = 0; auto & element : row)
-			{
-				// if there is no edge, continue the search
-				if (element == 0)
-				{
-					index2++;
-					continue;
-				}
-				// if there is an edge, process the connection, safeguarding from overflow
-				else if(ret.distances[index] < std::numeric_limits<int32_t>::max() - element)
-				{
-					auto vec = std::next(ret.prev_node.begin(), index2);
+			// get the currently processed prev node vector
+			auto vec = ret.prev_node.begin();
+			std::ranges::advance(vec, edge.y);
+			
+			int32_t val = this->matrix[edge.x][edge.y];
 
-					// if the new distance is smaller, erase previous vertices and update the distance 
-					if (ret.distances[index2] > ret.distances[index] + element)
-					{
-						change_found = true;
-						ret.distances[index2] = ret.distances[index] + element;
-						vec->clear();
-						vec->emplace_back(index);
-						log = true;
-					}
-					// else if the distance is equal, add new previous vertex to the vector
-					else if (ret.distances[index2] == ret.distances[index] + element
-							&& std::find(vec->begin(), vec->end(), index) == vec->end())
-					{
-						change_found = true;
-						ret.prev_node[index2].emplace_back(index);
-						log = true;
-					}
-				}
-				
-				// if log stream was provided and change was made, log subsequent step
-				if (log_stream && log)
+			// save iterators to optimize the access
+			auto src_dist = ret.distances.begin();
+			std::ranges::advance(src_dist, edge.x);
+
+			auto target_dist = ret.distances.begin();
+			std::ranges::advance(target_dist, edge.y);
+
+			// process the edge
+			if (ret.distances[edge.x] < std::numeric_limits<int32_t>::max() - val)
+			{
+				// if the new distance is smaller, erase previous vertices and update the distance 
+				if (*target_dist > *src_dist + val)
 				{
-					// reset current stuff-to-log flag
-					log = false;
-					log_step();
-					
+					change_found = true;
+					*target_dist = *src_dist + val;
+					vec->clear();
+					vec->emplace_back(edge.x);
+					log = true;
 				}
-				index2++;
+				// else if the distance is equal, add new previous vertex to the vector
+				else if (*target_dist == *src_dist + val
+					&& std::find(vec->begin(), vec->end(), edge.x) == vec->end())
+				{
+					change_found = true;
+					vec->emplace_back(edge.x);
+					log = true;
+				}
 			}
-			index++;
+
+			// if log stream was provided and change was made, log subsequent step
+			if (log_stream && log)
+			{
+				// reset current stuff-to-log flag
+				log = false;
+				log_step();
+
+			}
 		}
 
 		// if no change was found in current iteration, end the process

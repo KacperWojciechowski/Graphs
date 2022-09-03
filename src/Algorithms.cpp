@@ -34,20 +34,28 @@ auto Graph::Roadmap::print() const -> void
 		std::cout << "Prev node: ";
 
 		// print previous node info
-		for (std::size_t index2 = 0; auto vertex : this->prev_node[index])
+		if (this->prev_node[index].empty())
 		{
-			std::cout << vertex;
-			if (index2 < this->prev_node[index].size() - 1)
+			std::cout << "None";
+		}
+		else
+		{
+			for (std::size_t index2 = 0; auto vertex : this->prev_node[index])
 			{
-				std::cout << " / ";
+				std::cout << vertex;
+				if (index2 < this->prev_node[index].size() - 1)
+				{
+					std::cout << " / ";
+				}
+				index2++;
 			}
-			index2++;
 		}
 		index++;
 		
 		// flush the stream and go to new line
-		std::cout << std::endl;
+		std::cout << '\n';
 	}
+	std::cout << std::flush;
 }
 
 

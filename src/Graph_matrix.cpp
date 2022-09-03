@@ -840,27 +840,20 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 			
 			int32_t val = this->matrix[edge.x][edge.y];
 
-			// save iterators to optimize the access
-			auto src_dist = ret.distances.begin();
-			std::ranges::advance(src_dist, edge.x);
-
-			auto target_dist = ret.distances.begin();
-			std::ranges::advance(target_dist, edge.y);
-
 			// process the edge
 			if (ret.distances[edge.x] < std::numeric_limits<int32_t>::max() - val)
 			{
 				// if the new distance is smaller, erase previous vertices and update the distance 
-				if (*target_dist > *src_dist + val)
+				if (ret.distances[edge.y] > ret.distances[edge.x] + val)
 				{
 					change_found = true;
-					*target_dist = *src_dist + val;
+					ret.distances[edge.y] = ret.distances[edge.x] + val;
 					vec->clear();
 					vec->emplace_back(edge.x);
 					log = true;
 				}
 				// else if the distance is equal, add new previous vertex to the vector
-				else if (*target_dist == *src_dist + val
+				else if (ret.distances[edge.y] == ret.distances[edge.x] + val
 					&& std::find(vec->begin(), vec->end(), edge.x) == vec->end())
 				{
 					change_found = true;

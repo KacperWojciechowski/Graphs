@@ -16,7 +16,7 @@ namespace Graph
 		Path() = default;
 		Path(std::vector<std::size_t> path, uint32_t distance, uint32_t throughtput);
 
-		friend auto operator << (std::ostream& stream, Path&& p) ->std::ostream&;
+		friend auto operator << (std::ostream& stream, const Path& p) ->std::ostream&;
 
 		std::vector<std::size_t> path;  /**< Vector containing the path in order. */
 		uint32_t distance;				/**< Summed distance from the start to the end. */
@@ -36,11 +36,13 @@ namespace Graph
 		std::vector<int32_t> throughtputs;
 		std::size_t start;
 	
+		Roadmap(std::size_t vertex_count);
+
 		auto print() const -> void;
 		auto paths(std::size_t end) const -> std::vector<Path>;
 
 	private:
-		auto path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t& thr, int32_t const& distance, std::size_t v) const -> void;
+		auto path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t const& thr, int32_t const& distance, std::size_t v) const -> void;
 	};
 
 	/*
@@ -80,7 +82,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual auto greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto greedy_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the LF algorithm rules. 
@@ -91,7 +93,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual auto lf_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto lf_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the SL algorithm rules.
@@ -102,7 +104,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual auto sl_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto sl_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t = 0;
 
 		/**
 		 * Common definition of the function providing the Belman-Ford point-to-all path-searching algorithm implementation.
@@ -113,7 +115,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Data::Roadmap structure containing all necessary informations regarding the found paths.
 		 */
-		virtual auto bellman_ford(std::size_t start, std::ostream* log_stream = nullptr) -> Roadmap = 0;
+		virtual auto bellman_ford(std::size_t start, const std::ostream* log_stream = nullptr) -> Roadmap = 0;
 
 	protected:
 
@@ -129,6 +131,6 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual auto greedy_coloring_core(std::map<int, int>& m, std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto greedy_coloring_core(std::map<int, int>& m, const std::ostream* log_stream = nullptr) -> int32_t = 0;
 	};
 }

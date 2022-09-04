@@ -18,7 +18,7 @@ namespace Graph
 	 * 
 	 * \warning This class requires from graph have only non-negative weights of the edges.
 	 */
-	class Matrix : public GraphBase
+	class Matrix : public GraphBase//, public Algorithms
 	{
 	public:
 
@@ -54,9 +54,14 @@ namespace Graph
 		auto print_throughtput() const -> void;
 
 		/* Algorithmic interface*/
+		auto greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr)-> int32_t;
+		auto lf_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t;
+		auto sl_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t;
+
+		auto bellman_ford(std::size_t start, const std::ostream* log_stream = nullptr) -> Roadmap;
 
 		/* Extended algorithmic interface */
-		auto throughtput_bellman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, bool log) -> Roadmap;
+		auto throughtput_bellman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, std::ostream* log_stream) -> Roadmap;
 	
 	
 	private:
@@ -64,6 +69,9 @@ namespace Graph
 		auto load_mat_file(std::istream& file) -> void;
 		auto load_graphml_file(std::istream& file) -> void;
 		auto calculate_degrees() -> void;
+
+		/* Private algorithmic functions */
+		auto greedy_coloring_core(std::map<int, int>& m, const std::ostream* log_stream = nullptr)->int32_t;
 
 		/* Objects containing the graph*/
 		std::vector<std::vector<int32_t>> matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/

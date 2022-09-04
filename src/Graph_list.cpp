@@ -668,6 +668,10 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 	std::list<Node>::iterator itr_tmp;
 	std::size_t count = this->list.size();
 
+	// iterators for quicker element access
+	auto list_itr = this->list.begin();
+	auto deg_itr = this->degrees.begin();
+
 	// search through the list
 	for (std::size_t i = 0; i < count; i++)
 	{
@@ -675,8 +679,19 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 		if (!removed && i == node_id)
 		{
 			removed = true;
-			this->list.erase(std::next(this->list.begin(), i));
-			this->degrees.erase(std::next(this->degrees.begin(), i));
+			
+			// set default value for iterator
+			list_itr = this->list.begin();
+			deg_itr = this->degrees.begin();
+			
+			// advance iterator to get the desired one
+			std::ranges::advance(list_itr, i);
+			std::ranges::advance(deg_itr, i);
+
+			// erase the values pointed to by iterators
+			this->list.erase(list_itr);
+			this->degrees.erase(deg_itr);
+
 			count = this->list.size();
 			i--;
 		}

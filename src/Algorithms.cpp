@@ -4,6 +4,22 @@
 #include <iostream>
 
 /**
+ * Constructor creating internal vectors of given size.
+ * 
+ * \param vertex_count Amount of vertices in the graph structure.
+ */
+Graph::Roadmap::Roadmap(std::size_t vertex_count)
+	: prev_node(vertex_count),
+	distances(vertex_count, std::numeric_limits<int32_t>::max()),
+	throughtputs(vertex_count, std::numeric_limits<int32_t>::max()),
+	start(0)
+{
+}
+
+
+
+
+/**
  * \brief Function displaying the data stored within the Roadmap class.
  * 
  * \note In order to follow the full path, the user needs to recreate the path
@@ -18,20 +34,28 @@ auto Graph::Roadmap::print() const -> void
 		std::cout << "Prev node: ";
 
 		// print previous node info
-		for (std::size_t index2 = 0; auto vertex : this->prev_node[index])
+		if (this->prev_node[index].empty())
 		{
-			std::cout << vertex;
-			if (index2 < this->prev_node[index].size() - 1)
+			std::cout << "None";
+		}
+		else
+		{
+			for (std::size_t index2 = 0; auto vertex : this->prev_node[index])
 			{
-				std::cout << " / ";
+				std::cout << vertex;
+				if (index2 < this->prev_node[index].size() - 1)
+				{
+					std::cout << " / ";
+				}
+				index2++;
 			}
-			index2++;
 		}
 		index++;
 		
 		// flush the stream and go to new line
-		std::cout << std::endl;
+		std::cout << '\n';
 	}
+	std::cout << std::flush;
 }
 
 
@@ -52,9 +76,8 @@ auto Graph::Roadmap::paths(std::size_t end) const -> std::vector<Path>
 {
 	std::vector<Path> ret;
 	std::vector<std::size_t> path;
-	int32_t thr = this->throughtputs[end];
 
-	this->path_search(ret, path, thr, this->distances[end], end);
+	this->path_search(ret, path, this->throughtputs[end], this->distances[end], end);
 
 	for (auto& log : ret)
 	{
@@ -76,18 +99,13 @@ auto Graph::Roadmap::paths(std::size_t end) const -> std::vector<Path>
  * \param v Currently explored vertex.
  * \return 
  */
-auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t& thr, int32_t const& distance, std::size_t v) const -> void
+auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t const& thr, int32_t const& distance, std::size_t v) const -> void
 {
 	path.emplace_back(v);
 
-	if (thr > this->throughtputs[v])
-	{
-		thr = this->throughtputs[v];
-	}
-
 	if (this->prev_node[v].empty())
 	{
-		paths.emplace_back(path, thr, distance);
+		paths.emplace_back(path, distance, thr);
 		path.pop_back();
 	}
 	else
@@ -125,16 +143,23 @@ Graph::Path::Path(std::vector<std::size_t> path, uint32_t distance, uint32_t thr
 /**
  * Output stream operator for the Path.
  */
-auto Graph::operator<<(std::ostream& stream, Path&& p) -> std::ostream&
+auto Graph::operator<<(std::ostream& stream, const Path& p) -> std::ostream&
 {
 	stream << "Distance: " << p.distance << '\n';
 	stream << "Throughtput: " << p.throughtput << '\n';
 
-	for (auto& vertex : p.path)
+	for (std::size_t i = 0; auto& vertex : p.path)
 	{
-		stream << vertex << " -> ";
+		stream << vertex;;
+		if (i < p.path.size() - 1)
+		{
+			stream << " -> ";
+		}
+		i++;
 	}
 	stream << '\n';
 	stream << std::flush;
+
+	return stream;
 }
 

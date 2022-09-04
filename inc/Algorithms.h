@@ -16,7 +16,7 @@ namespace Graph
 		Path() = default;
 		Path(std::vector<std::size_t> path, uint32_t distance, uint32_t throughtput);
 
-		friend auto operator << (std::ostream& stream, Path&& p) ->std::ostream&;
+		friend auto operator << (std::ostream& stream, const Path& p) ->std::ostream&;
 
 		std::vector<std::size_t> path;  /**< Vector containing the path in order. */
 		uint32_t distance;				/**< Summed distance from the start to the end. */

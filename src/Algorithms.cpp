@@ -76,9 +76,8 @@ auto Graph::Roadmap::paths(std::size_t end) const -> std::vector<Path>
 {
 	std::vector<Path> ret;
 	std::vector<std::size_t> path;
-	int32_t thr = this->throughtputs[end];
 
-	this->path_search(ret, path, thr, this->distances[end], end);
+	this->path_search(ret, path, this->throughtputs[end], this->distances[end], end);
 
 	for (auto& log : ret)
 	{
@@ -106,7 +105,7 @@ auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size
 
 	if (this->prev_node[v].empty())
 	{
-		paths.emplace_back(path, thr, distance);
+		paths.emplace_back(path, distance, thr);
 		path.pop_back();
 	}
 	else
@@ -144,14 +143,19 @@ Graph::Path::Path(std::vector<std::size_t> path, uint32_t distance, uint32_t thr
 /**
  * Output stream operator for the Path.
  */
-auto Graph::operator<<(std::ostream& stream, Path&& p) -> std::ostream&
+auto Graph::operator<<(std::ostream& stream, const Path& p) -> std::ostream&
 {
 	stream << "Distance: " << p.distance << '\n';
 	stream << "Throughtput: " << p.throughtput << '\n';
 
-	for (auto& vertex : p.path)
+	for (std::size_t i = 0; auto& vertex : p.path)
 	{
-		stream << vertex << " -> ";
+		stream << vertex;;
+		if (i < p.path.size() - 1)
+		{
+			stream << " -> ";
+		}
+		i++;
 	}
 	stream << '\n';
 	stream << std::flush;

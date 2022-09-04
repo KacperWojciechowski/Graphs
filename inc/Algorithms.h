@@ -93,7 +93,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual auto greedy_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> Coloring = 0;
+		virtual auto greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> Coloring = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the LF algorithm rules. 
@@ -104,7 +104,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual auto lf_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> Coloring = 0;
+		virtual auto lf_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> Coloring = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the SL algorithm rules.
@@ -115,7 +115,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual auto sl_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> Coloring = 0;
+		virtual auto sl_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> Coloring = 0;
 
 		/**
 		 * Common definition of the function providing the Belman-Ford point-to-all path-searching algorithm implementation.
@@ -126,7 +126,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Data::Roadmap structure containing all necessary informations regarding the found paths.
 		 */
-		virtual auto bellman_ford(std::size_t start, const std::ostream* log_stream = nullptr) -> Roadmap = 0;
+		virtual auto bellman_ford(std::size_t start, std::ostream* log_stream = nullptr) -> Roadmap = 0;
 
 	protected:
 
@@ -142,6 +142,6 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual auto greedy_coloring_core(std::map<int, int>& m, const std::ostream* log_stream = nullptr) -> Coloring = 0;
+		virtual auto greedy_coloring_core(std::map<std::size_t, std::size_t>& m, std::ostream* log_stream = nullptr) -> Coloring = 0;
 	};
 }

@@ -3,6 +3,8 @@
 
 #include <iomanip>
 #include <fstream>
+#include <algorithm>
+#include <random>
 
 #pragma warning(push, 0)
 #include "../lib/rapidxml/rapidxml.hpp"
@@ -733,6 +735,81 @@ auto Graph::Matrix::load_throughtput(std::string file_path) -> void
 
 
 /**
+ * Coloring function generating ordering for greedy coloring.
+ * 
+ * This function creates an order of vertices for the greedy coloring algorithm to use with
+ * greedy_coloring_core() function. Depending on the parameter, this function will generate
+ * a random permutation of the vertices set according to the greedy coloring algorithm rules.
+ * 
+ * \note The function does not guarantee that multiple calls to it will result in only unique permuatations.
+ * 
+ * \see Graph::Matrix::greedy_coloring_core()
+ * 
+ * \param permutate Flag stating whether the function should permutate the set.
+ * \param log_stream Pointer to the log output stream. If different than nullptr, this function and core
+ *					 coloring function will produce logs during runtime. Nullptr by default.
+ * \return Structure containing all relevant coloring information.
+ */
+auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) -> Coloring
+{
+	std::map<std::size_t, std::size_t> m;
+
+	// if the flag is true, generate a random permutation acording to the rules
+	if (permutate)
+	{
+		std::vector<std::size_t> vertices(this->matrix.size());
+
+		// build a vector of vertices to permutate at this step
+		for (std::size_t i = 0; i < vertices.size(); i++)
+		{
+			vertices[i] = i;
+		}
+
+		// permutate the vector
+		auto rng = std::default_random_engine{};
+		std::shuffle(vertices.begin(), vertices.end(), rng);
+		
+		// append permutation to the map
+		for (std::size_t i = 0; auto& vertex : vertices)
+		{
+			m.insert({ i, vertex });
+			i++;
+		}
+	}
+	// if permutation is not to be generated
+	else
+	{
+		// insert vertices to the map in default ordering
+		for (std::size_t i = 0; i < this->matrix.size(); i++)
+		{
+			m.insert({ i, i });
+		}
+	}
+
+	// if log stream was provided, generate the log
+	if (log_stream)
+	{
+		*log_stream << "Generated permutation:\n";
+		for (std::size_t i = 0; auto element : m)
+		{
+			*log_stream << element.second;
+			if (i < m.size() - 1)
+			{
+				*log_stream << ", ";
+			}
+			i++;
+		}
+		*log_stream << std::endl;
+	}
+	
+	// pass the map and arguments to the coloring core function
+	return this->greedy_coloring_core(m, log_stream);
+}
+
+
+
+
+/**
  * Implementation of modified Bellman-Ford path searching algorithm in one-to-all variant.
  * 
  * This function implements a Bellman-Ford algorithm for SSP problem. The process is optimized by checking 
@@ -1132,7 +1209,7 @@ auto Graph::Matrix::calculate_degrees() -> void
  * \param log_stream Pointer to an output stream for logs to be produced.
  * \return 
  */
-auto Graph::Matrix::greedy_coloring_core(std::map<int, int>& m, const std::ostream* log_stream) -> Graph::Coloring
+auto Graph::Matrix::greedy_coloring_core(std::map<std::size_t, std::size_t>& m, std::ostream* log_stream) -> Graph::Coloring
 {
 	// vertices count
 	std::size_t count = m.size();
@@ -1143,17 +1220,63 @@ auto Graph::Matrix::greedy_coloring_core(std::map<int, int>& m, const std::ostre
 	// create array of flags for taken colors
 	std::unique_ptr<bool[]> colors_taken(new bool[count]);
 
+	auto log_change = [&ret, &log_stream, &colors_taken, &count](std::size_t vertex)
+	{
+		*log_stream << "Colors taken: ";
+		for (std::size_t i = 0; i < count; i++)
+		{
+			if (colors_taken[i])
+			{
+				*log_stream << i;
+				if (i < count - 1)
+				{
+					*log_stream << ", ";
+				}
+			}
+		}
+
+		*log_stream << "\nVertex " << vertex << " was assigned color " << ret.color[vertex] << '\n' << std::endl;
+	};
+
 	// iterate through the map
 	for (auto& vertex : m)
 	{
+		// reset taken flag for all colors
 		for (std::size_t i = 0; i < count; i++)
 		{
 			colors_taken[i] = false;
 		}
 
-		for (auto& element : this->matrix[vertex.second])
+		// check which colors were taken
+		for (std::size_t i = 0; auto& element : this->matrix[vertex.second])
 		{
+			// check whether an outgoing or incoming edge exists and if the neighbouring vertex has assigned color
+			if ((this->matrix[vertex.second][i] > 0 || this->matrix[i][vertex.second] > 1)
+				&& ret.color[i] > -1)
+			{
+				colors_taken[ret.color[i]] = true;
+			}
 
+			i++;
+		}
+
+		int32_t color = 0;
+
+		// skip all taken colors until the smallest not taken color
+		for (; colors_taken[color]; color++);
+
+		// assign color to the vertex
+		ret.color[vertex.second] = color;
+
+		// if a log output stream was given, produce a log
+		if (log_stream)
+		{
+			log_change(vertex.second);
 		}
 	}
+
+	// calculate the amount of colors used
+	ret.color_count = *max_element(ret.color.begin(), ret.color.end()) + 1;
+
+	return ret;
 }

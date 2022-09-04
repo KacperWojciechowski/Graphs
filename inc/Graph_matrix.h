@@ -55,8 +55,8 @@ namespace Graph
 
 		/* Algorithmic interface*/
 		auto greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr)-> Coloring;
-		auto lf_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> Coloring;
-		auto sl_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> Coloring;
+		auto lf_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> Coloring;
+		auto sl_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> Coloring;
 
 		auto bellman_ford(std::size_t start, const std::ostream* log_stream = nullptr) -> Roadmap;
 
@@ -71,7 +71,7 @@ namespace Graph
 		auto calculate_degrees() -> void;
 
 		/* Private algorithmic functions */
-		auto greedy_coloring_core(std::map<int, int>& m, const std::ostream* log_stream = nullptr) -> Coloring;
+		auto greedy_coloring_core(std::map<std::size_t, std::size_t>& m, std::ostream* log_stream = nullptr) -> Coloring;
 
 		/* Objects containing the graph*/
 		std::vector<std::vector<int32_t>> matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/

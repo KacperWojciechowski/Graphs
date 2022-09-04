@@ -163,3 +163,17 @@ auto Graph::operator<<(std::ostream& stream, const Path& p) -> std::ostream&
 	return stream;
 }
 
+
+
+
+/**
+ * Constructor creating sufficiently big vector for colors assignment.
+ * 
+ * \param color_count Default amount of colors used.
+ * \param vertex_count Amount of the vertices.
+ */
+Graph::Coloring::Coloring(int32_t color_count, std::size_t vertex_count)
+	: color_count(color_count),
+	color(vertex_count, -1)
+{
+}

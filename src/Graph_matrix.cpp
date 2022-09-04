@@ -1113,3 +1113,47 @@ auto Graph::Matrix::calculate_degrees() -> void
 		index1++;
 	}
 }
+
+
+
+
+/**
+ * Core coloring function performing the coloring operation.
+ * 
+ * This function performs the coloring operation based on the ordering passed
+ * in form of a map. It returns a structure containing the total amount of colors used,
+ * and a vector stating which color was assigned to each of the vertices. The function
+ * produces logs depending on whether a log stream pointer was provided or not. If 
+ * this parameter is nullptr, logs will not be produced.
+ * 
+ * \note log_stream is nullptr by default.
+ * 
+ * \param m Map containing the order of vertices to color by.
+ * \param log_stream Pointer to an output stream for logs to be produced.
+ * \return 
+ */
+auto Graph::Matrix::greedy_coloring_core(std::map<int, int>& m, const std::ostream* log_stream) -> Graph::Coloring
+{
+	// vertices count
+	std::size_t count = m.size();
+
+	// create return structure
+	Coloring ret(0, count);
+
+	// create array of flags for taken colors
+	std::unique_ptr<bool[]> colors_taken(new bool[count]);
+
+	// iterate through the map
+	for (auto& vertex : m)
+	{
+		for (std::size_t i = 0; i < count; i++)
+		{
+			colors_taken[i] = false;
+		}
+
+		for (auto& element : this->matrix[vertex.second])
+		{
+
+		}
+	}
+}

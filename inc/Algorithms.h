@@ -45,6 +45,17 @@ namespace Graph
 		auto path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t const& thr, int32_t const& distance, std::size_t v) const -> void;
 	};
 
+	/**
+	 * Structure containing the information regarding the color assignment by the coloring functions.
+	 */
+	struct Coloring
+	{
+		int32_t color_count;		/**< Total amount of colors used in the coloring process */
+		std::vector<int32_t> color; /**< Vector containing color assignment for each vertex */
+
+		Coloring(int32_t color_count, std::size_t vertex_count);
+	};
+
 	/*
 		Abstract algorithmic interface for the specific graph representations to implement
 	*/
@@ -82,7 +93,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual auto greedy_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto greedy_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> Coloring = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the LF algorithm rules. 
@@ -93,7 +104,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual auto lf_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto lf_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> Coloring = 0;
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the SL algorithm rules.
@@ -104,7 +115,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual auto sl_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto sl_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> Coloring = 0;
 
 		/**
 		 * Common definition of the function providing the Belman-Ford point-to-all path-searching algorithm implementation.
@@ -131,6 +142,6 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual auto greedy_coloring_core(std::map<int, int>& m, const std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto greedy_coloring_core(std::map<int, int>& m, const std::ostream* log_stream = nullptr) -> Coloring = 0;
 	};
 }

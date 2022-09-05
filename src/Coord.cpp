@@ -1,4 +1,4 @@
-#include "../inc/Coord.h"
+#include "Coord.h"
 
 /**
  * \brief Function finding the index of given coordinate pair in coordinates vector.

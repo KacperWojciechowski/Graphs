@@ -1,4 +1,4 @@
-#include "..\inc\PixelMap.h"
+#include "PixelMap.h"
 
 #include <string>
 

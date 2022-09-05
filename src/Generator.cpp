@@ -1,4 +1,4 @@
-#include "../inc/Generator.h"
+#include "Generator.h"
 
 #include <time.h>
 #include <iostream>

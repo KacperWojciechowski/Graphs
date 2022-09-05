@@ -13,54 +13,69 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Pliki nagłówkowe\Data">
+      <UniqueIdentifier>{cee9ea7a-e7f7-4102-8963-c82e06c0b7f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki nagłówkowe\Graphs">
+      <UniqueIdentifier>{21c96956-5c3c-431a-9eb3-deb58fbbea67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\Data">
+      <UniqueIdentifier>{f6719ae0-ade2-4b56-8f5e-e952add95440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\Graphs">
+      <UniqueIdentifier>{d212c416-94e9-4062-a55c-bf29438ade00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\GraphBase.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Algorithms.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Generator.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\PixelMap.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Graph_matrix.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Coord.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
     <ClInclude Include="inc\Examples.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="inc\Generator.h">
+      <Filter>Pliki nagłówkowe\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\PixelMap.h">
+      <Filter>Pliki nagłówkowe\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Coord.h">
+      <Filter>Pliki nagłówkowe\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Graph_matrix.h">
+      <Filter>Pliki nagłówkowe\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GraphBase.h">
+      <Filter>Pliki nagłówkowe\Graphs</Filter>
+    </ClInclude>
     <ClInclude Include="inc\Graph_list.h">
-      <Filter>Pliki nagłówkowe</Filter>
+      <Filter>Pliki nagłówkowe\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Algorithms.h">
+      <Filter>Pliki nagłówkowe\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Graphs.h">
+      <Filter>Pliki nagłówkowe\Graphs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Coord.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graph_matrix.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graph_list.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Algorithms.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Generator.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PixelMap.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Coord.cpp">
+      <Filter>Pliki źródłowe\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Generator.cpp">
+      <Filter>Pliki źródłowe\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PixelMap.cpp">
+      <Filter>Pliki źródłowe\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Algorithms.cpp">
+      <Filter>Pliki źródłowe\Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graph_list.cpp">
+      <Filter>Pliki źródłowe\Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graph_matrix.cpp">
+      <Filter>Pliki źródłowe\Graphs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

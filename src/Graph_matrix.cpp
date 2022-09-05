@@ -1,5 +1,5 @@
-#include "../inc/Graph_matrix.h"
-#include "../inc/Coord.h"
+#include "Graph_matrix.h"
+#include "Coord.h"
 
 #include <iomanip>
 #include <fstream>
@@ -7,7 +7,7 @@
 #include <random>
 
 #pragma warning(push, 0)
-#include "../lib/rapidxml/rapidxml.hpp"
+#include "rapidxml/rapidxml.hpp"
 #pragma warning(pop)
 
 /**

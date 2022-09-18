@@ -10,7 +10,7 @@ namespace Graph
 	/**
 	 * \brief Structure storing information regarding found path by path-searching algorithm.
 	 */
-	struct Path
+	struct [[nodiscard]] Path
 	{
 	public:
 		Path() = default;
@@ -29,7 +29,7 @@ namespace Graph
 	 * 
 	 * \note The class does allow for storing several paths of the same length.
 	 */
-	struct Roadmap
+	struct [[nodiscard]] Roadmap
 	{
 		std::vector<std::vector<std::size_t>> prev_node; /**< Vector of possible previous vertices with the same distance */
 		std::vector<int32_t> distances; /**< The distance value from start vertex to any given vertex */
@@ -39,7 +39,7 @@ namespace Graph
 		Roadmap(std::size_t vertex_count);
 
 		auto print() const -> void;
-		auto paths(std::size_t end) const -> std::vector<Path>;
+		auto [[nodiscard]] paths(std::size_t end) const -> std::vector<Path>;
 
 	private:
 		auto path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, const int32_t& thr, const int32_t& distance, std::size_t v) const -> void;

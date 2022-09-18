@@ -21,26 +21,26 @@ namespace Data
 		Coord() = default;
 		Coord(std::size_t x, std::size_t y);
 
-		auto row() const -> std::size_t const&
+		auto [[nodiscard]] row() const -> std::size_t const&
 		{
 			return x;
 		}
 
-		auto row() -> std::size_t&
+		auto [[nodiscard]] row() -> std::size_t&
 		{
 			return x;
 		}
 
-		auto col() const -> std::size_t const&
+		auto [[nodiscard]] col() const -> std::size_t const&
 		{
 			return y;
 		}
 
-		auto col() -> std::size_t&
+		auto [[nodiscard]] col() -> std::size_t&
 		{
 			return y;
 		}
 	};
 
-	auto find_index(const std::vector<Coord>& nodes, const Coord& _coord) -> std::size_t;
+	auto [[nodiscard]] find_index(const std::vector<Coord>& nodes, const Coord& _coord) -> std::size_t;
 }

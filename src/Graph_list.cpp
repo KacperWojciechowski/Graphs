@@ -40,7 +40,7 @@ Graph::List::List(const std::string& file_path, Type type)
 		std::ifstream file(file_path);
 		if (file.good())
 		{
-			this->load_lst_file(file);
+			load_lst_file(file);
 		}
 		else
 		{
@@ -48,7 +48,7 @@ Graph::List::List(const std::string& file_path, Type type)
 		}
 		file.close();
 
-		this->calculate_degrees();
+		calculate_degrees();
 	}
 	// loading the .GRAPHML file
 	else if (file_path.find(".GRAPHML") != std::string::npos)
@@ -56,7 +56,7 @@ Graph::List::List(const std::string& file_path, Type type)
 		std::fstream file(file_path, std::ios::in);
 		if (file.good())
 		{
-			this->load_graphml_file(file);
+			load_graphml_file(file);
 		}
 		else
 		{
@@ -64,7 +64,7 @@ Graph::List::List(const std::string& file_path, Type type)
 		}
 		file.close();
 		
-		this->calculate_degrees();
+		calculate_degrees();
 	}
 	// signalizing the unsupported file format
 	else
@@ -81,24 +81,24 @@ Graph::List::List(const std::string& file_path, Type type)
  * 
  * \param matrix Reference to the Graph::Matrix object.
  */
-Graph::List::List(const GraphBase& graph)
+Graph::List::List(const GraphBase& graph) noexcept
 {
 	// get general graph info
-	this->type = graph.get_type();
+	type = graph.get_type();
 	const std::size_t count = graph.get_nodes_amount();
 
 	// build list
 	for (std::size_t i = 0; i < count; i++)
 	{
-		this->list.emplace_back(0);
-		this->degrees.emplace_back(graph.get_node_degree(i));
+		list.emplace_back(0);
+		degrees.emplace_back(graph.get_node_degree(i));
 
 		for (std::size_t j = 0; j < graph.get_nodes_amount(); j++)
 		{
 			const std::size_t val = graph.get_edge(i, j);
 			if (val != 0)
 			{
-				this->list[i].emplace_back( j, val );
+				list[i].emplace_back( j, val );
 			}
 		}
 	}
@@ -121,7 +121,7 @@ Graph::List::List(const GraphBase& graph)
  * 
  * \ref create_list_from_pixelmap.cpp "Example of creating a list graph based on pixel map"
  */
-Graph::List::List(const Data::PixelMap& map)
+Graph::List::List(const Data::PixelMap& map) noexcept
 	: type(Graph::Type::undirected)
 {
 	const std::size_t columns = map.get_columns();
@@ -145,7 +145,7 @@ Graph::List::List(const Data::PixelMap& map)
 	// Function adding an element to the list of given vertex index.
 	auto add_to_list = [this, &vertices](std::size_t index, std::size_t row, std::size_t col) -> void
 	{
-		this->list[index].emplace_back(Data::find_index(vertices, { row, col }), 1);
+		list[index].emplace_back(Data::find_index(vertices, { row, col }), 1);
 	};
 
 	// Function checking whether an element is a non-wall field
@@ -157,7 +157,7 @@ Graph::List::List(const Data::PixelMap& map)
 	// build the list based on the found fields
 	for (std::size_t index = 0; const auto & vertex : vertices)
 	{
-		this->list.emplace_back(0);
+		list.emplace_back(0);
 
 		// check upper neighbour
 		if (vertex.row() > 0 && is_gap(vertex.row() - 1, vertex.col()))
@@ -186,7 +186,7 @@ Graph::List::List(const Data::PixelMap& map)
 		index++;
 	}
 
-	this->calculate_degrees();
+	calculate_degrees();
 }
 
 
@@ -202,7 +202,7 @@ Graph::List::List(const Data::PixelMap& map)
  * 
  * \param file Reference to the file object of the data source.
  */
-auto Graph::List::load_lst_file(std::istream& file) -> void
+auto Graph::List::load_lst_file(std::istream& file) noexcept -> void
 {
 	std::string line;
 	size_t pos;
@@ -226,7 +226,7 @@ auto Graph::List::load_lst_file(std::istream& file) -> void
 	{
 		if (line != "")
 		{
-			this->list.emplace_back(0);
+			list.emplace_back(0);
 			pos = 0;
 		
 			// omit the first identifier
@@ -234,7 +234,7 @@ auto Graph::List::load_lst_file(std::istream& file) -> void
 
 			while (pos != std::string::npos)
 			{
-				this->list[index].emplace_back(extract_val(), 1);
+				list[index].emplace_back(extract_val(), 1);
 			}
 		}
 	}
@@ -282,15 +282,15 @@ auto Graph::List::load_graphml_file(std::istream& file) -> void
 	}
 
 	// parse the graph type
-	std::string type = graph_node->first_attribute("edgedefault")->value();
+	std::string type_s = graph_node->first_attribute("edgedefault")->value();
 
-	if (type == "undirected")
+	if (type_s == "undirected")
 	{
-		this->type = Type::undirected;
+		type = Type::undirected;
 	}
-	else if (type == "directed")
+	else if (type_s == "directed")
 	{
-		this->type = Type::directed;
+		type = Type::directed;
 	}
 	else
 	{
@@ -300,7 +300,7 @@ auto Graph::List::load_graphml_file(std::istream& file) -> void
 	// obtain vertices count
 	for (rapidxml::xml_node<>* vertex = graph_node->first_node("node"); vertex; vertex = vertex->next_sibling("node"))
 	{
-		this->list.emplace_back(0);
+		list.emplace_back(0);
 	}
 
 	// obtain edges
@@ -342,17 +342,21 @@ auto Graph::List::load_graphml_file(std::istream& file) -> void
 			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
 			{
 				weight = std::atoi(key->value());
+				if (weight <= 0)
+				{
+					throw std::runtime_error("Weight less or equal to 0");
+				}
 			}
 		}
 
 		index1 = static_cast<std::size_t>(std::stoi(id1));
 		index2 = static_cast<std::size_t>(std::stoi(id2));
 
-		this->list[index1].emplace_back( index2, weight );
+		list[index1].emplace_back( index2, weight );
 
 		if (this->type == Type::undirected && id1 != id2)
 		{
-			this->list[index2].emplace_back( index1, weight );
+			list[index2].emplace_back( index1, weight );
 		}
 	}
 }
@@ -366,25 +370,25 @@ auto Graph::List::load_graphml_file(std::istream& file) -> void
  * This function is for internal use only.
  * 
  */
-auto Graph::List::calculate_degrees() -> void
+auto Graph::List::calculate_degrees() noexcept -> void
 {
-	this->degrees.resize(this->list.size());
+	degrees.resize(list.size());
 
 	// calculate the degree and out_degree of each vertex
-	for (std::size_t i = 0; i < this->list.size(); i++)
+	for (std::size_t i = 0; i < list.size(); i++)
 	{
-		for (const auto& element : this->list[i])
+		for (const auto& element : list[i])
 		{
-			this->degrees[i].out_deg++;
-			this->degrees[element.ID].in_deg++;
+			degrees[i].out_deg++;
+			degrees[element.ID].in_deg++;
 
 			if (element.ID == i)
 			{
-				this->degrees[i].deg += 2;
+				degrees[i].deg += 2;
 			}
 			else
 			{
-				this->degrees[i].deg++;
+				degrees[i].deg++;
 			}
 		}
 	}
@@ -398,7 +402,7 @@ auto Graph::List::calculate_degrees() -> void
  * 
  * \param l lvalue reference to the data source object.
  */
-Graph::List::List(const List& l)
+Graph::List::List(const List& l) noexcept
 	: list(l.list),
 	type(l.type),
 	degrees(l.degrees)
@@ -441,12 +445,12 @@ Graph::List::List(List&& l) noexcept
  *		  In case of directed graphs, indegree and outdegree is shown in format "in|out".
  * 
  */
-auto Graph::List::print() const -> void
+auto Graph::List::print() const noexcept -> void
 {
 	// display graph name and type info
 	std::cout << "Type = ";
 
-	switch (this->type)
+	switch (type)
 	{
 	case Type::undirected:
 		std::cout << "undirected ";
@@ -464,20 +468,20 @@ auto Graph::List::print() const -> void
 	std::cout << '\n';
 
 	// display vertices count
-	std::cout << "Vertices = " << this->list.size() << '\n';
+	std::cout << "Vertices = " << list.size() << '\n';
 
 	std::cout << "{\n";
 
-	for (std::size_t index = 0; const auto& element : this->list)
+	for (std::size_t index = 0; const auto& element : list)
 	{
 		// display degrees
-		if (this->type == Type::undirected)
+		if (type == Type::undirected)
 		{
-			std::cout << "degree: " << std::left << std::setw(6) << this->degrees[index].deg;
+			std::cout << "degree: " << std::left << std::setw(6) << degrees[index].deg;
 		}
 		else
 		{
-			std::cout << "degrees: (in|out) " << this->degrees[index].in_deg << " | " << this->degrees[index].out_deg;
+			std::cout << "degrees: (in|out) " << degrees[index].in_deg << " | " << degrees[index].out_deg;
 		}
 
 		std::cout << ",    " << index << ": ";
@@ -504,6 +508,10 @@ auto Graph::List::print() const -> void
  * \warning If an edge between given vertices already exists, the weight of the 
  *			connection will be overwritten, and second edge will not be added.
  * 
+ * \warning Exceptions to guard against:
+ *		- std::out_of_range - one of the indexes is out of range
+ *		- std::invalid_argument - weight is equal to zero
+ * 
  * \param source ID of the source vertex.
  * \param destination ID of the end vertex.
  * \param weight Weight of the connection.
@@ -514,7 +522,7 @@ auto Graph::List::print() const -> void
 auto Graph::List::make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void
 {
 	// validate arguments
-	if (source >= this->list.size() || destination >= this->list.size())
+	if (source >= list.size() || destination >= list.size())
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
@@ -524,40 +532,40 @@ auto Graph::List::make_edge(std::size_t source, std::size_t destination, int32_t
 	}
 
 	// search for the iterator of connection, if added edge already exists
-	auto edge_itr = std::ranges::find(this->list[source], destination, &Node::ID);
+	auto edge_itr = std::ranges::find(list[source], destination, &Node::ID);
 
 	// if iterator was found, override the weight of the connection
-	if (edge_itr != this->list[source].end())
+	if (edge_itr != list[source].end())
 	{
 		edge_itr->weight = weight;
 	}
 	// else insert the connection to the structure
 	else
 	{
-		this->list[source].emplace_back( destination, weight );
+		list[source].emplace_back( destination, weight );
 		
 		// calculate degrees
-		this->degrees[source].out_deg++;
-		this->degrees[source].deg++;
-		this->degrees[destination].in_deg++;
+		degrees[source].out_deg++;
+		degrees[source].deg++;
+		degrees[destination].in_deg++;
 	}
 
 	// if the graph type is undirected
-	if (this->type == Type::undirected)
+	if (type == Type::undirected)
 	{
 		// search for the iterator of mirrored connection 
-		edge_itr = std::ranges::find(this->list[destination], source, &Node::ID);
+		edge_itr = std::ranges::find(list[destination], source, &Node::ID);
 		
 		// if iterator was found, override the weight of the connection
-		if (edge_itr != this->list[destination].end())
+		if (edge_itr != list[destination].end())
 		{
 			edge_itr->weight = weight;
 		}
 		// else insert the mirrored connection to the structure
 		else
 		{
-			this->list[destination].emplace_back( source, weight );
-			this->degrees[destination].deg++;
+			list[destination].emplace_back( source, weight );
+			degrees[destination].deg++;
 		}
 	}
 }
@@ -573,10 +581,10 @@ auto Graph::List::make_edge(std::size_t source, std::size_t destination, int32_t
  * 
  * \see add_node_list.cpp "Example of adding an isolated vertex"
  */
-auto Graph::List::add_node() -> void
+auto Graph::List::add_node() noexcept -> void
 {
-	this->list.emplace_back(0);
-	this->degrees.emplace_back( 0, 0, 0 );
+	list.emplace_back(0);
+	degrees.emplace_back( 0, 0, 0 );
 }
 
 
@@ -598,37 +606,37 @@ auto Graph::List::add_node() -> void
 auto Graph::List::remove_edge(std::size_t source, std::size_t destination) -> void
 {
 	// validate the parameter
-	if (source >= this->list.size() || destination >= this->list.size())
+	if (source >= list.size() || destination >= list.size())
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
 
 	// erase the edge
-	for (auto itr = this->list[source].begin(); itr != this->list[source].end(); itr++)
+	for (auto itr = list[source].begin(); itr != list[source].end(); itr++)
 	{
 		if (itr->ID == destination)
 		{
-			this->list[source].erase(itr);
+			list[source].erase(itr);
 
-			this->degrees[source].out_deg--;
-			this->degrees[source].deg--;
-			this->degrees[destination].in_deg--;
+			degrees[source].out_deg--;
+			degrees[source].deg--;
+			degrees[destination].in_deg--;
 			break;
 		}
 	}
 
 	// if the graph is undirected, remove the mirrored edge 
-	if (this->type == Type::undirected)
+	if (type == Type::undirected)
 	{
-		for (auto itr = this->list[destination].begin(); itr != this->list[destination].end(); itr++)
+		for (auto itr = list[destination].begin(); itr != list[destination].end(); itr++)
 		{
 			if (itr->ID == source)
 			{
-				this->list[destination].erase(itr);
+				list[destination].erase(itr);
 
-				this->degrees[destination].out_deg--;
-				this->degrees[destination].deg--;
-				this->degrees[source].in_deg--;
+				degrees[destination].out_deg--;
+				degrees[destination].deg--;
+				degrees[source].in_deg--;
 				break;
 			}
 		}
@@ -654,18 +662,18 @@ auto Graph::List::remove_edge(std::size_t source, std::size_t destination) -> vo
 auto Graph::List::remove_node(std::size_t node_id) -> void
 {
 	// validate parameter
-	if (node_id >= this->list.size())
+	if (node_id >= list.size())
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
 
 	// variables for vertex removal
 	bool removed = false;
-	std::size_t count = this->list.size();
+	std::size_t count = list.size();
 
 	// iterators for quicker element access
-	auto list_itr = this->list.begin();
-	auto deg_itr = this->degrees.begin();
+	auto list_itr = list.begin();
+	auto deg_itr = degrees.begin();
 
 	// search through the list
 	for (std::size_t i = 0; i < count; i++)
@@ -676,24 +684,24 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 			removed = true;
 			
 			// set default value for iterator
-			list_itr = this->list.begin();
-			deg_itr = this->degrees.begin();
+			list_itr = list.begin();
+			deg_itr = degrees.begin();
 			
 			// advance iterator to get the desired one
 			std::ranges::advance(list_itr, i);
 			std::ranges::advance(deg_itr, i);
 
 			// erase the values pointed to by iterators
-			this->list.erase(list_itr);
-			this->degrees.erase(deg_itr);
+			list.erase(list_itr);
+			degrees.erase(deg_itr);
 
-			count = this->list.size();
+			count = list.size();
 			i--;
 		}
 		// remove the parts of the list where the given vertex is the end of an edge
 		else
 		{
-			for (auto itr2 = this->list[i].begin(); itr2 != this->list[i].end();)
+			for (auto itr2 = list[i].begin(); itr2 != list[i].end();)
 			{
 				// if given vertex was found
 				if (itr2->ID == node_id)
@@ -701,9 +709,9 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 					// erase the vertex
 					auto itr_tmp = itr2;
 					itr2++;
-					this->list[i].erase(itr_tmp);
-					this->degrees[i].deg--;
-					this->degrees[i].out_deg--;
+					list[i].erase(itr_tmp);
+					degrees[i].deg--;
+					degrees[i].out_deg--;
 					continue;
 				}
 				// if vertex of higher ID than the given one was found
@@ -723,85 +731,6 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 
 
 /**
- * \brief Getter for vertices amount.
- * 
- * \return Amount of vertices as const.
- */
-auto Graph::List::get_nodes_amount() const -> std::size_t
-{
-	return this->list.size();
-}
-
-
-
-
-/**
- * \brief Getter for vertex degree.
- * 
- * \param node_id ID of the vertex which degree should be returned.
- * \return Degree of the vertex as const.
- */
-auto Graph::List::get_node_degree(std::size_t node_id) const -> Graph::Degree
-{
-	// validate the parameter
-	if (node_id >= this->degrees.size())
-	{
-		throw std::out_of_range("Index out of bounds");
-	}
-
-	// return the degree value
-	return this->degrees[node_id];
-}
-
-
-
-
-/**
- * \brief Getter for the weight of the edge between two given vertices.
- * 
- * \note A return value of zero means there is no edge between given vertices.
- * 
- * \param source ID of the beginning vertex of the edge.
- * \param destination ID of the end vertex of the edge.
- * \return Weight of the connection.
- */
-auto Graph::List::get_edge(std::size_t source, std::size_t destination) const -> int32_t
-{
-	int32_t ret = 0;
-
-	if (source >= this->list.size() || destination >= this->list.size())
-	{
-		throw std::out_of_range("Index out of bounds");
-	}
-	for (const auto& neighbour : this->list[source])
-	{
-		if (neighbour.ID == destination)
-		{
-			ret = neighbour.weight;
-			break;
-		}
-	}
-
-	return ret;
-}
-
-
-
-
-/**
- * \brief Getter for the type of the graph.
- * 
- * \return The type of the graph as const.
- */
-auto Graph::List::get_type() const -> Graph::Type
-{
-	return this->type;
-}
-
-
-
-
-/**
  * \brief Function saving current graph structure  into a .GRAPHML format file.
  * 
  * This format does contain the weights of the edges.
@@ -811,7 +740,7 @@ auto Graph::List::get_type() const -> Graph::Type
  * 
  * \ref save_list_to_graphml.cpp "Example of saving current graph structure in .GRAPHML format"
  */
-auto Graph::List::save_graphml(std::ostream& stream, std::string name) const -> void
+auto Graph::List::save_graphml(std::ostream& stream, std::string name) const noexcept -> void
 {
 	// header
 	stream << "<?xml version=\"1.0\"";
@@ -832,7 +761,7 @@ auto Graph::List::save_graphml(std::ostream& stream, std::string name) const -> 
 	stream << "\t<graph id=";
 	stream << "\"" + name + "\"";
 	stream << " edgedefault=";
-	switch (this->type)
+	switch (type)
 	{
 	case Type::directed:
 		stream << "\"directed\">\n";
@@ -843,18 +772,18 @@ auto Graph::List::save_graphml(std::ostream& stream, std::string name) const -> 
 	}
 
 	// vertices data
-	for (std::size_t i = 0; i < this->list.size(); i++)
+	for (std::size_t i = 0; i < list.size(); i++)
 	{
 		stream << "\t\t<node id=\"n" << i;
 		stream << "\"/>\n";
 	}
 
 	// edge data including weight
-	for (std::size_t i = 0; i < this->list.size(); i++)
+	for (std::size_t i = 0; i < list.size(); i++)
 	{
-		for (const auto& neighbour : this->list[i])
+		for (const auto& neighbour : list[i])
 		{
-			if (this->type == Type::undirected && neighbour.ID < i)
+			if (type == Type::undirected && neighbour.ID < i)
 			{
 				continue;
 			}

@@ -13,7 +13,7 @@
  * \param _coord searched coordinates structure
  * \return index of the coord structure within the coordinates vector.
  */
-auto Data::find_index(const std::vector<Data::Coord>& nodes, const Data::Coord& coord) -> std::size_t
+auto Data::find_index(const std::vector<Data::Coord>& nodes, const Data::Coord& coord) noexcept -> std::size_t
 {
 	size_t size = nodes.size();
 
@@ -33,22 +33,4 @@ auto Data::find_index(const std::vector<Data::Coord>& nodes, const Data::Coord& 
 
 	// return found index
 	return ret;
-}
-
-
-
-
-/**
- * Constructor accepting the coordinates.
- *
- * Allows user to use the structure as an initializer list while passing
- * as a parameter to a function.
- * 
- * \param x X coordinate.
- * \param y Y coordinate.
- */
-Data::Coord::Coord(std::size_t x, std::size_t y)
-	: x(x),
-	y(y)
-{
 }

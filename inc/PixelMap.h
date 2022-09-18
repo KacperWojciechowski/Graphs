@@ -22,17 +22,34 @@ namespace Data
 		static constexpr uint8_t WALL = 1; /**< A wall field within the pixel map structure */
 
 		// constructors
-		PixelMap(std::istream& stream);
+		PixelMap(std::istream& stream) noexcept;
 
-		PixelMap(const PixelMap& p);
+		PixelMap(const PixelMap& p) noexcept;
 		PixelMap(PixelMap&& p) noexcept;
 
 		// interface
 		auto print() const -> void;
 
-		auto [[nodiscard]] get_rows() const -> std::size_t;
-		auto [[nodiscard]] get_columns() const -> std::size_t;
-		auto [[nodiscard]] get_field(const Data::Coord& coord) const -> uint8_t;
+		// getters
+
+		auto [[nodiscard]] get_rows() const noexcept -> std::size_t
+		{
+			return map.size();
+		}
+
+		auto [[nodiscard]] get_columns() const -> std::size_t
+		{
+			return map[0].size();
+		}
+
+		auto [[nodiscard]] get_field(const Data::Coord& coord) const -> uint8_t
+		{
+			if (coord.x >= map.size() || coord.y >= map[0].size())
+			{
+				throw std::out_of_range("Index out of range");
+			}
+			return map[coord.x][coord.y];
+		}
 
 	private:
 		std::vector<std::vector<uint8_t>> map; /**< Structure containing the map. Consists of std::vector of std::vector objects. Each

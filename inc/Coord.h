@@ -19,28 +19,43 @@ namespace Data
 		std::size_t y; /**< y coordinate of a vertex / ending vertex of an edge */
 
 		Coord() = default;
-		Coord(std::size_t x, std::size_t y);
 
-		auto [[nodiscard]] row() const -> std::size_t const&
+		/**
+		 * Constructor accepting the coordinates.
+		 *
+		 * Allows user to use the structure as an initializer list while passing
+		 * as a parameter to a function.
+		 *
+		 * \param x X coordinate.
+		 * \param y Y coordinate.
+		 */
+		Coord(std::size_t x, std::size_t y) noexcept
+			: x(x),
+			y(y)
+		{}
+
+		// getters
+
+		auto [[nodiscard]] row() const noexcept -> std::size_t const&
 		{
 			return x;
 		}
 
-		auto [[nodiscard]] row() -> std::size_t&
+		auto [[nodiscard]] row() noexcept -> std::size_t&
 		{
 			return x;
 		}
 
-		auto [[nodiscard]] col() const -> std::size_t const&
+		auto [[nodiscard]] col() const noexcept -> std::size_t const&
 		{
 			return y;
 		}
 
-		auto [[nodiscard]] col() -> std::size_t&
+		auto [[nodiscard]] col() noexcept -> std::size_t&
 		{
 			return y;
 		}
 	};
 
-	auto [[nodiscard]] find_index(const std::vector<Coord>& nodes, const Coord& _coord) -> std::size_t;
+	auto [[nodiscard]] find_index(const std::vector<Coord>& nodes, const Coord& _coord) noexcept -> std::size_t;
 }

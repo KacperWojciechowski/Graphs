@@ -29,7 +29,7 @@
  * 
  * \ref matrix_generator.cpp "Example of generating a randomized matrix"
  */
-auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc) const -> void
+auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc) const noexcept -> void
 {
 	std::vector<std::vector<std::size_t>> matrix;
 
@@ -271,7 +271,7 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
  * 
  * \ref list_generator.cpp "Example of generating a randomized list"
  */
-auto Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc) const -> void
+auto Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc) const noexcept -> void
 {
 	std::vector<std::vector<std::size_t>> list;
 
@@ -354,7 +354,7 @@ auto Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
  * 
  * \ref pixel_map_generator.cpp "Example of generating the pixel map data source"
  */
-auto Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width) const -> void
+auto Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width) const noexcept -> void
 {
 	// creating random distributions
 	std::random_device dev;

@@ -84,7 +84,7 @@ Graph::Matrix::Matrix(const std::string& file_path, Type type)
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
  */
-Graph::Matrix::Matrix(const std::vector<std::vector<int32_t>>& mat, Type type)
+Graph::Matrix::Matrix(const std::vector<std::vector<int32_t>>& mat, Type type) noexcept
 	: matrix(mat),
 	type(type)
 {
@@ -101,7 +101,7 @@ Graph::Matrix::Matrix(const std::vector<std::vector<int32_t>>& mat, Type type)
  * 
  * \param l Reference to a different supported graph representation.
  */
-Graph::Matrix::Matrix(const GraphBase& graph)
+Graph::Matrix::Matrix(const GraphBase& graph) noexcept
 { 
 	// get general graph info
 	type = graph.get_type();
@@ -128,7 +128,7 @@ Graph::Matrix::Matrix(const GraphBase& graph)
  * 
  * \param m lvalue reference to the copied Graph::Matrix object.
  */
-Graph::Matrix::Matrix(const Matrix& m)
+Graph::Matrix::Matrix(const Matrix& m) noexcept
 	: matrix(m.matrix),
 	type(m.type),
 	degrees(m.degrees),
@@ -168,7 +168,7 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  * \note Based on the type of the graph, the degree is presented either as a single value for undirected graph,
  *		 or as a indegree|outdegree pair for directed graph.
  */
-auto Graph::Matrix::print() const -> void
+auto Graph::Matrix::print() const noexcept -> void
 {
 	// display type information
 	std::cout << "Type = ";
@@ -291,7 +291,7 @@ auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32
  * 
  * \ref add_node_matrix.cpp "Example of adding an isolated vertex"
  */
-auto Graph::Matrix::add_node() -> void
+auto Graph::Matrix::add_node() noexcept -> void
 {
 	// add zeros at the end of each row to mark the new vertex to be added
 	for (auto& row : matrix)
@@ -439,78 +439,6 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 
 
 
-auto Graph::Matrix::get_nodes_amount() const -> std::size_t
-{
-	return matrix.size();
-}
-
-
-
-
-/**
- * \brief Getter for the degree of given vertex.
- * 
- * \param node_id ID of the vertex which degree should be returned.
- * \return Degree of the given vertex
- * 
- * \warning Exception to guard against:
- *		- std::out_of_range - when given ID exceeds the count of vertices.
- */
-auto Graph::Matrix::get_node_degree(std::size_t node_id) const -> Graph::Degree
-{
-	if (node_id >= degrees.size())
-	{
-		throw std::out_of_range("ID out of bounds");
-	}
-	else
-	{
-		return degrees[node_id];
-	}
-}
-
-
-
-
-/**
- * \brief Getter for the weight of a connection between given vertices.
- * 
- * \param source ID of the source vertex of the edge (counting from 0).
- * \param destination ID of the end vertex of the edge (counting from 0).
- * \return Value of the weight of the edge.
- * 
- * \note Return value of zero means no connection is present.
- * 
- * \warning Exception to guard against:
- *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
- */
-auto Graph::Matrix::get_edge(std::size_t source, std::size_t destination) const -> int32_t
-{
-	if (source >= matrix.size() || destination >= matrix.size())
-	{
-		throw std::out_of_range("Index out of bounds");
-	}
-	else
-	{
-		return matrix[source][destination];
-	}
-}
-
-
-
-
-/**
- * \brief Getter for the type of the graph.
- * 
- * \return Graph::Type enum defining the type of the graph.
- */
-auto Graph::Matrix::get_type() const -> Graph::Type
-{
-	return type;
-}
-
-
-
-
 /**
  * \brief Function generating a .GRAPHML file containing the graph information.
  * 
@@ -522,7 +450,7 @@ auto Graph::Matrix::get_type() const -> Graph::Type
  * 
  * \ref save_matrix_to_graphml.cpp "Example of saving the graph structure in .GRAPHML file"
  */
-auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const -> void
+auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const noexcept -> void
 {
 	// header
 	stream << "<?xml version=\"1.0\"";
@@ -602,7 +530,7 @@ auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const -
  * 
  * \todo Modify the function to support directed graphs.
  */
-auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
+auto Graph::Matrix::change_to_line_graph() const noexcept -> Graph::Matrix
 {
 	std::vector<Data::Coord> edges;
 
@@ -746,7 +674,7 @@ auto Graph::Matrix::load_throughtput(const std::string& file_path) -> void
  *					 coloring function will produce logs during runtime. Nullptr by default.
  * \return Structure containing all relevant coloring information.
  */
-auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) const -> Coloring
+auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) const noexcept -> Coloring
 {
 	std::map<std::size_t, std::size_t> m;
 
@@ -820,7 +748,7 @@ auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) co
  * 
  * \see Graph::Roadmap for returned structure reference
  */
-auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stream) const -> Roadmap
+auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stream) const noexcept -> Roadmap
 {
 	const std::size_t vertices_count = matrix.size();
 
@@ -1061,13 +989,13 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 	}
 
 	// parse the graph type
-	std::string type = graph_node->first_attribute("edgedefault")->value();
+	std::string type_s = graph_node->first_attribute("edgedefault")->value();
 
-	if (type == "undirected")
+	if (type_s == "undirected")
 	{
 		type = Type::undirected;
 	}
-	else if (type == "directed")
+	else if (type_s == "directed")
 	{
 		type = Type::directed;
 	}
@@ -1147,7 +1075,7 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
  * This function is for internal purpose and is not to be called directly by the user.
  * 
  */
-auto Graph::Matrix::calculate_degrees() -> void
+auto Graph::Matrix::calculate_degrees() noexcept -> void
 {
 	// create the degrees table
 	degrees.resize(matrix.size());
@@ -1200,7 +1128,7 @@ auto Graph::Matrix::calculate_degrees() -> void
  * \param log_stream Pointer to an output stream for logs to be produced.
  * \return 
  */
-auto Graph::Matrix::greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream) const -> Graph::Coloring
+auto Graph::Matrix::greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream) const noexcept -> Graph::Coloring
 {
 	// vertices count
 	const std::size_t count = m.size();

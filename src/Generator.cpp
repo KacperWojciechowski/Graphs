@@ -130,8 +130,8 @@ auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
  */
 auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstream& matrix_src, const Limits& limits, Graph::Type type) const -> void
 {
-	std::vector<std::vector<uint32_t>> src_matrix;
-	std::vector<std::vector<uint32_t>> dest_matrix;
+	std::vector<std::vector<int32_t>> src_matrix;
+	std::vector<std::vector<int32_t>> dest_matrix;
 
 	// creating random distributions
 	std::random_device dev;
@@ -146,7 +146,7 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 	// lambda function extracting the values from read row of the source matrix
 	auto insert_val = [&line, &pos, &src_matrix](std::size_t index) -> void {
 
-		const std::int32_t val = std::stoi(line);
+		const int32_t val = std::stoi(line);
 		pos = line.find(' ');
 		
 		if (pos != std::string::npos)
@@ -159,7 +159,7 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 			throw std::runtime_error("Weight less than zero");
 		}
 
-		src_matrix[index].emplace_back(static_cast<uint32_t>(val));
+		src_matrix[index].emplace_back(val);
 	};
 
 	// parse the source matrix file

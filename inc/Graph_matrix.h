@@ -23,7 +23,7 @@ namespace Graph
 	public:
 
 		/* Constructors */
-		Matrix(std::string file_path, Type type);
+		Matrix(const std::string& file_path, Type type);
 		Matrix(const std::vector<std::vector<int32_t>>& mat, Type type);
 		
 		Matrix(const GraphBase& l);

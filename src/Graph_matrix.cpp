@@ -32,7 +32,7 @@
  * \ref create_matrix_from_graphml.cpp "Example of creating the object from .GRAPHML file"\b
  * \ref create_matrix_from_mat.cpp "Example of creating the object from .mat file"\b
  */
-Graph::Matrix::Matrix(std::string file_path, Type type)
+Graph::Matrix::Matrix(const std::string& file_path, Type type)
 	: type(type)
 {
 	// loading the .mat file
@@ -105,7 +105,7 @@ Graph::Matrix::Matrix(const GraphBase& graph)
 { 
 	// get general graph info
 	this->type = graph.get_type();
-	std::size_t count = graph.get_nodes_amount();
+	const std::size_t count = graph.get_nodes_amount();
 
 	this->matrix.resize(count);
 
@@ -196,9 +196,9 @@ auto Graph::Matrix::print() const -> void
 	// display adjacency matrix
 	std::cout << "[\n";
 
-	for (std::size_t index = 0; auto& row : this->matrix)
+	for (std::size_t index = 0; const auto& row : this->matrix)
 	{
-		for (auto& element : row)
+		for (const auto& element : row)
 		{
 			std::cout << std::setw(3) << std::right << element << ", ";
 		}
@@ -248,7 +248,7 @@ auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32
 		throw std::invalid_argument("Weight equal to zero");
 	}
 	// save the previous weight for degree calculation
-	int32_t previous_weight = this->matrix[source][destination];
+	const uint32_t previous_weight = this->matrix[source][destination];
 	
 	// update the weight of the connection
 	this->matrix[source][destination] = weight;
@@ -294,13 +294,10 @@ auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32
 auto Graph::Matrix::add_node() -> void
 {
 	// add zeros at the end of each row to mark the new vertex to be added
-	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
+	for (auto& row : this->matrix)
 	{
-		itr->emplace_back(0);
+		row.emplace_back(0);
 	}
-
-	// create the vector representing the neighbours of the new vertex
-	std::size_t size = this->matrix[0].size();
 
 	// add new row to the matrix
 	this->matrix.emplace_back(this->matrix.size() + 1);
@@ -332,30 +329,33 @@ auto Graph::Matrix::remove_edge(std::size_t source, std::size_t destination) -> 
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
-	// if indexes are correct, mark the connection
 	
-	this->matrix[source][destination] = 0;
-
-	// if graph type is undirected, mark the connection both ways
-	if (this->type == Type::undirected)
+	// if the edge existed, remove it
+	if (this->matrix[source][destination] != 0)
 	{
-		this->matrix[destination][source] = 0;
+		this->matrix[source][destination] = 0;
 
-		// update the undirected degree indicator for given vertices
-		if (source == destination)
+		// if graph type is undirected, remove the connection both ways
+		if (this->type == Type::undirected)
 		{
-			this->degrees[source].deg -= 2;
+			this->matrix[destination][source] = 0;
+
+			// update the undirected degree indicator for given vertices
+			if (source == destination)
+			{
+				this->degrees[source].deg -= 2;
+			}
+			else
+			{
+				this->degrees[source].deg--;
+				this->degrees[destination].deg--;
+			}
 		}
-		else
-		{
-			this->degrees[source].deg--;
-			this->degrees[destination].deg--;
-		}
+
+		// update the directed degrees indicators for given vertices
+		this->degrees[source].out_deg--;
+		this->degrees[destination].in_deg--;
 	}
-
-	// update the directed degrees indicators for given vertices
-	this->degrees[source].out_deg--;
-	this->degrees[destination].in_deg--;
 }
 
 
@@ -399,7 +399,7 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 					this->degrees[j].in_deg--;
 
 					// as this vertex will be deleted, loops can be ommited
-					if (this->type == Type::undirected && i != j)
+					if (this->type == Type::undirected)
 					{
 						this->degrees[j].deg--;
 					}
@@ -626,15 +626,16 @@ auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
 	// create sufficient matrix for the line graph and fill it with zeros
 	std::vector<std::vector<int32_t>> mat;
 
-	std::size_t size = edges.size();
-	std::size_t index;
-
+	const std::size_t size = edges.size();
+	
 	for (std::size_t i = 0; i < size; i++)
 	{
 		mat.emplace_back(size);
 	}
 
 	Data::Coord coordinates;
+
+	std::size_t index;
 
 	// fill the line graph
 	for (std::size_t i = 0; i < size; i++)
@@ -770,7 +771,7 @@ auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) co
 		std::shuffle(vertices.begin(), vertices.end(), rng);
 		
 		// append permutation to the map
-		for (std::size_t i = 0; auto& vertex : vertices)
+		for (std::size_t i = 0; const auto& vertex : vertices)
 		{
 			m.insert({ i, vertex });
 			i++;
@@ -790,7 +791,7 @@ auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) co
 	if (log_stream)
 	{
 		*log_stream << "Generated permutation:\n";
-		for (std::size_t i = 0; auto element : m)
+		for (std::size_t i = 0; const auto& element : m)
 		{
 			*log_stream << element.second;
 			if (i < m.size() - 1)
@@ -826,7 +827,7 @@ auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) co
  */
 auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stream) const -> Roadmap
 {
-	std::size_t vertices_count = this->matrix.size();
+	const std::size_t vertices_count = this->matrix.size();
 
 	Roadmap ret(this->matrix.size());
 
@@ -842,9 +843,9 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 	std::vector<Data::Coord> edges;
 
 	// extract all the edges present in the graph
-	for (std::size_t index = 0; auto & row : this->matrix)
+	for (std::size_t index = 0; const auto & row : this->matrix)
 	{
-		for (std::size_t index2 = 0; auto & element : row)
+		for (std::size_t index2 = 0; const auto & element : row)
 		{
 			if (element != 0)
 			{
@@ -861,7 +862,7 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 		// distance information
 		std::cout << "Distances: \n";
 
-		for (auto& dist : ret.distances)
+		for (const auto& dist : ret.distances)
 		{
 			if (dist == std::numeric_limits<int32_t>::max())
 			{
@@ -876,13 +877,13 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 		// previous vertices information
 		std::cout << "\nPrevious: \n";
 
-		for (std::size_t index = 0; auto & vec : ret.prev_node)
+		for (std::size_t index = 0; const auto & vec : ret.prev_node)
 		{
 			std::cout << index << ": ";
 
 			if (!vec.empty())
 			{	
-				for (auto& vertex : vec)
+				for (const auto& vertex : vec)
 				{
 					std::cout << vertex << ", ";
 				}
@@ -900,7 +901,10 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 	};
 
 	// log initial state
-	log_step();
+	if (log_stream)
+	{
+		log_step();
+	}
 
 	// iterate |V| - 1 times
 	for (std::size_t i = 1; i < vertices_count; i++)
@@ -909,13 +913,13 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 		change_found = false;
 
 		// iterate over all present edges
-		for (auto& edge : edges)
+		for (const auto& edge : edges)
 		{
 			// get the currently processed prev node vector
 			auto vec = ret.prev_node.begin();
 			std::ranges::advance(vec, edge.y);
 			
-			int32_t val = this->matrix[edge.x][edge.y];
+			const int32_t val = this->matrix[edge.x][edge.y];
 
 			// process the edge
 			if (ret.distances[edge.x] < std::numeric_limits<int32_t>::max() - val)
@@ -982,9 +986,7 @@ auto Graph::Matrix::load_mat_file(std::istream& file) -> void
 	// function extracting the weight value from a row of adjacency matrix
 	auto extract_val = [&line, &pos]() -> int32_t
 	{
-		int32_t val;
-
-		val = std::stoi(line);
+		const int32_t val = std::stoi(line);
 		
 		if (val < 0)
 		{
@@ -1094,17 +1096,11 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 	}
 
 	// obtain edges
-	std::string id1;
-	std::string id2;
-	uint32_t weight;
-
-	std::size_t index1, index2;
-
 	for (rapidxml::xml_node<>* edge = graph_node->first_node("edge"); edge; edge = edge->next_sibling("edge"))
 	{
 		// get the IDs
-		id1 = edge->first_attribute("source")->value();
-		id2 = edge->first_attribute("target")->value();
+		std::string id1 = edge->first_attribute("source")->value();
+		std::string id2 = edge->first_attribute("target")->value();
 
 		// stip any letters at the beginning of IDs
 		for (std::size_t i = 0; i < id1.size(); i++)
@@ -1125,17 +1121,17 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 		}
 
 		// obtain weight
-		weight = 1;
+		uint32_t weight = 1;
 
 		for (rapidxml::xml_node<>* key = edge->first_node("data"); key; key = key->next_sibling())
 		{
 			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
 			{
-				weight = atoi(key->value());
+				weight = std::stoi(key->value());
 			}
 		}
-		index1 = static_cast<std::size_t>(std::stoi(id1));
-		index2 = static_cast<std::size_t>(std::stoi(id2));
+		const std::size_t index1 = static_cast<std::size_t>(std::stoi(id1));
+		const std::size_t index2 = static_cast<std::size_t>(std::stoi(id2));
 		
 		this->matrix[index1][index2] = weight;
 
@@ -1162,9 +1158,9 @@ auto Graph::Matrix::calculate_degrees() -> void
 	this->degrees.resize(this->matrix.size());
 
 	// iterate through the whole adjacency matrix to calculate degree of each node
-	for (std::size_t index1 = 0; auto& row : this->matrix)
+	for (std::size_t index1 = 0; const auto& row : this->matrix)
 	{
-		for (std::size_t index2 = 0; auto& element : row)
+		for (std::size_t index2 = 0; const auto& element : row)
 		{
 			// if connection was found, increase the degree
 			if (element != 0)
@@ -1212,7 +1208,7 @@ auto Graph::Matrix::calculate_degrees() -> void
 auto Graph::Matrix::greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream) const -> Graph::Coloring
 {
 	// vertices count
-	std::size_t count = m.size();
+	const std::size_t count = m.size();
 
 	// create return structure
 	Coloring ret(0, count);
@@ -1239,7 +1235,7 @@ auto Graph::Matrix::greedy_coloring_core(const std::map<std::size_t, std::size_t
 	};
 
 	// iterate through the map
-	for (auto& vertex : m)
+	for (const auto& vertex : m)
 	{
 		// reset taken flag for all colors
 		for (std::size_t i = 0; i < count; i++)
@@ -1248,7 +1244,7 @@ auto Graph::Matrix::greedy_coloring_core(const std::map<std::size_t, std::size_t
 		}
 
 		// check which colors were taken
-		for (std::size_t i = 0; auto& element : this->matrix[vertex.second])
+		for (std::size_t i = 0; const auto& element : this->matrix[vertex.second])
 		{
 			// check whether an outgoing or incoming edge exists and if the neighbouring vertex has assigned color
 			if ((this->matrix[vertex.second][i] > 0 || this->matrix[i][vertex.second] > 1)

@@ -27,7 +27,7 @@ Graph::Roadmap::Roadmap(std::size_t vertex_count)
  */
 auto Graph::Roadmap::print() const -> void
 {
-	for (std::size_t index = 0; auto element : this->distances)
+	for (std::size_t index = 0; const auto& element : this->distances)
 	{
 		// print distance
 		std::cout << "Distance: " << element << std::endl;
@@ -40,7 +40,7 @@ auto Graph::Roadmap::print() const -> void
 		}
 		else
 		{
-			for (std::size_t index2 = 0; auto vertex : this->prev_node[index])
+			for (std::size_t index2 = 0; const auto& vertex : this->prev_node[index])
 			{
 				std::cout << vertex;
 				if (index2 < this->prev_node[index].size() - 1)
@@ -52,7 +52,7 @@ auto Graph::Roadmap::print() const -> void
 		}
 		index++;
 		
-		// flush the stream and go to new line
+		// go to new line
 		std::cout << '\n';
 	}
 	std::cout << std::flush;
@@ -149,7 +149,7 @@ auto Graph::operator<<(std::ostream& stream, const Path& p) -> std::ostream&
 	stream << "Distance: " << p.distance << '\n';
 	stream << "Throughtput: " << p.throughtput << '\n';
 
-	for (std::size_t i = 0; auto& vertex : p.path)
+	for (std::size_t i = 0; const auto& vertex : p.path)
 	{
 		stream << vertex;;
 		if (i < p.path.size() - 1)

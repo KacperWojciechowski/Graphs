@@ -35,7 +35,7 @@ Graph::List::List(const std::string& file_path, Type type)
 	: type(type)
 {
 	// loading the .lst file
-	if (file_path.find(".lst", 0) != std::string::npos)
+	if (file_path.find(".lst") != std::string::npos)
 	{
 		std::ifstream file(file_path);
 		if (file.good())
@@ -51,7 +51,7 @@ Graph::List::List(const std::string& file_path, Type type)
 		this->calculate_degrees();
 	}
 	// loading the .GRAPHML file
-	else if (file_path.find(".GRAPHML", 0) != std::string::npos)
+	else if (file_path.find(".GRAPHML") != std::string::npos)
 	{
 		std::fstream file(file_path, std::ios::in);
 		if (file.good())
@@ -85,9 +85,7 @@ Graph::List::List(const GraphBase& graph)
 {
 	// get general graph info
 	this->type = graph.get_type();
-	std::size_t count = graph.get_nodes_amount();
-	
-	int32_t val;
+	const std::size_t count = graph.get_nodes_amount();
 
 	// build list
 	for (std::size_t i = 0; i < count; i++)
@@ -97,7 +95,7 @@ Graph::List::List(const GraphBase& graph)
 
 		for (std::size_t j = 0; j < graph.get_nodes_amount(); j++)
 		{
-			val = graph.get_edge(i, j);
+			const std::size_t val = graph.get_edge(i, j);
 			if (val != 0)
 			{
 				this->list[i].emplace_back( j, val );
@@ -126,8 +124,8 @@ Graph::List::List(const GraphBase& graph)
 Graph::List::List(const Data::PixelMap& map)
 	: type(Graph::Type::undirected)
 {
-	std::size_t columns = map.get_columns();
-	std::size_t rows = map.get_rows();
+	const std::size_t columns = map.get_columns();
+	const std::size_t rows = map.get_rows();
 
 	std::vector<Data::Coord> vertices;
 
@@ -157,7 +155,7 @@ Graph::List::List(const Data::PixelMap& map)
 	};
 
 	// build the list based on the found fields
-	for (std::size_t index = 0; auto & vertex : vertices)
+	for (std::size_t index = 0; const auto & vertex : vertices)
 	{
 		this->list.emplace_back(0);
 
@@ -214,9 +212,7 @@ auto Graph::List::load_lst_file(std::istream& file) -> void
 	// function extracting subsequent neighbouring vertices IDs
 	auto extract_val = [&line, &pos]() -> std::size_t
 	{
-		std::size_t val;
-
-		val = static_cast<std::size_t>(std::stoul(line) - 1);
+		const std::size_t val = static_cast<std::size_t>(std::stoul(line) - 1);
 		pos = line.find(' ');
 		if (pos != std::string::npos)
 		{
@@ -377,7 +373,7 @@ auto Graph::List::calculate_degrees() -> void
 	// calculate the degree and out_degree of each vertex
 	for (std::size_t i = 0; i < this->list.size(); i++)
 	{
-		for (auto& element : this->list[i])
+		for (const auto& element : this->list[i])
 		{
 			this->degrees[i].out_deg++;
 			this->degrees[element.ID].in_deg++;
@@ -472,7 +468,7 @@ auto Graph::List::print() const -> void
 
 	std::cout << "{\n";
 
-	for (std::size_t index = 0; auto& element : this->list)
+	for (std::size_t index = 0; const auto& element : this->list)
 	{
 		// display degrees
 		if (this->type == Type::undirected)
@@ -486,9 +482,9 @@ auto Graph::List::print() const -> void
 
 		std::cout << ",    " << index << ": ";
 
-		for (auto itr2 = element.begin(); itr2 != element.end(); itr2++)
+		for (const auto& vertex : element)
 		{
-			std::cout << itr2->ID << " {" << itr2->weight << "}, ";
+			std::cout << vertex.ID << " {" << vertex.weight << "}, ";
 		}
 		index++;
 		std::cout << '\n';
@@ -665,7 +661,6 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 
 	// variables for vertex removal
 	bool removed = false;
-	std::list<Node>::iterator itr_tmp;
 	std::size_t count = this->list.size();
 
 	// iterators for quicker element access
@@ -704,7 +699,7 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 				if (itr2->ID == node_id)
 				{
 					// erase the vertex
-					itr_tmp = itr2;
+					auto itr_tmp = itr2;
 					itr2++;
 					this->list[i].erase(itr_tmp);
 					this->degrees[i].deg--;
@@ -778,7 +773,7 @@ auto Graph::List::get_edge(std::size_t source, std::size_t destination) const ->
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
-	for (auto& neighbour : this->list[source])
+	for (const auto& neighbour : this->list[source])
 	{
 		if (neighbour.ID == destination)
 		{
@@ -857,16 +852,16 @@ auto Graph::List::save_graphml(std::ostream& stream, std::string name) const -> 
 	// edge data including weight
 	for (std::size_t i = 0; i < this->list.size(); i++)
 	{
-		for (auto itr = this->list[i].begin(); itr != this->list[i].end(); itr++)
+		for (const auto& neighbour : this->list[i])
 		{
-			if (this->type == Type::undirected && itr->ID < i)
+			if (this->type == Type::undirected && neighbour.ID < i)
 			{
 				continue;
 			}
 			stream << "\t\t<edge source=\"n" << i;
-			stream << "\" target=\"n" << itr->ID;
+			stream << "\" target=\"n" << neighbour.ID;
 			stream << "\">\n";
-			stream << "\t\t\t<data key=\"d0\">" + std::to_string(itr->weight) + "</data>\n";
+			stream << "\t\t\t<data key=\"d0\">" + std::to_string(neighbour.weight) + "</data>\n";
 			stream << "\t\t</edge>\n";
 		}
 	}

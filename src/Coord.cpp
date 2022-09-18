@@ -21,7 +21,7 @@ auto Data::find_index(const std::vector<Data::Coord>& nodes, const Data::Coord& 
 	std::size_t ret = std::numeric_limits<std::size_t>::max();
 
 	// search for the index
-	for (std::size_t index = 0; auto& element : nodes)
+	for (std::size_t index = 0; const auto& element : nodes)
 	{
 		if (element.x == coord.x && element.y == coord.y)
 		{

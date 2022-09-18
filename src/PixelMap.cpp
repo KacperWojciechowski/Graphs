@@ -94,9 +94,9 @@ Data::PixelMap::PixelMap(PixelMap&& p) noexcept
 auto Data::PixelMap::print() const -> void
 {
 	std::cout << "[\n";
-	for (auto& row : this->map)
+	for (const auto& row : this->map)
 	{
-		for (auto& element : row)
+		for (const auto& element : row)
 		{
 			std::cout << std::to_string(element) << " ";
 		}

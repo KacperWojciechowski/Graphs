@@ -12,8 +12,8 @@ namespace Graph
 	enum class [[nodiscard]] Type
 	{
 		undirected = 0, /**< The graph is undirected, which means that the weights of the connections are automatically 
-						mirrored */
-		directed, /**< The graph is directed, which means that the weights are not automatically mirrored */
+							 mirrored */
+		directed,		/**< The graph is directed, which means that the weights are not automatically mirrored */
 	};
 
 

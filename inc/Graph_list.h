@@ -71,7 +71,7 @@ namespace Graph
 
 		/* Objects containing the graph information */
 
-		std::vector<std::list<Node>> list; /**< List structure of the graph. Consists of the std::vector 
+		std::vector<std::vector<Node>> list; /**< List structure of the graph. Consists of the std::vector 
 												containing std::lists of neighbour vertices for a given vertex. */
 		std::vector<Degree> degrees;	   /**< Vector containing degrees of each vertex. Degrees are stored within the Graph::Degree
 												structure, and the type field decides which fields of the structure should be used. */

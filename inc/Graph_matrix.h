@@ -40,14 +40,14 @@ namespace Graph
 		auto remove_edge(std::size_t source, std::size_t destination) -> void;
 		auto remove_node(std::size_t node_id) -> void;
 
-		auto get_nodes_amount() const -> std::size_t;
+		auto [[nodiscard]] get_nodes_amount() const -> std::size_t;
 		auto get_node_degree(std::size_t node_id) const -> Degree;
-		auto get_edge(std::size_t source, std::size_t destination) const -> int32_t;
-		auto get_type() const -> Type;
+		auto [[nodiscard]] get_edge(std::size_t source, std::size_t destination) const -> int32_t;
+		auto [[nodiscard]] get_type() const -> Type;
 
 		auto save_graphml(std::ostream& stream, std::string name) const -> void;
 
-		auto change_to_line_graph() const -> Matrix;
+		auto [[nodiscard]] change_to_line_graph() const -> Matrix;
 
 		/* Extended interface */
 		auto load_throughtput(const std::string& file_path) -> void;

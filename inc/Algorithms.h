@@ -48,7 +48,7 @@ namespace Graph
 	/**
 	 * Structure containing the information regarding the color assignment by the coloring functions.
 	 */
-	struct Coloring
+	struct [[nodiscard]] Coloring
 	{
 		int32_t color_count;		/**< Total amount of colors used in the coloring process */
 		std::vector<int32_t> color; /**< Vector containing color assignment for each vertex */

@@ -9,7 +9,7 @@ namespace Graph
 	/**
 	 * \brief Enum class stating the type of the graph.
 	 */
-	enum class Type
+	enum class [[nodiscard]] Type
 	{
 		undirected = 0, /**< The graph is undirected, which means that the weights of the connections are automatically 
 						mirrored */
@@ -24,7 +24,7 @@ namespace Graph
 	 *		 In case of accessing eg. deg, while having an undirected graph, the result might be incorrect,
 	 *		 hence should not be taken into an account.
 	 */
-	struct Degree
+	struct [[nodiscard]] Degree
 	{
 		std::size_t in_deg; /**< Indegree for the directed graphs */
 		std::size_t out_deg; /**< Outdegree for the directed graphs */
@@ -96,7 +96,7 @@ namespace Graph
 		 * 
 		 * \return The amount of the vertices in a graph object.
 		 */
-		virtual auto get_nodes_amount() const -> std::size_t = 0;
+		virtual auto [[nodiscard]] get_nodes_amount() const -> std::size_t = 0;
 
 
 
@@ -119,7 +119,7 @@ namespace Graph
 		 * \param destination End vertex of an edge.
 		 * \return Weight value of the connection.
 		 */
-		virtual auto get_edge(std::size_t source, std::size_t destination) const -> int32_t = 0;
+		virtual auto [[nodiscard]] get_edge(std::size_t source, std::size_t destination) const -> int32_t = 0;
 
 
 

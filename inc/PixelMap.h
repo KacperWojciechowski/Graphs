@@ -24,7 +24,7 @@ namespace Data
 		// constructors
 		PixelMap(std::istream& stream);
 
-		PixelMap(PixelMap& p);
+		PixelMap(const PixelMap& p);
 		PixelMap(PixelMap&& p) noexcept;
 
 		// interface
@@ -32,7 +32,7 @@ namespace Data
 
 		auto get_rows() const -> std::size_t;
 		auto get_columns() const -> std::size_t;
-		auto get_field(Data::Coord&& coord) const -> uint8_t;
+		auto get_field(const Data::Coord& coord) const -> uint8_t;
 
 	private:
 		std::vector<std::vector<uint8_t>> map; /**< Structure containing the map. Consists of std::vector of std::vector objects. Each

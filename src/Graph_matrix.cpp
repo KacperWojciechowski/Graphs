@@ -84,7 +84,7 @@ Graph::Matrix::Matrix(std::string file_path, Type type)
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
  */
-Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, Type type)
+Graph::Matrix::Matrix(const std::vector<std::vector<int32_t>>& mat, Type type)
 	: matrix(mat),
 	type(type)
 {
@@ -101,7 +101,7 @@ Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, Type type)
  * 
  * \param l Reference to a different supported graph representation.
  */
-Graph::Matrix::Matrix(GraphBase& graph)
+Graph::Matrix::Matrix(const GraphBase& graph)
 { 
 	// get general graph info
 	this->type = graph.get_type();
@@ -128,7 +128,7 @@ Graph::Matrix::Matrix(GraphBase& graph)
  * 
  * \param m lvalue reference to the copied Graph::Matrix object.
  */
-Graph::Matrix::Matrix(Matrix& m)
+Graph::Matrix::Matrix(const Matrix& m)
 	: matrix(m.matrix),
 	type(m.type),
 	degrees(m.degrees),
@@ -691,7 +691,7 @@ auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
  *		- std::invalid_argument - when the file has an unsupported extension.
  *		- std::runtime_error - when the file could not be accessed.
  */
-auto Graph::Matrix::load_throughtput(std::string file_path) -> void
+auto Graph::Matrix::load_throughtput(const std::string& file_path) -> void
 {
 	int32_t value;
 
@@ -750,7 +750,7 @@ auto Graph::Matrix::load_throughtput(std::string file_path) -> void
  *					 coloring function will produce logs during runtime. Nullptr by default.
  * \return Structure containing all relevant coloring information.
  */
-auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) -> Coloring
+auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) const -> Coloring
 {
 	std::map<std::size_t, std::size_t> m;
 
@@ -824,7 +824,7 @@ auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) ->
  * 
  * \see Graph::Roadmap for returned structure reference
  */
-auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stream) -> Roadmap
+auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stream) const -> Roadmap
 {
 	std::size_t vertices_count = this->matrix.size();
 
@@ -1209,7 +1209,7 @@ auto Graph::Matrix::calculate_degrees() -> void
  * \param log_stream Pointer to an output stream for logs to be produced.
  * \return 
  */
-auto Graph::Matrix::greedy_coloring_core(std::map<std::size_t, std::size_t>& m, std::ostream* log_stream) -> Graph::Coloring
+auto Graph::Matrix::greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream) const -> Graph::Coloring
 {
 	// vertices count
 	std::size_t count = m.size();

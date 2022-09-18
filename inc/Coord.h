@@ -42,5 +42,5 @@ namespace Data
 		}
 	};
 
-	auto find_index(const std::vector<Coord>& nodes, Coord&& _coord) -> std::size_t;
+	auto find_index(const std::vector<Coord>& nodes, const Coord& _coord) -> std::size_t;
 }

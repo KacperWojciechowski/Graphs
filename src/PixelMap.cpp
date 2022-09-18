@@ -65,7 +65,7 @@ Data::PixelMap::PixelMap(std::istream& stream)
  * 
  * \param p l-value reference to a Data::PixelMap object.
  */
-Data::PixelMap::PixelMap(PixelMap& p)
+Data::PixelMap::PixelMap(const PixelMap& p)
 	: map(p.map)
 {
 }
@@ -140,7 +140,7 @@ auto Data::PixelMap::get_columns() const -> std::size_t
  * \param coord Coordinates of the field.
  * \return 
  */
-auto Data::PixelMap::get_field(Data::Coord&& coord) const-> uint8_t
+auto Data::PixelMap::get_field(const Data::Coord& coord) const-> uint8_t
 {
 	return this->map[coord.x][coord.y];
 }

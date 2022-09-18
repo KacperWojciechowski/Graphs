@@ -81,7 +81,7 @@ Graph::List::List(const std::string& file_path, Type type)
  * 
  * \param matrix Reference to the Graph::Matrix object.
  */
-Graph::List::List(GraphBase& graph)
+Graph::List::List(const GraphBase& graph)
 {
 	// get general graph info
 	this->type = graph.get_type();
@@ -123,7 +123,7 @@ Graph::List::List(GraphBase& graph)
  * 
  * \ref create_list_from_pixelmap.cpp "Example of creating a list graph based on pixel map"
  */
-Graph::List::List(Data::PixelMap& map)
+Graph::List::List(const Data::PixelMap& map)
 	: type(Graph::Type::undirected)
 {
 	std::size_t columns = map.get_columns();
@@ -402,7 +402,7 @@ auto Graph::List::calculate_degrees() -> void
  * 
  * \param l lvalue reference to the data source object.
  */
-Graph::List::List(List& l)
+Graph::List::List(const List& l)
 	: list(l.list),
 	type(l.type),
 	degrees(l.degrees)

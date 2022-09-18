@@ -13,7 +13,7 @@
  * \param _coord searched coordinates structure
  * \return index of the coord structure within the coordinates vector.
  */
-auto Data::find_index(const std::vector<Data::Coord>& nodes, Data::Coord&& coord) -> std::size_t
+auto Data::find_index(const std::vector<Data::Coord>& nodes, const Data::Coord& coord) -> std::size_t
 {
 	size_t size = nodes.size();
 

@@ -24,11 +24,11 @@ namespace Graph
 
 		/* Constructors */
 		Matrix(std::string file_path, Type type);
-		Matrix(std::vector<std::vector<int32_t>>& mat, Type type);
+		Matrix(const std::vector<std::vector<int32_t>>& mat, Type type);
 		
-		Matrix(GraphBase& l);
+		Matrix(const GraphBase& l);
 
-		Matrix(Matrix& m);
+		Matrix(const Matrix& m);
 		Matrix(Matrix&& m) noexcept;
 
 		/* Common interface */
@@ -50,18 +50,18 @@ namespace Graph
 		auto change_to_line_graph() const -> Matrix;
 
 		/* Extended interface */
-		auto load_throughtput(std::string file_path) -> void;
+		auto load_throughtput(const std::string& file_path) -> void;
 		auto print_throughtput() const -> void;
 
 		/* Algorithmic interface*/
-		auto greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr)-> Coloring;
-		auto lf_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> Coloring;
-		auto sl_coloring(bool permutate = false, std::ostream* log_stream = nullptr) -> Coloring;
+		auto greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr) const -> Coloring;
+		auto lf_coloring(bool permutate = false, std::ostream* log_stream = nullptr) const -> Coloring;
+		auto sl_coloring(bool permutate = false, std::ostream* log_stream = nullptr) const -> Coloring;
 
-		auto bellman_ford(std::size_t start, const std::ostream* log_stream = nullptr) -> Roadmap;
+		auto bellman_ford(std::size_t start, const std::ostream* log_stream = nullptr) const -> Roadmap;
 
 		/* Extended algorithmic interface */
-		auto throughtput_bellman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, std::ostream* log_stream) -> Roadmap;
+		auto throughtput_bellman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, std::ostream* log_stream) const -> Roadmap;
 	
 	
 	private:
@@ -71,7 +71,7 @@ namespace Graph
 		auto calculate_degrees() -> void;
 
 		/* Private algorithmic functions */
-		auto greedy_coloring_core(std::map<std::size_t, std::size_t>& m, std::ostream* log_stream = nullptr) -> Coloring;
+		auto greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream = nullptr) const -> Coloring;
 
 		/* Objects containing the graph*/
 		std::vector<std::vector<int32_t>> matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/

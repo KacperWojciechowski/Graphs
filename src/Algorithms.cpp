@@ -130,7 +130,7 @@ auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size
  * \param throughtput The throughtput of the path, which is the minimal throughtput of
  *					  all subsequent stretch.
  */
-Graph::Path::Path(std::vector<std::size_t> path, uint32_t distance, uint32_t throughtput)
+Graph::Path::Path(const std::vector<std::size_t>& path, uint32_t distance, uint32_t throughtput)
 	: path(path),
 	distance(distance),
 	throughtput(throughtput)

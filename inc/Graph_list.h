@@ -39,10 +39,10 @@ namespace Graph
 		/* Constructors */
 		List(const std::string& file_path, Type type);
 
-		List(GraphBase& matrix);
-		List(Data::PixelMap& map);
+		List(const GraphBase& matrix);
+		List(const Data::PixelMap& map);
 
-		List(List& l);
+		List(const List& l);
 		List(List&& l) noexcept;
 
 		/* Interface */

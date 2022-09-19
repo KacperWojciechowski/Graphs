@@ -1,22 +1,7 @@
-#include "../inc/Algorithms.h"
+#include "Algorithms.h"
 
 #include <algorithm>
 #include <iostream>
-
-/**
- * Constructor creating internal vectors of given size.
- * 
- * \param vertex_count Amount of vertices in the graph structure.
- */
-Graph::Roadmap::Roadmap(std::size_t vertex_count)
-	: prev_node(vertex_count),
-	distances(vertex_count, std::numeric_limits<int32_t>::max()),
-	throughtputs(vertex_count, std::numeric_limits<int32_t>::max()),
-	start(0)
-{
-}
-
-
 
 
 /**
@@ -25,25 +10,25 @@ Graph::Roadmap::Roadmap(std::size_t vertex_count)
  * \note In order to follow the full path, the user needs to recreate the path
  *		 based on the stored data.
  */
-auto Graph::Roadmap::print() const -> void
+auto Graph::Roadmap::print() const noexcept -> void
 {
-	for (std::size_t index = 0; auto element : this->distances)
+	for (std::size_t index = 0; const auto& element : distances)
 	{
 		// print distance
 		std::cout << "Distance: " << element << std::endl;
 		std::cout << "Prev node: ";
 
 		// print previous node info
-		if (this->prev_node[index].empty())
+		if (prev_node[index].empty())
 		{
 			std::cout << "None";
 		}
 		else
 		{
-			for (std::size_t index2 = 0; auto vertex : this->prev_node[index])
+			for (std::size_t index2 = 0; const auto& vertex : prev_node[index])
 			{
 				std::cout << vertex;
-				if (index2 < this->prev_node[index].size() - 1)
+				if (index2 < prev_node[index].size() - 1)
 				{
 					std::cout << " / ";
 				}
@@ -52,7 +37,7 @@ auto Graph::Roadmap::print() const -> void
 		}
 		index++;
 		
-		// flush the stream and go to new line
+		// go to new line
 		std::cout << '\n';
 	}
 	std::cout << std::flush;
@@ -72,12 +57,12 @@ auto Graph::Roadmap::print() const -> void
  * \param end Destination vertex of the path.
  * \return
  */
-auto Graph::Roadmap::paths(std::size_t end) const -> std::vector<Path>
+auto Graph::Roadmap::paths(std::size_t end) const noexcept -> std::vector<Path>
 {
 	std::vector<Path> ret;
 	std::vector<std::size_t> path;
 
-	this->path_search(ret, path, this->throughtputs[end], this->distances[end], end);
+	path_search(ret, path, throughtputs[end], distances[end], end);
 
 	for (auto& log : ret)
 	{
@@ -99,18 +84,18 @@ auto Graph::Roadmap::paths(std::size_t end) const -> std::vector<Path>
  * \param v Currently explored vertex.
  * \return 
  */
-auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t const& thr, int32_t const& distance, std::size_t v) const -> void
+auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t const& thr, int32_t const& distance, std::size_t v) const noexcept -> void
 {
 	path.emplace_back(v);
 
-	if (this->prev_node[v].empty())
+	if (prev_node[v].empty())
 	{
 		paths.emplace_back(path, distance, thr);
 		path.pop_back();
 	}
 	else
 	{
-		for (auto& vertex : this->prev_node[v])
+		for (auto& vertex : prev_node[v])
 		{
 			path_search(paths, path, thr, distance, vertex);
 		}
@@ -122,33 +107,14 @@ auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size
 
 
 /**
- * Constructor saving the Path information.
- * 
- * \param path Vector containing the indexes of each subsequent vertex in a path, starting
- *			   with the source vertex and ending with a destination vertex.
- * \param distance Summed distance from the source vertex to the destination vertex.
- * \param throughtput The throughtput of the path, which is the minimal throughtput of
- *					  all subsequent stretch.
- */
-Graph::Path::Path(std::vector<std::size_t> path, uint32_t distance, uint32_t throughtput)
-	: path(path),
-	distance(distance),
-	throughtput(throughtput)
-{
-}
-
-
-
-
-/**
  * Output stream operator for the Path.
  */
-auto Graph::operator<<(std::ostream& stream, const Path& p) -> std::ostream&
+auto Graph::operator<<(std::ostream& stream, const Path& p) noexcept -> std::ostream&
 {
 	stream << "Distance: " << p.distance << '\n';
 	stream << "Throughtput: " << p.throughtput << '\n';
 
-	for (std::size_t i = 0; auto& vertex : p.path)
+	for (std::size_t i = 0; const auto & vertex : p.path)
 	{
 		stream << vertex;;
 		if (i < p.path.size() - 1)
@@ -162,4 +128,3 @@ auto Graph::operator<<(std::ostream& stream, const Path& p) -> std::ostream&
 
 	return stream;
 }
-

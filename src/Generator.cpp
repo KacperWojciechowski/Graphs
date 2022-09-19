@@ -1,9 +1,9 @@
-#include "../inc/Generator.h"
+#include "Generator.h"
 
-#include <time.h>
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <random>
 
 /**
  * Function generating a random graph of given type in a matrix representation.
@@ -29,15 +29,15 @@
  * 
  * \ref matrix_generator.cpp "Example of generating a randomized matrix"
  */
-auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc) const -> void
+auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc) const noexcept -> void
 {
 	std::vector<std::vector<std::size_t>> matrix;
-	std::size_t val;
 
-	srand(static_cast<uint32_t>(time(NULL)));
-
-	// calculate the divider for modulo division
-	std::size_t divider = limits.max - limits.min + 1;
+	// creating random distributions
+	std::random_device dev;
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> distr_div(0, limits.max - limits.min);	// weight distribution
+	std::uniform_int_distribution<std::mt19937::result_type> distr_dens(0, density_psc);		// density prescaling distribution
 
 	// create an empty matrix
 	for (std::size_t i = 0; i < vertex_amount; i++)
@@ -46,13 +46,14 @@ auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
 	}
 
 	// fill matrix with random weights
+	std::size_t val;
 	if (type == Graph::Type::directed)
 	{
 		for (auto& row : matrix)
 		{
 			for (auto& element : row)
 			{
-				val = rand() % density_psc == 0 ? rand() % divider : 0;
+				val = distr_dens(rng) == 0 ? distr_div(rng) : 0;
 				if (val != 0)
 				{
 					val += limits.min;
@@ -67,7 +68,7 @@ auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
 		{
 			for (std::size_t j = i; j < vertex_amount; j++)
 			{
-				val = rand() % density_psc == 0 ? rand() % divider : 0;
+				val = distr_dens(rng) == 0 ? distr_div(rng) : 0;
 				if (val != 0)
 				{
 					val += limits.min;
@@ -79,9 +80,9 @@ auto Data::Generator::make_matrix(std::ostream& stream, uint32_t vertex_amount, 
 	}
 
 	// output the resulting matrix to the stream
-	for (std::size_t index1 = 0; auto& row : matrix)
+	for (std::size_t index1 = 0; const auto& row : matrix)
 	{
-		for (std::size_t index2 = 0; auto& element : row)
+		for (std::size_t index2 = 0; const auto& element : row)
 		{
 			stream << element;
 			if (index2 < row.size() - 1)
@@ -131,11 +132,11 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 {
 	std::vector<std::vector<int32_t>> src_matrix;
 	std::vector<std::vector<int32_t>> dest_matrix;
-	
-	srand(static_cast<uint32_t>(time(NULL)));
 
-	// calculate the divider for modulo division
-	std::int32_t divider = limits.max - limits.min + 1;
+	// creating random distributions
+	std::random_device dev;
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> distr(limits.min, limits.max);
 	
 	std::string line;
 	std::size_t pos;
@@ -145,7 +146,7 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 	// lambda function extracting the values from read row of the source matrix
 	auto insert_val = [&line, &pos, &src_matrix](std::size_t index) -> void {
 
-		std::int32_t val = std::stoi(line);
+		const int32_t val = std::stoi(line);
 		pos = line.find(' ');
 		
 		if (pos != std::string::npos)
@@ -179,7 +180,7 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 	}
 
 	// verify whether the source matrix is square and create destination matrix
-	for (std::size_t index = 0; auto& row : src_matrix)
+	for (std::size_t index = 0; const auto& row : src_matrix)
 	{
 		if (src_matrix.size() != row.size())
 		{
@@ -192,8 +193,7 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 		}
 	}
 
-	std::int32_t val;
-	std::size_t size = src_matrix.size();
+	const std::size_t size = src_matrix.size();
 
 	// create the destination matrix
 	if (type == Graph::Type::directed)
@@ -204,7 +204,7 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 			{
 				if (src_matrix[i][j] != 0)
 				{
-					dest_matrix[i][j] = rand() % divider + limits.min;
+					dest_matrix[i][j] = distr(rng);
 				}
 			}
 		}
@@ -217,7 +217,7 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 			{
 				if (src_matrix[i][j] != 0)
 				{
-					val = rand() % divider + limits.min;
+					const std::int32_t val = distr(rng);
 					dest_matrix[i][j] = val;
 					dest_matrix[j][i] = val;
 				}
@@ -226,9 +226,9 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
 	}
 
 	// output the created throughtput matrix
-	for (std::size_t index1 = 0; auto& row : dest_matrix)
+	for (std::size_t index1 = 0; const auto& row : dest_matrix)
 	{
-		for (std::size_t index2 = 0; auto& element : row)
+		for (std::size_t index2 = 0; const auto& element : row)
 		{
 			stream << element;
 			if (index2 < row.size() - 1)
@@ -271,13 +271,16 @@ auto Data::Generator::make_throughtput_matrix(std::ostream& stream, std::ifstrea
  * 
  * \ref list_generator.cpp "Example of generating a randomized list"
  */
-auto Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc) const -> void
+auto Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc) const noexcept -> void
 {
 	std::vector<std::vector<std::size_t>> list;
-	std::size_t count;
-	std::size_t val;
 
-	srand(static_cast<uint32_t>(time(NULL)));
+	// creating random distributions
+	std::random_device dev;
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> distr_count(0, vertex_amount);			// edge count distribution
+	std::uniform_int_distribution<std::mt19937::result_type> distr_indexes(0, vertex_amount - 1);	// vertices distribution
+	std::uniform_int_distribution<std::mt19937::result_type> distr_dens(0, density_psc);			// density prescaling distribution
 
 	// generate empty list
 	for (std::size_t i = 0; i < vertex_amount; i++)
@@ -288,12 +291,12 @@ auto Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
 	// generate row of the data source file
 	for (std::size_t i = 0; i < vertex_amount; i++)
 	{
-		count = rand() % vertex_amount + 1;
+		const std::size_t count = distr_count(rng);
 
 		// generate indexes of each adjacent vertex
 		for (std::size_t j = 0; j < count; j++)
 		{
-			val = rand() % density_psc == 0 ? rand() % vertex_amount : 0;
+			const std::size_t val = distr_dens(rng) == 0 ? distr_indexes(rng) : 0;
 			
 			// prevent duplicates from appearing
 			if (std::find(list[i].begin(), list[i].end(), val) == list[i].end() && val != 0)
@@ -315,11 +318,11 @@ auto Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
 	}
 
 	// save the structure
-	for (std::size_t index = 0; auto row : list)
+	for (std::size_t index = 0; const auto& row : list)
 	{
 		stream << index + 1 << ": ";
 
-		for (std::size_t index2 = 0; auto element : row)
+		for (std::size_t index2 = 0; const auto& element : row)
 		{
 			stream << element + 1;
 
@@ -351,11 +354,12 @@ auto Data::Generator::make_list(std::ostream& stream, std::size_t vertex_amount,
  * 
  * \ref pixel_map_generator.cpp "Example of generating the pixel map data source"
  */
-auto Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width) const -> void
+auto Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint32_t width) const noexcept -> void
 {
-	srand(static_cast<unsigned int>(time(NULL)));
-
-	uint32_t sector;
+	// creating random distributions
+	std::random_device dev;
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> distr(0, 1);	// edge count distribution
 
 	// generate subsequent pixels in each row
 	for (uint32_t i = 0; i < length; i++)
@@ -363,8 +367,7 @@ auto Data::Generator::make_pixel_map(std::ostream& stream, uint32_t length, uint
 		// iterate through row positions
 		for (uint32_t j = 0; j < width; j++)
 		{
-			sector = rand() % 2;
-			stream << sector;
+			stream << distr(rng);
 			if (j < width - 1)
 			{
 				stream << ' ';

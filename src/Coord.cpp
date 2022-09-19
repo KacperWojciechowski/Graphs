@@ -1,4 +1,4 @@
-#include "../inc/Coord.h"
+#include "Coord.h"
 
 /**
  * \brief Function finding the index of given coordinate pair in coordinates vector.
@@ -13,7 +13,7 @@
  * \param _coord searched coordinates structure
  * \return index of the coord structure within the coordinates vector.
  */
-auto Data::find_index(const std::vector<Data::Coord>& nodes, Data::Coord&& coord) -> std::size_t
+auto Data::find_index(const std::vector<Data::Coord>& nodes, const Data::Coord& coord) noexcept -> std::size_t
 {
 	size_t size = nodes.size();
 
@@ -21,7 +21,7 @@ auto Data::find_index(const std::vector<Data::Coord>& nodes, Data::Coord&& coord
 	std::size_t ret = std::numeric_limits<std::size_t>::max();
 
 	// search for the index
-	for (std::size_t index = 0; auto& element : nodes)
+	for (std::size_t index = 0; const auto& element : nodes)
 	{
 		if (element.x == coord.x && element.y == coord.y)
 		{
@@ -33,22 +33,4 @@ auto Data::find_index(const std::vector<Data::Coord>& nodes, Data::Coord&& coord
 
 	// return found index
 	return ret;
-}
-
-
-
-
-/**
- * Constructor accepting the coordinates.
- *
- * Allows user to use the structure as an initializer list while passing
- * as a parameter to a function.
- * 
- * \param x X coordinate.
- * \param y Y coordinate.
- */
-Data::Coord::Coord(std::size_t x, std::size_t y)
-	: x(x),
-	y(y)
-{
 }

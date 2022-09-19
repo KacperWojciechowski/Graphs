@@ -1,4 +1,4 @@
-#include "..\inc\PixelMap.h"
+#include "PixelMap.h"
 
 #include <string>
 
@@ -14,7 +14,7 @@
  * 
  * \ref create_pixel_map.cpp "Example of creating a Data::PixelMap object"
  */
-Data::PixelMap::PixelMap(std::istream& stream)
+Data::PixelMap::PixelMap(std::istream& stream) noexcept
 {
 	std::string line;
 
@@ -41,15 +41,15 @@ Data::PixelMap::PixelMap(std::istream& stream)
 	{
 		if (line != "")
 		{
-			this->map.emplace_back(0);
+			map.emplace_back(0);
 			pos = 0;
 
 			while (pos != std::string::npos)
 			{
-				this->map[index].emplace_back(extract_val());
+				map[index].emplace_back(extract_val());
 			}
 
-			if (this->map[index].size() != this->map[0].size())
+			if (map[index].size() != map[0].size())
 			{
 				throw std::runtime_error("Deviating row length");
 			}
@@ -65,7 +65,7 @@ Data::PixelMap::PixelMap(std::istream& stream)
  * 
  * \param p l-value reference to a Data::PixelMap object.
  */
-Data::PixelMap::PixelMap(PixelMap& p)
+Data::PixelMap::PixelMap(const PixelMap& p) noexcept
 	: map(p.map)
 {
 }
@@ -91,56 +91,16 @@ Data::PixelMap::PixelMap(PixelMap&& p) noexcept
  * Print function displaying the map structure on the standard output.
  * 
  */
-auto Data::PixelMap::print() const -> void
+auto Data::PixelMap::print() const noexcept -> void
 {
 	std::cout << "[\n";
-	for (auto& row : this->map)
+	for (const auto& row : map)
 	{
-		for (auto& element : row)
+		for (const auto& element : row)
 		{
 			std::cout << std::to_string(element) << " ";
 		}
 		std::cout << '\n';
 	}
 	std::cout << "]" << std::endl;
-}
-
-
-
-
-/**
- * Row count getter.
- * 
- * \return Number of rows within the structure.
- */
-auto Data::PixelMap::get_rows() const -> std::size_t
-{
-	return this->map.size();
-}
-
-
-
-
-/**
- * Columns count getter.
- * 
- * \return Number of columns within the structure.
- */
-auto Data::PixelMap::get_columns() const -> std::size_t
-{
-	return this->map[0].size();
-}
-
-
-
-
-/**
- * Field value getter.
- * 
- * \param coord Coordinates of the field.
- * \return 
- */
-auto Data::PixelMap::get_field(Data::Coord&& coord) const-> uint8_t
-{
-	return this->map[coord.x][coord.y];
 }

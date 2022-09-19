@@ -1,11 +1,13 @@
-#include "../inc/Graph_matrix.h"
-#include "../inc/Coord.h"
+#include "Graph_matrix.h"
+#include "Coord.h"
 
 #include <iomanip>
 #include <fstream>
+#include <algorithm>
+#include <random>
 
 #pragma warning(push, 0)
-#include "../lib/rapidxml/rapidxml.hpp"
+#include "rapidxml/rapidxml.hpp"
 #pragma warning(pop)
 
 /**
@@ -30,7 +32,7 @@
  * \ref create_matrix_from_graphml.cpp "Example of creating the object from .GRAPHML file"\b
  * \ref create_matrix_from_mat.cpp "Example of creating the object from .mat file"\b
  */
-Graph::Matrix::Matrix(std::string file_path, Type type)
+Graph::Matrix::Matrix(const std::string& file_path, Type type)
 	: type(type)
 {
 	// loading the .mat file
@@ -39,7 +41,7 @@ Graph::Matrix::Matrix(std::string file_path, Type type)
 		std::ifstream file(file_path);
 		if (file.good())
 		{
-			this->load_mat_file(file);
+			load_mat_file(file);
 		}
 		else
 		{
@@ -47,7 +49,7 @@ Graph::Matrix::Matrix(std::string file_path, Type type)
 		}
 		file.close();
 		
-		this->calculate_degrees();
+		calculate_degrees();
 	}
 	// loading the .GRAPHML file
 	else if (file_path.find(".GRAPHML", 0) != std::string::npos)
@@ -55,7 +57,7 @@ Graph::Matrix::Matrix(std::string file_path, Type type)
 		std::fstream file(file_path, std::ios::in);
 		if(file.good())
 		{
-			this->load_graphml_file(file);
+			load_graphml_file(file);
 		}
 		else
 		{
@@ -63,7 +65,7 @@ Graph::Matrix::Matrix(std::string file_path, Type type)
 		}
 		file.close();
 
-		this->calculate_degrees();
+		calculate_degrees();
 	}
 	// signalizing the unsupported file format 
 	else
@@ -82,11 +84,11 @@ Graph::Matrix::Matrix(std::string file_path, Type type)
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
  */
-Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, Type type)
+Graph::Matrix::Matrix(const std::vector<std::vector<int32_t>>& mat, Type type) noexcept
 	: matrix(mat),
 	type(type)
 {
-	this->calculate_degrees();
+	calculate_degrees();
 }
 
 
@@ -99,21 +101,21 @@ Graph::Matrix::Matrix(std::vector<std::vector<int32_t>>& mat, Type type)
  * 
  * \param l Reference to a different supported graph representation.
  */
-Graph::Matrix::Matrix(GraphBase& graph)
+Graph::Matrix::Matrix(const GraphBase& graph) noexcept
 { 
 	// get general graph info
-	this->type = graph.get_type();
-	std::size_t count = graph.get_nodes_amount();
+	type = graph.get_type();
+	const std::size_t count = graph.get_nodes_amount();
 
-	this->matrix.resize(count);
+	matrix.resize(count);
 
 	for (std::size_t i = 0; i < count; i++)
 	{
-		this->degrees.emplace_back(graph.get_node_degree(i));
+		degrees.emplace_back(graph.get_node_degree(i));
 
 		for (std::size_t j = 0; j < count; j++)
 		{
-			this->matrix[i].emplace_back(graph.get_edge(i, j));
+			matrix[i].emplace_back(graph.get_edge(i, j));
 		}
 	}
 }
@@ -126,7 +128,7 @@ Graph::Matrix::Matrix(GraphBase& graph)
  * 
  * \param m lvalue reference to the copied Graph::Matrix object.
  */
-Graph::Matrix::Matrix(Matrix& m)
+Graph::Matrix::Matrix(const Matrix& m) noexcept
 	: matrix(m.matrix),
 	type(m.type),
 	degrees(m.degrees),
@@ -166,12 +168,12 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
  * \note Based on the type of the graph, the degree is presented either as a single value for undirected graph,
  *		 or as a indegree|outdegree pair for directed graph.
  */
-auto Graph::Matrix::print() const -> void
+auto Graph::Matrix::print() const noexcept -> void
 {
 	// display type information
 	std::cout << "Type = ";
 	
-	switch (this->type)
+	switch (type)
 	{
 	case Type::undirected:
 		std::cout << "undirected ";
@@ -189,25 +191,25 @@ auto Graph::Matrix::print() const -> void
 	std::cout << std::endl;
 	
 	// display vertices count
-	std::cout << "Vertices = " << this->matrix.size() << '\n';
+	std::cout << "Vertices = " << matrix.size() << '\n';
 
 	// display adjacency matrix
 	std::cout << "[\n";
 
-	for (std::size_t index = 0; auto& row : this->matrix)
+	for (std::size_t index = 0; const auto& row : matrix)
 	{
-		for (auto& element : row)
+		for (const auto& element : row)
 		{
 			std::cout << std::setw(3) << std::right << element << ", ";
 		}
-		if (this->type == Type::undirected)
+		if (type == Type::undirected)
 		{
-			std::cout << "  degree: " << this->degrees[index].deg << '\n';
+			std::cout << "  degree: " << degrees[index].deg << '\n';
 		}
 		else
 		{
-			std::cout << "  degrees: (in|out) " << this->degrees[index].in_deg
-				<< " | " << this->degrees[index].out_deg << '\n';
+			std::cout << "  degrees: (in|out) " << degrees[index].in_deg
+				<< " | " << degrees[index].out_deg << '\n';
 		}
 		index++;
 	}
@@ -237,7 +239,7 @@ auto Graph::Matrix::print() const -> void
 auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void
 {
 	// validate the parameters
-	if (source >= this->matrix.size() || destination >= this->matrix.size())
+	if (source >= matrix.size() || destination >= matrix.size())
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
@@ -246,33 +248,33 @@ auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32
 		throw std::invalid_argument("Weight equal to zero");
 	}
 	// save the previous weight for degree calculation
-	int32_t previous_weight = this->matrix[source][destination];
+	const uint32_t previous_weight = matrix[source][destination];
 	
 	// update the weight of the connection
-	this->matrix[source][destination] = weight;
+	matrix[source][destination] = weight;
 
 	// if graph type is undirected, mark the connection both ways
-	if (this->type == Type::undirected)
+	if (type == Type::undirected)
 	{
-		this->matrix[destination][source] = weight;
+		matrix[destination][source] = weight;
 	}
 
 	// update the degrees of given vertices
 	if (previous_weight == 0)
 	{
-		this->degrees[source].out_deg++;
-		this->degrees[destination].in_deg++;
+		degrees[source].out_deg++;
+		degrees[destination].in_deg++;
 
-		if (this->type == Type::undirected)
+		if (type == Type::undirected)
 		{
 			if (source == destination)
 			{
-				this->degrees[source].deg += 2;
+				degrees[source].deg += 2;
 			}
 			else
 			{
-				this->degrees[source].deg++;
-				this->degrees[destination].deg++;
+				degrees[source].deg++;
+				degrees[destination].deg++;
 			}
 		}
 	}
@@ -289,22 +291,19 @@ auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32
  * 
  * \ref add_node_matrix.cpp "Example of adding an isolated vertex"
  */
-auto Graph::Matrix::add_node() -> void
+auto Graph::Matrix::add_node() noexcept -> void
 {
 	// add zeros at the end of each row to mark the new vertex to be added
-	for (auto itr = this->matrix.begin(); itr != this->matrix.end(); itr++)
+	for (auto& row : matrix)
 	{
-		itr->emplace_back(0);
+		row.emplace_back(0);
 	}
 
-	// create the vector representing the neighbours of the new vertex
-	std::size_t size = this->matrix[0].size();
-
 	// add new row to the matrix
-	this->matrix.emplace_back(this->matrix.size() + 1);
+	matrix.emplace_back(matrix.size() + 1);
 
 	// add new vertex to the degrees vector
-	this->degrees.emplace_back( 0, 0, 0 );
+	degrees.emplace_back( 0, 0, 0 );
 }
 
 
@@ -326,34 +325,37 @@ auto Graph::Matrix::add_node() -> void
 auto Graph::Matrix::remove_edge(std::size_t source, std::size_t destination) -> void
 {
 	// validate the vertices indexes
-	if (source >= this->matrix.size() || destination >= this->matrix.size())
+	if (source >= matrix.size() || destination >= matrix.size())
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
-	// if indexes are correct, mark the connection
 	
-	this->matrix[source][destination] = 0;
-
-	// if graph type is undirected, mark the connection both ways
-	if (this->type == Type::undirected)
+	// if the edge existed, remove it
+	if (matrix[source][destination] != 0)
 	{
-		this->matrix[destination][source] = 0;
+		matrix[source][destination] = 0;
 
-		// update the undirected degree indicator for given vertices
-		if (source == destination)
+		// if graph type is undirected, remove the connection both ways
+		if (type == Type::undirected)
 		{
-			this->degrees[source].deg -= 2;
+			matrix[destination][source] = 0;
+
+			// update the undirected degree indicator for given vertices
+			if (source == destination)
+			{
+				degrees[source].deg -= 2;
+			}
+			else
+			{
+				degrees[source].deg--;
+				degrees[destination].deg--;
+			}
 		}
-		else
-		{
-			this->degrees[source].deg--;
-			this->degrees[destination].deg--;
-		}
+
+		// update the directed degrees indicators for given vertices
+		degrees[source].out_deg--;
+		degrees[destination].in_deg--;
 	}
-
-	// update the directed degrees indicators for given vertices
-	this->degrees[source].out_deg--;
-	this->degrees[destination].in_deg--;
 }
 
 
@@ -375,7 +377,7 @@ auto Graph::Matrix::remove_edge(std::size_t source, std::size_t destination) -> 
 auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 {
 	// validate the vertex ID
-	if (node_id >= this->matrix.size())
+	if (node_id >= matrix.size())
 	{
 		throw std::out_of_range("ID out of bounds");
 	}
@@ -383,46 +385,46 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 	
 
 	// remove the column of the deleted vertex and update degree of each vertex if necessary
-	for (std::size_t i = 0; i < this->matrix.size(); i++)
+	for (std::size_t i = 0; i < matrix.size(); i++)
 	{
-		auto itr = this->matrix[i].begin();
+		auto itr = matrix[i].begin();
 
 		// find and decrease all degrees of vertices that have an incoming edge from the deleted vertex
 		if (i == node_id)
 		{
-			for (std::size_t j = 0; j < this->matrix[i].size(); j++)
+			for (std::size_t j = 0; j < matrix[i].size(); j++)
 			{
-				if (this->matrix[i][j] != 0)
+				if (matrix[i][j] != 0)
 				{
-					this->degrees[j].in_deg--;
+					degrees[j].in_deg--;
 
 					// as this vertex will be deleted, loops can be ommited
-					if (this->type == Type::undirected && i != j)
+					if (type == Type::undirected)
 					{
-						this->degrees[j].deg--;
+						degrees[j].deg--;
 					}
 				}
 			}
 		}
 		// find and decrease all degrees of vertices that have an outcoming edge to the deleted vertex
-		else if (this->matrix[i][node_id] != 0)
+		else if (matrix[i][node_id] != 0)
 		{	
-			this->degrees[i].out_deg--;
+			degrees[i].out_deg--;
 			
-			if (this->type == Type::undirected)
+			if (type == Type::undirected)
 			{
-				this->degrees[i].deg--;
+				degrees[i].deg--;
 			}
 		}
 		
 		// remove the column of deleted vertex
 		std::ranges::advance(itr, node_id);
-		this->matrix[i].erase(itr);
+		matrix[i].erase(itr);
 	}
 
 	// iterators for quicker access
-	auto mat_itr = this->matrix.begin();
-	auto deg_itr = this->degrees.begin();
+	auto mat_itr = matrix.begin();
+	auto deg_itr = degrees.begin();
 
 	// access the row of deleted vertex and degree of deleted vertes
 	std::ranges::advance(mat_itr, node_id);
@@ -430,85 +432,8 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 
 	// remove the row of the deleted vertex and remove the degree counter
 	// for the deleted vertex
-	this->matrix.erase(mat_itr);
-	this->degrees.erase(deg_itr);
-}
-
-
-
-
-/**
- * \brief Getter for vertices count.
- * 
- * \return Amount of vertices in the graph structure.
- */
-auto Graph::Matrix::get_nodes_amount() const -> std::size_t
-{
-	return this->matrix.size();
-}
-
-
-
-
-/**
- * \brief Getter for the degree of given vertex.
- * 
- * \param node_id ID of the vertex which degree should be returned.
- * \return Degree of the given vertex
- * 
- * \warning Exception to guard against:
- *		- std::out_of_range - when given ID exceeds the count of vertices.
- */
-auto Graph::Matrix::get_node_degree(std::size_t node_id) const -> Graph::Degree
-{
-	if (node_id >= this->degrees.size())
-	{
-		throw std::out_of_range("ID out of bounds");
-	}
-	else
-	{
-		return this->degrees[node_id];
-	}
-}
-
-
-
-
-/**
- * \brief Getter for the weight of a connection between given vertices.
- * 
- * \param source ID of the source vertex of the edge (counting from 0).
- * \param destination ID of the end vertex of the edge (counting from 0).
- * \return Value of the weight of the edge.
- * 
- * \note Return value of zero means no connection is present.
- * 
- * \warning Exception to guard against:
- *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
- */
-auto Graph::Matrix::get_edge(std::size_t source, std::size_t destination) const -> int32_t
-{
-	if (source >= this->matrix.size() || destination >= this->matrix.size())
-	{
-		throw std::out_of_range("Index out of bounds");
-	}
-	else
-	{
-		return this->matrix[source][destination];
-	}
-}
-
-
-
-
-/**
- * \brief Getter for the type of the graph.
- * 
- * \return Graph::Type enum defining the type of the graph.
- */
-auto Graph::Matrix::get_type() const -> Graph::Type
-{
-	return this->type;
+	matrix.erase(mat_itr);
+	degrees.erase(deg_itr);
 }
 
 
@@ -525,7 +450,7 @@ auto Graph::Matrix::get_type() const -> Graph::Type
  * 
  * \ref save_matrix_to_graphml.cpp "Example of saving the graph structure in .GRAPHML file"
  */
-auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const -> void
+auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const noexcept -> void
 {
 	// header
 	stream << "<?xml version=\"1.0\"";
@@ -546,7 +471,7 @@ auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const -
 	stream << "\t<graph id=";
 	stream << "\"" + name + "\"";
 	stream << " edgedefault=";
-	switch (this->type)
+	switch (type)
 	{
 	case Type::directed:
 		stream << "\"directed\">\n";
@@ -557,20 +482,20 @@ auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const -
 	}
 
 	// vertices data
-	for (std::size_t i = 0; i < this->matrix.size(); i++)
+	for (std::size_t i = 0; i < matrix.size(); i++)
 	{
 		stream << "\t\t<node id=\"n" << i;
 		stream << "\"/>\n";
 	}
 
 	// edge data including weight
-	for (std::size_t i = 0; auto& row : this->matrix)
+	for (std::size_t i = 0; auto& row : matrix)
 	{
 		for (std::size_t j = 0; auto& element : row)
 		{
 			if (element != 0)
 			{
-				if (this->type == Type::undirected && j < i)
+				if (type == Type::undirected && j < i)
 				{
 					continue;
 				}
@@ -605,16 +530,16 @@ auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const -
  * 
  * \todo Modify the function to support directed graphs.
  */
-auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
+auto Graph::Matrix::change_to_line_graph() const noexcept -> Graph::Matrix
 {
 	std::vector<Data::Coord> edges;
 
 	// gather all the edges from the adjacency matrix of initial graph
-	for (std::size_t i = 0; i < this->matrix.size(); i++)
+	for (std::size_t i = 0; i < matrix.size(); i++)
 	{
-		for (std::size_t j = i; j < this->matrix[i].size(); j++)
+		for (std::size_t j = i; j < matrix[i].size(); j++)
 		{
-			if (this->matrix[i][j] != 0)
+			if (matrix[i][j] != 0)
 			{
 				edges.emplace_back( i, j );
 			}
@@ -624,15 +549,16 @@ auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
 	// create sufficient matrix for the line graph and fill it with zeros
 	std::vector<std::vector<int32_t>> mat;
 
-	std::size_t size = edges.size();
-	std::size_t index;
-
+	const std::size_t size = edges.size();
+	
 	for (std::size_t i = 0; i < size; i++)
 	{
 		mat.emplace_back(size);
 	}
 
 	Data::Coord coordinates;
+
+	std::size_t index;
 
 	// fill the line graph
 	for (std::size_t i = 0; i < size; i++)
@@ -642,9 +568,9 @@ auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
 
 		// search through the matrix for common vertices between edges
 		// in the same row of the initial adjacency matrix
-		for (std::size_t k = coordinates.x; k < this->matrix.size(); k++)
+		for (std::size_t k = coordinates.x; k < matrix.size(); k++)
 		{
-			if (this->matrix[coordinates.x][k] != 0 && k != coordinates.y)
+			if (matrix[coordinates.x][k] != 0 && k != coordinates.y)
 			{
 				index = Data::find_index(edges, { coordinates.x, k });
 				mat[i][index] = 1;
@@ -656,7 +582,7 @@ auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
 		// in the same column of the initial adjacency matrix
 		for (std::size_t k = coordinates.x; k < coordinates.y; k++)
 		{
-			if (this->matrix[k][coordinates.y] != 0 && k != coordinates.x)
+			if (matrix[k][coordinates.y] != 0 && k != coordinates.x)
 			{
 				index = Data::find_index(edges, { k, coordinates.y });
 				mat[i][index] = 1;
@@ -666,7 +592,7 @@ auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
 	}
 
 	// create and return the line graph object based on created matrix
-	Matrix matrix(mat, this->type);
+	Matrix matrix(mat, type);
 	return matrix;
 }
 
@@ -689,7 +615,7 @@ auto Graph::Matrix::change_to_line_graph() const -> Graph::Matrix
  *		- std::invalid_argument - when the file has an unsupported extension.
  *		- std::runtime_error - when the file could not be accessed.
  */
-auto Graph::Matrix::load_throughtput(std::string file_path) -> void
+auto Graph::Matrix::load_throughtput(const std::string& file_path) -> void
 {
 	int32_t value;
 
@@ -702,16 +628,16 @@ auto Graph::Matrix::load_throughtput(std::string file_path) -> void
 		if (file.good())
 		{
 			// create empty rows
-			this->throughtput.resize(this->matrix.size());
+			throughtput.resize(matrix.size());
 
 			// read each value from the throughtput matrix
-			for (std::size_t i = 0; i < this->matrix.size(); i++)
+			for (std::size_t i = 0; i < matrix.size(); i++)
 			{
 				// load each value to the respective row
-				for (std::size_t j = 0; j < this->matrix[i].size(); j++)
+				for (std::size_t j = 0; j < matrix[i].size(); j++)
 				{
 					file >> value;
-					this->throughtput[i].emplace_back(value);
+					throughtput[i].emplace_back(value);
 				}
 			}
 		}
@@ -733,6 +659,81 @@ auto Graph::Matrix::load_throughtput(std::string file_path) -> void
 
 
 /**
+ * Coloring function generating ordering for greedy coloring.
+ * 
+ * This function creates an order of vertices for the greedy coloring algorithm to use with
+ * greedy_coloring_core() function. Depending on the parameter, this function will generate
+ * a random permutation of the vertices set according to the greedy coloring algorithm rules.
+ * 
+ * \note The function does not guarantee that multiple calls to it will result in only unique permuatations.
+ * 
+ * \see Graph::Matrix::greedy_coloring_core()
+ * 
+ * \param permutate Flag stating whether the function should permutate the set.
+ * \param log_stream Pointer to the log output stream. If different than nullptr, this function and core
+ *					 coloring function will produce logs during runtime. Nullptr by default.
+ * \return Structure containing all relevant coloring information.
+ */
+auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) const noexcept -> Coloring
+{
+	std::map<std::size_t, std::size_t> m;
+
+	// if the flag is true, generate a random permutation acording to the rules
+	if (permutate)
+	{
+		std::vector<std::size_t> vertices(matrix.size());
+
+		// build a vector of vertices to permutate at this step
+		for (std::size_t i = 0; i < vertices.size(); i++)
+		{
+			vertices[i] = i;
+		}
+
+		// permutate the vector
+		auto rng = std::default_random_engine{};
+		std::shuffle(vertices.begin(), vertices.end(), rng);
+		
+		// append permutation to the map
+		for (std::size_t i = 0; const auto& vertex : vertices)
+		{
+			m.insert({ i, vertex });
+			i++;
+		}
+	}
+	// if permutation is not to be generated
+	else
+	{
+		// insert vertices to the map in default ordering
+		for (std::size_t i = 0; i < matrix.size(); i++)
+		{
+			m.insert({ i, i });
+		}
+	}
+
+	// if log stream was provided, generate the log
+	if (log_stream)
+	{
+		*log_stream << "Generated permutation:\n";
+		for (std::size_t i = 0; const auto& element : m)
+		{
+			*log_stream << element.second;
+			if (i < m.size() - 1)
+			{
+				*log_stream << ", ";
+			}
+			i++;
+		}
+		*log_stream << std::endl;
+	}
+	
+	// pass the map and arguments to the coloring core function
+	return greedy_coloring_core(m, log_stream);
+}
+
+
+
+
+/**
  * Implementation of modified Bellman-Ford path searching algorithm in one-to-all variant.
  * 
  * This function implements a Bellman-Ford algorithm for SSP problem. The process is optimized by checking 
@@ -747,11 +748,11 @@ auto Graph::Matrix::load_throughtput(std::string file_path) -> void
  * 
  * \see Graph::Roadmap for returned structure reference
  */
-auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stream) -> Roadmap
+auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stream) const noexcept -> Roadmap
 {
-	std::size_t vertices_count = this->matrix.size();
+	const std::size_t vertices_count = matrix.size();
 
-	Roadmap ret(this->matrix.size());
+	Roadmap ret(matrix.size());
 
 	// set starting distance to zero
 	ret.distances[start] = 0;
@@ -765,9 +766,9 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 	std::vector<Data::Coord> edges;
 
 	// extract all the edges present in the graph
-	for (std::size_t index = 0; auto & row : this->matrix)
+	for (std::size_t index = 0; const auto & row : matrix)
 	{
-		for (std::size_t index2 = 0; auto & element : row)
+		for (std::size_t index2 = 0; const auto & element : row)
 		{
 			if (element != 0)
 			{
@@ -784,7 +785,7 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 		// distance information
 		std::cout << "Distances: \n";
 
-		for (auto& dist : ret.distances)
+		for (const auto& dist : ret.distances)
 		{
 			if (dist == std::numeric_limits<int32_t>::max())
 			{
@@ -799,13 +800,13 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 		// previous vertices information
 		std::cout << "\nPrevious: \n";
 
-		for (std::size_t index = 0; auto & vec : ret.prev_node)
+		for (std::size_t index = 0; const auto & vec : ret.prev_node)
 		{
 			std::cout << index << ": ";
 
 			if (!vec.empty())
 			{	
-				for (auto& vertex : vec)
+				for (const auto& vertex : vec)
 				{
 					std::cout << vertex << ", ";
 				}
@@ -823,7 +824,10 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 	};
 
 	// log initial state
-	log_step();
+	if (log_stream)
+	{
+		log_step();
+	}
 
 	// iterate |V| - 1 times
 	for (std::size_t i = 1; i < vertices_count; i++)
@@ -832,13 +836,13 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 		change_found = false;
 
 		// iterate over all present edges
-		for (auto& edge : edges)
+		for (const auto& edge : edges)
 		{
 			// get the currently processed prev node vector
 			auto vec = ret.prev_node.begin();
 			std::ranges::advance(vec, edge.y);
 			
-			int32_t val = this->matrix[edge.x][edge.y];
+			const int32_t val = matrix[edge.x][edge.y];
 
 			// process the edge
 			if (ret.distances[edge.x] < std::numeric_limits<int32_t>::max() - val)
@@ -901,13 +905,11 @@ auto Graph::Matrix::load_mat_file(std::istream& file) -> void
 	std::string line;
 	std::size_t vertices = 0;
 	std::size_t pos;
-	
+
 	// function extracting the weight value from a row of adjacency matrix
 	auto extract_val = [&line, &pos]() -> int32_t
 	{
-		int32_t val;
-
-		val = std::stoi(line);
+		const int32_t val = std::stoi(line);
 		
 		if (val < 0)
 		{
@@ -927,15 +929,15 @@ auto Graph::Matrix::load_mat_file(std::istream& file) -> void
 	// build the matrix
 	for (std::size_t index = 0; std::getline(file, line); index++)
 	{
-		this->matrix.emplace_back(0);
+		matrix.emplace_back(0);
 		pos = 0;
 
 		while (pos != std::string::npos)
 		{
-			this->matrix[index].emplace_back(extract_val());
+			matrix[index].emplace_back(extract_val());
 		}
 
-		if (this->matrix[index].size() != this->matrix[0].size())
+		if (matrix[index].size() != matrix[0].size())
 		{
 			throw std::runtime_error("Deviating row length");
 		}
@@ -987,15 +989,15 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 	}
 
 	// parse the graph type
-	std::string type = graph_node->first_attribute("edgedefault")->value();
+	std::string type_s = graph_node->first_attribute("edgedefault")->value();
 
-	if (type == "undirected")
+	if (type_s == "undirected")
 	{
-		this->type = Type::undirected;
+		type = Type::undirected;
 	}
-	else if (type == "directed")
+	else if (type_s == "directed")
 	{
-		this->type = Type::directed;
+		type = Type::directed;
 	}
 	else
 	{
@@ -1013,21 +1015,15 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 	// create sufficient matrix
 	for (std::size_t i = 0; i < count; i++)
 	{
-		this->matrix.emplace_back(count);
+		matrix.emplace_back(count);
 	}
 
 	// obtain edges
-	std::string id1;
-	std::string id2;
-	uint32_t weight;
-
-	std::size_t index1, index2;
-
 	for (rapidxml::xml_node<>* edge = graph_node->first_node("edge"); edge; edge = edge->next_sibling("edge"))
 	{
 		// get the IDs
-		id1 = edge->first_attribute("source")->value();
-		id2 = edge->first_attribute("target")->value();
+		std::string id1 = edge->first_attribute("source")->value();
+		std::string id2 = edge->first_attribute("target")->value();
 
 		// stip any letters at the beginning of IDs
 		for (std::size_t i = 0; i < id1.size(); i++)
@@ -1048,23 +1044,23 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 		}
 
 		// obtain weight
-		weight = 1;
+		uint32_t weight = 1;
 
 		for (rapidxml::xml_node<>* key = edge->first_node("data"); key; key = key->next_sibling())
 		{
 			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
 			{
-				weight = atoi(key->value());
+				weight = std::stoi(key->value());
 			}
 		}
-		index1 = static_cast<std::size_t>(std::stoi(id1));
-		index2 = static_cast<std::size_t>(std::stoi(id2));
+		const std::size_t index1 = static_cast<std::size_t>(std::stoi(id1));
+		const std::size_t index2 = static_cast<std::size_t>(std::stoi(id2));
 		
-		this->matrix[index1][index2] = weight;
+		matrix[index1][index2] = weight;
 
-		if (this->type == Type::undirected && id1 != id2)
+		if (type == Type::undirected && id1 != id2)
 		{
-			this->matrix[index2][index1] = weight;
+			matrix[index2][index1] = weight;
 		}
 	}
 
@@ -1079,32 +1075,32 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
  * This function is for internal purpose and is not to be called directly by the user.
  * 
  */
-auto Graph::Matrix::calculate_degrees() -> void
+auto Graph::Matrix::calculate_degrees() noexcept -> void
 {
 	// create the degrees table
-	this->degrees.resize(this->matrix.size());
+	degrees.resize(matrix.size());
 
 	// iterate through the whole adjacency matrix to calculate degree of each node
-	for (std::size_t index1 = 0; auto& row : this->matrix)
+	for (std::size_t index1 = 0; const auto& row : matrix)
 	{
-		for (std::size_t index2 = 0; auto& element : row)
+		for (std::size_t index2 = 0; const auto& element : row)
 		{
 			// if connection was found, increase the degree
 			if (element != 0)
 			{
-				this->degrees[index1].out_deg++;
-				this->degrees[index2].in_deg++;
+				degrees[index1].out_deg++;
+				degrees[index2].in_deg++;
 
 				// if a loop was found, increase the degree by 2
-				if (this->type == Type::undirected)
+				if (type == Type::undirected)
 				{
 					if (index1 == index2)
 					{
-						this->degrees[index1].deg += 2;
+						degrees[index1].deg += 2;
 					}
 					else
 					{
-						this->degrees[index1].deg++;
+						degrees[index1].deg++;
 					}
 				}
 			}
@@ -1112,4 +1108,94 @@ auto Graph::Matrix::calculate_degrees() -> void
 		}
 		index1++;
 	}
+}
+
+
+
+
+/**
+ * Core coloring function performing the coloring operation.
+ * 
+ * This function performs the coloring operation based on the ordering passed
+ * in form of a map. It returns a structure containing the total amount of colors used,
+ * and a vector stating which color was assigned to each of the vertices. The function
+ * produces logs depending on whether a log stream pointer was provided or not. If 
+ * this parameter is nullptr, logs will not be produced.
+ * 
+ * \note log_stream is nullptr by default.
+ * 
+ * \param m Map containing the order of vertices to color by.
+ * \param log_stream Pointer to an output stream for logs to be produced.
+ * \return 
+ */
+auto Graph::Matrix::greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream) const noexcept -> Graph::Coloring
+{
+	// vertices count
+	const std::size_t count = m.size();
+
+	// create return structure
+	Coloring ret(0, count);
+
+	// create array of flags for taken colors
+	std::unique_ptr<bool[]> colors_taken(new bool[count]);
+
+	auto log_change = [&ret, &log_stream, &colors_taken, &count](std::size_t vertex)
+	{
+		*log_stream << "Colors taken: ";
+		for (std::size_t i = 0; i < count; i++)
+		{
+			if (colors_taken[i])
+			{
+				*log_stream << i;
+				if (i < count - 1)
+				{
+					*log_stream << ", ";
+				}
+			}
+		}
+
+		*log_stream << "\nVertex " << vertex << " was assigned color " << ret.color[vertex] << '\n' << std::endl;
+	};
+
+	// iterate through the map
+	for (const auto& vertex : m)
+	{
+		// reset taken flag for all colors
+		for (std::size_t i = 0; i < count; i++)
+		{
+			colors_taken[i] = false;
+		}
+
+		// check which colors were taken
+		for (std::size_t i = 0; const auto& element : matrix[vertex.second])
+		{
+			// check whether an outgoing or incoming edge exists and if the neighbouring vertex has assigned color
+			if ((matrix[vertex.second][i] > 0 || matrix[i][vertex.second] > 1)
+				&& ret.color[i] > -1)
+			{
+				colors_taken[ret.color[i]] = true;
+			}
+
+			i++;
+		}
+
+		int32_t color = 0;
+
+		// skip all taken colors until the smallest not taken color
+		for (; colors_taken[color]; color++);
+
+		// assign color to the vertex
+		ret.color[vertex.second] = color;
+
+		// if a log output stream was given, produce a log
+		if (log_stream)
+		{
+			log_change(vertex.second);
+		}
+	}
+
+	// calculate the amount of colors used
+	ret.color_count = *max_element(ret.color.begin(), ret.color.end()) + 1;
+
+	return ret;
 }

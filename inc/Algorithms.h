@@ -10,13 +10,27 @@ namespace Graph
 	/**
 	 * \brief Structure storing information regarding found path by path-searching algorithm.
 	 */
-	struct Path
+	struct [[nodiscard]] Path
 	{
 	public:
 		Path() = default;
-		Path(std::vector<std::size_t> path, uint32_t distance, uint32_t throughtput);
 
-		friend auto operator << (std::ostream& stream, const Path& p) ->std::ostream&;
+		/**
+		 * Constructor saving the Path information.
+		 *
+		 * \param path Vector containing the indexes of each subsequent vertex in a path, starting
+		 *			   with the source vertex and ending with a destination vertex.
+		 * \param distance Summed distance from the source vertex to the destination vertex.
+		 * \param throughtput The throughtput of the path, which is the minimal throughtput of
+		 *					  all subsequent stretch.
+		 */
+		Path(const std::vector<std::size_t>& path, uint32_t distance, uint32_t throughtput) noexcept
+			: path(path),
+			distance(distance),
+			throughtput(throughtput)
+		{}
+
+		friend auto operator << (std::ostream& stream, const Path& p) noexcept -> std::ostream&;
 
 		std::vector<std::size_t> path;  /**< Vector containing the path in order. */
 		uint32_t distance;				/**< Summed distance from the start to the end. */
@@ -24,26 +38,65 @@ namespace Graph
 											 algorithm, and equals 0 for normal algorithms */
 	};
 
+
+
+
 	/**
 	 * \brief Structure for storing data from path-searching algorithms. 
 	 * 
 	 * \note The class does allow for storing several paths of the same length.
 	 */
-	struct Roadmap
+	struct [[nodiscard]] Roadmap
 	{
 		std::vector<std::vector<std::size_t>> prev_node; /**< Vector of possible previous vertices with the same distance */
 		std::vector<int32_t> distances; /**< The distance value from start vertex to any given vertex */
 		std::vector<int32_t> throughtputs;
 		std::size_t start;
 	
-		Roadmap(std::size_t vertex_count);
+		/**
+		 * Constructor creating internal vectors of given size.
+		 *
+		 * \param vertex_count Amount of vertices in the graph structure.
+		 */
+		Roadmap(std::size_t vertex_count) noexcept
+			: prev_node(vertex_count),
+			distances(vertex_count, std::numeric_limits<int32_t>::max()),
+			throughtputs(vertex_count, std::numeric_limits<int32_t>::max()),
+			start(0)
+		{}
 
-		auto print() const -> void;
-		auto paths(std::size_t end) const -> std::vector<Path>;
+		auto print() const noexcept -> void;
+		auto [[nodiscard]] paths(std::size_t end) const noexcept -> std::vector<Path>;
 
 	private:
-		auto path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t const& thr, int32_t const& distance, std::size_t v) const -> void;
+		auto path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, const int32_t& thr, const int32_t& distance, std::size_t v) const noexcept-> void;
 	};
+
+
+
+
+	/**
+	 * Structure containing the information regarding the color assignment by the coloring functions.
+	 */
+	struct [[nodiscard]] Coloring
+	{
+		int32_t color_count;		/**< Total amount of colors used in the coloring process */
+		std::vector<int32_t> color; /**< Vector containing color assignment for each vertex */
+
+		/**
+		 * Constructor creating sufficiently big vector for colors assignment.
+		 *
+		 * \param color_count Default amount of colors used.
+		 * \param vertex_count Amount of the vertices.
+		 */
+		Coloring(int32_t color_count, std::size_t vertex_count) noexcept
+			: color_count(color_count),
+			color(vertex_count, -1)
+		{}
+	};
+
+
+
 
 	/*
 		Abstract algorithmic interface for the specific graph representations to implement
@@ -82,7 +135,10 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual auto greedy_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr) const -> Coloring = 0;
+
+
+
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the LF algorithm rules. 
@@ -93,7 +149,10 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual auto lf_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto lf_coloring(bool permutate = false, std::ostream* log_stream = nullptr) const -> Coloring = 0;
+
+
+
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the SL algorithm rules.
@@ -104,7 +163,10 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Numer of colors used in the coloring process.
 		 */
-		virtual auto sl_coloring(bool permutate = false, const std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto sl_coloring(bool permutate = false, std::ostream* log_stream = nullptr) const -> Coloring = 0;
+
+
+
 
 		/**
 		 * Common definition of the function providing the Belman-Ford point-to-all path-searching algorithm implementation.
@@ -115,7 +177,7 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Data::Roadmap structure containing all necessary informations regarding the found paths.
 		 */
-		virtual auto bellman_ford(std::size_t start, const std::ostream* log_stream = nullptr) -> Roadmap = 0;
+		virtual auto bellman_ford(std::size_t start, std::ostream* log_stream = nullptr) const -> Roadmap = 0;
 
 	protected:
 
@@ -131,6 +193,6 @@ namespace Graph
 		 *					 Nullptr by default.
 		 * \return Number of colors used in the coloring process.
 		 */
-		virtual auto greedy_coloring_core(std::map<int, int>& m, const std::ostream* log_stream = nullptr) -> int32_t = 0;
+		virtual auto greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream = nullptr) const -> Coloring = 0;
 	};
 }

@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 
-#include "../inc/GraphBase.h"
+#include "GraphBase.h"
 
 namespace Data
 {
@@ -25,7 +25,7 @@ namespace Data
 	public:
 		// matrix graph generation
 		auto make_matrix(std::ostream& stream, uint32_t vertex_amount, const Limits& limits, Graph::Type type, std::uint8_t density_psc = 1) const noexcept -> void;
-		auto make_throughtput_matrix(std::ostream& stream, std::ifstream& matrix_src, const Limits& limits, Graph::Type type) const noexcept -> void;
+		auto make_throughtput_matrix(std::ostream& stream, std::ifstream& matrix_src, const Limits& limits, Graph::Type type) const -> void;
 
 		// list graph generation
 		auto make_list(std::ostream& stream, std::size_t vertex_amount, Graph::Type type, std::uint8_t density_psc = 1) const noexcept -> void;

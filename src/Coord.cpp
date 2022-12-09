@@ -1,5 +1,7 @@
 #include "Coord.h"
 
+#include <limits>
+
 /**
  * \brief Function finding the index of given coordinate pair in coordinates vector.
  * 

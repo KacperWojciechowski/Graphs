@@ -36,26 +36,26 @@ namespace Data
 
 		// getters
 
-		auto [[nodiscard]] row() const noexcept -> std::size_t const&
+		[[nodiscard]] auto row() const noexcept -> std::size_t const&
 		{
 			return x;
 		}
 
-		auto [[nodiscard]] row() noexcept -> std::size_t&
+		[[nodiscard]] auto row() noexcept -> std::size_t&
 		{
 			return x;
 		}
 
-		auto [[nodiscard]] col() const noexcept -> std::size_t const&
+		[[nodiscard]] auto col() const noexcept -> std::size_t const&
 		{
 			return y;
 		}
 
-		auto [[nodiscard]] col() noexcept -> std::size_t&
+		[[nodiscard]] auto col() noexcept -> std::size_t&
 		{
 			return y;
 		}
 	};
 
-	auto [[nodiscard]] find_index(const std::vector<Coord>& nodes, const Coord& _coord) noexcept -> std::size_t;
+	[[nodiscard]] auto find_index(const std::vector<Coord>& nodes, const Coord& _coord) noexcept -> std::size_t;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\inc\Coord.h"
+#include "Coord.h"
 
 #include <cstdint>
 #include <vector>

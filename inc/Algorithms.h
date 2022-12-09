@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <limits>
 
 namespace Graph
 {
@@ -66,7 +67,7 @@ namespace Graph
 		{}
 
 		auto print() const noexcept -> void;
-		auto [[nodiscard]] paths(std::size_t end) const noexcept -> std::vector<Path>;
+		[[nodiscard]] auto paths(std::size_t end) const noexcept -> std::vector<Path>;
 
 	private:
 		auto path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, const int32_t& thr, const int32_t& distance, std::size_t v) const noexcept-> void;

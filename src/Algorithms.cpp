@@ -57,7 +57,7 @@ auto Graph::Roadmap::print() const noexcept -> void
  * \param end Destination vertex of the path.
  * \return
  */
-auto Graph::Roadmap::paths(std::size_t end) const noexcept -> std::vector<Path>
+[[nodiscard]] auto Graph::Roadmap::paths(std::size_t end) const noexcept -> std::vector<Path>
 {
 	std::vector<Path> ret;
 	std::vector<std::size_t> path;

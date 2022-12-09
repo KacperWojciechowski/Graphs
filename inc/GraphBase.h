@@ -96,7 +96,7 @@ namespace Graph
 		 * 
 		 * \return The amount of the vertices in a graph object.
 		 */
-		virtual auto [[nodiscard]] get_nodes_amount() const -> std::size_t = 0;
+		virtual [[nodiscard]] auto get_nodes_amount() const -> std::size_t = 0;
 
 
 
@@ -107,7 +107,7 @@ namespace Graph
 		 * \param node_id ID of a vertex (counting from 0) to get the degree of.
 		 * \return The degree of a given vertex.
 		 */
-		virtual auto get_node_degree(std::size_t node_id) const -> Degree = 0;
+		virtual [[nodiscard]] auto get_node_degree(std::size_t node_id) const -> Degree = 0;
 
 
 
@@ -119,7 +119,7 @@ namespace Graph
 		 * \param destination End vertex of an edge.
 		 * \return Weight value of the connection.
 		 */
-		virtual auto [[nodiscard]] get_edge(std::size_t source, std::size_t destination) const -> int32_t = 0;
+		virtual [[nodiscard]] auto get_edge(std::size_t source, std::size_t destination) const -> int32_t = 0;
 
 
 
@@ -127,7 +127,7 @@ namespace Graph
 		/**
 		 * \brief Common function definition for type getter.
 		 */
-		virtual auto get_type() const -> Type = 0;
+		virtual [[nodiscard]] auto get_type() const -> Type = 0;
 
 
 

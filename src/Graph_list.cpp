@@ -2,7 +2,7 @@
 #include "PixelMap.h"
 
 #pragma warning(push, 0)
-#include "rapidxml\rapidxml.hpp"
+#include "rapidxml/rapidxml.hpp"
 #pragma warning(pop)
 
 #include <iomanip>

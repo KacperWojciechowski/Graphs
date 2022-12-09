@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "..\inc\GraphBase.h"
+#include "GraphBase.h"
 
 // forward declaration of PixelMap class for convertion constructor
 namespace Data

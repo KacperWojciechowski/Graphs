@@ -27,3 +27,7 @@ Features:
 - Examples library available also in documentation, showing how to use the library's API
 
 **For further information see doxygen documentation**
+
+Side notes:
+------------------------------------------------------------
+Current CMakeLists.txt version requires user to have installed g++-10 and gcc-10 in their /usr/bin directory. To be fixed in the future.

@@ -15,10 +15,10 @@ namespace Graph
 {
 	/**
 	 * \brief Class representing a graph in the adjacency list form.
-	 * 
+	 *
 	 * The representation is based on the STL list and vector classes. It does provide a
 	 * standard graph interface stated by the Graph virtual class.
-	 * 
+	 *
 	 * \warning This class requires from the graph to have only non-negative weights of the edges.
 	 */
 	class List : public GraphBase
@@ -52,21 +52,21 @@ namespace Graph
 		auto remove_edge(std::size_t source, std::size_t destination) -> void;
 		auto remove_node(std::size_t node_id) -> void;
 
-		auto [[nodiscard]] get_nodes_amount() const noexcept -> std::size_t
+		[[nodiscard]] auto get_nodes_amount() const noexcept -> std::size_t
 		{
 			return list.size();
 		}
 
 		/**
 		 * Getter for a vertex degree.
-		 * 
+		 *
 		 * \warning Exception to guard against:
 		 *		- std::out_of_range - given vertex ID is out of range.
-		 * 
+		 *
 		 * \param node_id ID of the vertex.
-		 * \return 
+		 * \return
 		 */
-		auto get_node_degree(std::size_t node_id) const noexcept -> Degree
+		auto get_node_degree(std::size_t node_id) const -> Degree
 		{
 			if (node_id >= degrees.size())
 			{
@@ -82,12 +82,12 @@ namespace Graph
 		 *
 		 * \warning Exceptions to guard against:
 		 *		- std::out_of_range - One of the given indexes is out of range.
-		 * 
+		 *
 		 * \param source ID of the beginning vertex of the edge.
 		 * \param destination ID of the end vertex of the edge.
 		 * \return Weight of the connection.
 		 */
-		auto [[nodiscard]] get_edge(std::size_t source, std::size_t destination) const -> int32_t
+		[[nodiscard]] auto get_edge(std::size_t source, std::size_t destination) const -> int32_t
 		{
 			int32_t ret = 0;
 			if (source >= list.size() || destination >= list.size())
@@ -105,14 +105,14 @@ namespace Graph
 			return ret;
 		}
 
-		auto [[nodiscard]] get_type() const noexcept -> Type
+		[[nodiscard]] auto get_type() const noexcept -> Type
 		{
 			return type;
 		}
 
 		auto save_graphml(std::ostream& stream, std::string name) const noexcept -> void;
 
-		auto [[nodiscard]] change_to_line_graph() const -> List;
+		[[nodiscard]] auto change_to_line_graph() const -> List;
 
 	private:
 
@@ -130,8 +130,3 @@ namespace Graph
 		Type type;						   /**< Enum signifying the type of the graph */
 	};
 }
-
-
-
-
-

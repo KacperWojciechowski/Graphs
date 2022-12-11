@@ -7,28 +7,31 @@
 
 #include <iomanip>
 #include <fstream>
+#include <cstring>
+#include <ranges>
+#include <algorithm>
 
 /**
  * \brief Constructor creating the graph from file.
- * 
+ *
  * The constructor accepts the path to a file in supported format. If format is incorrect
- * or the file cannot be accessed, an exception is returned. 
- * 
+ * or the file cannot be accessed, an exception is returned.
+ *
  * \param file_path Path of the data source file.
  * \param type Type of the graph (from the Graph::Type enum). In case of reading from graphML file
  *			   this parameter is ignored.
- * 
+ *
  * \warning Exceptions to guard against:
  *		- std::invalid_argument - when given file extension is not supported.
  *		- std::runtime_error	- when given file cannot be accessed.
  * \attention Supported formats are .lst and .GRAPHML. The .lst representation does not
  *			  contain weights, so a weight of 1 is assumed for each connection if using
- *			  this file format as a data source. 
- * 
+ *			  this file format as a data source.
+ *
  * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for House of Graphs adjacency list format guideline.
  * \see <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html"> Here </a> for GraphML format guideline.
- * 
- * \ref create_list_from_lst.cpp "Example of using .lst file as data source"\n 
+ *
+ * \ref create_list_from_lst.cpp "Example of using .lst file as data source"\n
  * \ref create_list_from_graphml.cpp "Example of using .GRAPHML file as data source"
  */
 Graph::List::List(const std::string& file_path, Type type)
@@ -63,7 +66,7 @@ Graph::List::List(const std::string& file_path, Type type)
 			throw std::runtime_error("Could not open file");
 		}
 		file.close();
-		
+
 		calculate_degrees();
 	}
 	// signalizing the unsupported file format
@@ -78,7 +81,7 @@ Graph::List::List(const std::string& file_path, Type type)
 
 /**
  * \brief Constructor creating the Graph::List object based on any supported graph representation.
- * 
+ *
  * \param matrix Reference to the Graph::Matrix object.
  */
 Graph::List::List(const GraphBase& graph) noexcept
@@ -109,16 +112,16 @@ Graph::List::List(const GraphBase& graph) noexcept
 
 /**
  * Constructor creating a graph of neighbourhood in a pixel map.
- * 
+ *
  * This constructor creates an adjacency list object representing the neighbourhood
  * of each non-wall field within a pixel map based on Data::PixelMap object. This
  * function treats all the connections between adjacent field within the map as bi-directional,
  * and as such, assumes the graph is undirected.
- * 
+ *
  * \see Data::PixelMap for pixel map representation reference.
- * 
+ *
  * \param map Reference to a pixel map representation.
- * 
+ *
  * \ref create_list_from_pixelmap.cpp "Example of creating a list graph based on pixel map"
  */
 Graph::List::List(const Data::PixelMap& map) noexcept
@@ -194,12 +197,12 @@ Graph::List::List(const Data::PixelMap& map) noexcept
 
 /**
  * \brief Function loading the data from .lst file into the object.
- * 
+ *
  * This function is for internal use only. To create an object containig data
  * from .lst file, use the specified constructor.
- * 
+ *
  * \see List::List(std::string file_path, std::string name, Graph::Type type)
- * 
+ *
  * \param file Reference to the file object of the data source.
  */
 auto Graph::List::load_lst_file(std::istream& file) noexcept -> void
@@ -228,7 +231,7 @@ auto Graph::List::load_lst_file(std::istream& file) noexcept -> void
 		{
 			list.emplace_back(0);
 			pos = 0;
-		
+
 			// omit the first identifier
 			line = line.substr(line.find(' ') + 1);
 
@@ -245,9 +248,9 @@ auto Graph::List::load_lst_file(std::istream& file) noexcept -> void
 
 /**
  * \brief Function loading the data from .GRAPHML file.
- * 
+ *
  * \param file Reference to the file object of the data source.
- * 
+ *
  * \warning Exceptions to guard against:
  *		- std::runtime_error When weight is less or equal to 0.
  */
@@ -262,7 +265,7 @@ auto Graph::List::load_graphml_file(std::istream& file) -> void
 
 	// parse the document
 	document->parse<0>(&buffer[0]);
-	
+
 	// save the root node and key node
 	auto root_node = document->first_node("graphml");
 	auto weight_node = root_node->first_node("key");
@@ -271,7 +274,7 @@ auto Graph::List::load_graphml_file(std::istream& file) -> void
 	std::string weight_key = "";
 
 	// acquire the weight key
-	while (weight_node && strcmp(weight_node->first_attribute("attr.name")->value(), "weight") != 0)
+	while (weight_node && std::strcmp(weight_node->first_attribute("attr.name")->value(), "weight") != 0)
 	{
 		weight_node = weight_node->next_sibling("key");
 	}
@@ -339,7 +342,7 @@ auto Graph::List::load_graphml_file(std::istream& file) -> void
 
 		for (rapidxml::xml_node<>* key = edge->first_node("data"); key; key = key->next_sibling())
 		{
-			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
+			if (std::strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
 			{
 				weight = std::atoi(key->value());
 				if (weight <= 0)
@@ -366,9 +369,9 @@ auto Graph::List::load_graphml_file(std::istream& file) -> void
 
 /**
  * \brief Function for calculating the degrees of each vertex.
- * 
+ *
  * This function is for internal use only.
- * 
+ *
  */
 auto Graph::List::calculate_degrees() noexcept -> void
 {
@@ -399,7 +402,7 @@ auto Graph::List::calculate_degrees() noexcept -> void
 
 /**
  * \brief Simple copy constructor.
- * 
+ *
  * \param l lvalue reference to the data source object.
  */
 Graph::List::List(const List& l) noexcept
@@ -414,7 +417,7 @@ Graph::List::List(const List& l) noexcept
 
 /**
  * \brief Simple move constructor.
- * 
+ *
  * \param l rvalue reference to the data source object
  */
 Graph::List::List(List&& l) noexcept
@@ -431,7 +434,7 @@ Graph::List::List(List&& l) noexcept
 
 /**
  * \brief Function printing information regarding the graph.
- * 
+ *
  * Information displayed are such as:
  *  - Name of the graph
  *  - Type of the graph
@@ -439,11 +442,11 @@ Graph::List::List(List&& l) noexcept
  *	- IDs of adjacent vertexes
  *  - Weights of the connections
  *  - Degree of each vertex
- * 
+ *
  *	\note Data is displayed in format "degree: ____*, ID: adj_vert_ID {weight}, adj_vert_ID {weight}, ...",
  *		  but the degree field varies based on the graph type. In case of undirected graph, only one value is shown.
  *		  In case of directed graphs, indegree and outdegree is shown in format "in|out".
- * 
+ *
  */
 auto Graph::List::print() const noexcept -> void
 {
@@ -502,20 +505,20 @@ auto Graph::List::print() const noexcept -> void
 
 /**
  * \brief Function adding a connection between two given vertices.
- * 
+ *
  * If the graph type is undirected, the connection will be inserted both ways.
- * 
- * \warning If an edge between given vertices already exists, the weight of the 
+ *
+ * \warning If an edge between given vertices already exists, the weight of the
  *			connection will be overwritten, and second edge will not be added.
- * 
+ *
  * \warning Exceptions to guard against:
  *		- std::out_of_range - one of the indexes is out of range
  *		- std::invalid_argument - weight is equal to zero
- * 
+ *
  * \param source ID of the source vertex.
  * \param destination ID of the end vertex.
  * \param weight Weight of the connection.
- * 
+ *
  * \ref add_edge_list_insert.cpp "Example of adding an edge between two vertices"\n
  * \ref add_edge_list_override.cpp "Example of modifying the weight of an existing edge"
  */
@@ -543,7 +546,7 @@ auto Graph::List::make_edge(std::size_t source, std::size_t destination, int32_t
 	else
 	{
 		list[source].emplace_back( destination, weight );
-		
+
 		// calculate degrees
 		degrees[source].out_deg++;
 		degrees[source].deg++;
@@ -553,9 +556,9 @@ auto Graph::List::make_edge(std::size_t source, std::size_t destination, int32_t
 	// if the graph type is undirected
 	if (type == Type::undirected)
 	{
-		// search for the iterator of mirrored connection 
+		// search for the iterator of mirrored connection
 		edge_itr = std::ranges::find(list[destination], source, &Node::ID);
-		
+
 		// if iterator was found, override the weight of the connection
 		if (edge_itr != list[destination].end())
 		{
@@ -575,10 +578,10 @@ auto Graph::List::make_edge(std::size_t source, std::size_t destination, int32_t
 
 /**
  * \brief Function adding a new vertex to the graph structure.
- * 
+ *
  * Added vertex is initially isolated, so any connections to it need
  * to be added manually.
- * 
+ *
  * \see add_node_list.cpp "Example of adding an isolated vertex"
  */
 auto Graph::List::add_node() noexcept -> void
@@ -592,15 +595,15 @@ auto Graph::List::add_node() noexcept -> void
 
 /**
  * \brief Function removing a connection between two given adjacency vertices.
- * 
+ *
  * If the graph is undirected, the connection will be removed both ways.
- * 
+ *
  * \param source ID of the beginning vertex.
  * \param destination ID of the end vertex.
- * 
+ *
  * \warning Exceptions to guard against:
  *		- std::out_of_range - When any of the given IDs is out of bounds for the adjacency list.
- * 
+ *
  * \ref remove_edge_list.cpp "Example of removing an edge from graph structure"
  */
 auto Graph::List::remove_edge(std::size_t source, std::size_t destination) -> void
@@ -625,7 +628,7 @@ auto Graph::List::remove_edge(std::size_t source, std::size_t destination) -> vo
 		}
 	}
 
-	// if the graph is undirected, remove the mirrored edge 
+	// if the graph is undirected, remove the mirrored edge
 	if (type == Type::undirected)
 	{
 		for (auto itr = list[destination].begin(); itr != list[destination].end(); itr++)
@@ -648,15 +651,15 @@ auto Graph::List::remove_edge(std::size_t source, std::size_t destination) -> vo
 
 /**
  * \brief Function for removing a vertex from the graph structure.
- * 
+ *
  * \param node_id ID of the vertex to be removed from the graph structure.
- * 
+ *
  * \warning Removal of a vertex causes the re-enumeration of each subsequent vertex,
  *			by decreasing their indexes by 1.
- * 
+ *
  * \warning Exception to guard against:
  *			- std::out_of_range - when given vertex ID is out of bounds for the list.
- * 
+ *
  * \ref remove_node_list.cpp "Example of removing a vertex from graph structure"
  */
 auto Graph::List::remove_node(std::size_t node_id) -> void
@@ -682,11 +685,11 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 		if (!removed && i == node_id)
 		{
 			removed = true;
-			
+
 			// set default value for iterator
 			list_itr = list.begin();
 			deg_itr = degrees.begin();
-			
+
 			// advance iterator to get the desired one
 			std::ranges::advance(list_itr, i);
 			std::ranges::advance(deg_itr, i);
@@ -718,7 +721,6 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 				else if (itr2->ID > node_id)
 				{
 					itr2->ID--;
-					
 				}
 				// move to the next vertex
 				itr2++;
@@ -732,12 +734,12 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
 
 /**
  * \brief Function saving current graph structure  into a .GRAPHML format file.
- * 
+ *
  * This format does contain the weights of the edges.
- * 
+ *
  * \param stream Stream to which the graphML data format should be saved to.
  * \param name Name of the graph (user-given).
- * 
+ *
  * \ref save_list_to_graphml.cpp "Example of saving current graph structure in .GRAPHML format"
  */
 auto Graph::List::save_graphml(std::ostream& stream, std::string name) const noexcept -> void

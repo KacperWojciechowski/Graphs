@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_COMPILER "/usr/bin/g++-10")
+set(CMAKE_C_COMPILER "/usr/bin/gcc-10")
+
 project(graphs CXX)
 
 include(FetchContent)
@@ -13,17 +18,17 @@ FetchContent_MakeAvailable(googletest)
 
 file(GLOB Sources "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-add_subdirectory(lib)
 add_library(Graph_lib ${Sources})
 
-target_include_directories(Graph_lib PUBLIC inc)
+target_include_directories(Graph_lib PUBLIC inc
+									 PUBLIC "third-party/rapidxml/include")
+
 
 file(GLOB TestSources "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
 
 add_executable(Tests ${TestSources})
 
 target_link_libraries(Tests
-	INTERFACE RapidXML
 	gtest
 	gmock
 	gtest_main
@@ -34,7 +39,7 @@ set_target_properties(Tests PROPERTIES CXX_STANDARD 20)
 target_compile_features(Tests PUBLIC cxx_std_20)
 target_include_directories(Tests PUBLIC inc)
 
-target_compile_options(Tests PUBLIC -std=c++2a -Wall -Wextra -pedantic -Werror -std=c++2a)
+target_compile_options(Tests PUBLIC -Wall -Wextra -pedantic -Werror)
 
 add_custom_target(run_tests COMMAND ./tests DEPENDS Tests)
 enable_testing()

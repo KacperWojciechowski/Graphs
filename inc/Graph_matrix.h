@@ -12,10 +12,10 @@ namespace Graph
 
 	/**
 	 * @brief This class provides an adjacency matrix graph representation.
-	 * 
+	 *
 	 * The representation is based on the STL vector class. It does provide a
-	 * standard graph interface stated by the Graph virtual class. 
-	 * 
+	 * standard graph interface stated by the Graph virtual class.
+	 *
 	 * \warning This class requires from graph have only non-negative weights of the edges.
 	 */
 	class Matrix : public GraphBase//, public Algorithms
@@ -25,7 +25,7 @@ namespace Graph
 		/* Constructors */
 		Matrix(const std::string& file_path, Type type);
 		Matrix(const std::vector<std::vector<int32_t>>& mat, Type type) noexcept;
-		
+
 		Matrix(const GraphBase& l) noexcept;
 
 		Matrix(const Matrix& m) noexcept;
@@ -40,17 +40,17 @@ namespace Graph
 		auto remove_edge(std::size_t source, std::size_t destination) -> void;
 		auto remove_node(std::size_t node_id) -> void;
 
-		auto [[nodiscard]] get_nodes_amount() const noexcept -> std::size_t
+		[[nodiscard]] auto get_nodes_amount() const noexcept -> std::size_t
 		{
 			return matrix.size();
 		}
 
 		/**
 		 * \brief Getter for the degree of given vertex.
-		 * 
+		 *
 		 * \param node_id ID of the vertex which degree should be returned.
 		 * \return Degree of the given vertex
-		 * 
+		 *
 		 * \warning Exception to guard against:
 		 *		- std::out_of_range - when given ID exceeds the count of vertices.
 		 */
@@ -73,7 +73,7 @@ namespace Graph
 		 * \warning Exception to guard against:
 		 *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
 		 */
-		auto [[nodiscard]] get_edge(std::size_t source, std::size_t destination) const -> int32_t
+		[[nodiscard]] auto get_edge(std::size_t source, std::size_t destination) const -> int32_t
 		{
 			if (source >= matrix.size() || destination >= matrix.size())
 			{
@@ -85,14 +85,14 @@ namespace Graph
 			}
 		}
 
-		auto [[nodiscard]] get_type() const noexcept -> Type
+		[[nodiscard]] auto get_type() const noexcept -> Type
 		{
 			return type;
 		}
 
 		auto save_graphml(std::ostream& stream, std::string name) const noexcept -> void;
 
-		auto [[nodiscard]] change_to_line_graph() const noexcept -> Matrix;
+		[[nodiscard]] auto change_to_line_graph() const noexcept -> Matrix;
 
 		/* Extended interface */
 		auto load_throughtput(const std::string& file_path) -> void;
@@ -107,13 +107,12 @@ namespace Graph
 
 		/* Extended algorithmic interface */
 		auto throughtput_bellman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, std::ostream* log_stream) const noexcept -> Roadmap;
-	
-	
+
 	private:
 		/* Load functions for specific file formats */
 		auto load_mat_file(std::istream& file) -> void;
 		auto load_graphml_file(std::istream& file) -> void;
-		auto calculate_degrees() -> void;
+		auto calculate_degrees() noexcept -> void;
 
 		/* Private algorithmic functions */
 		auto greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream = nullptr) const noexcept -> Coloring;

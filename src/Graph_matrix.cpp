@@ -5,6 +5,7 @@
 #include <fstream>
 #include <algorithm>
 #include <random>
+#include <cstring>
 
 #pragma warning(push, 0)
 #include "rapidxml/rapidxml.hpp"
@@ -12,23 +13,23 @@
 
 /**
  * \brief Constructor loading the graph from file.
- * 
+ *
  * The constructor accepts the path to a file in supported format. If format is incorrect
- * or the file cannot be accessed, an exception is returned. 
- * 
+ * or the file cannot be accessed, an exception is returned.
+ *
  * \param file_path Path of the data source file.
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
- * 
+ *
  * \warning Exceptions to guard against:
  *		- std::invalid_argument - when given file extension is not supported.
  *		- std::runtime_error	- when given file cannot be accessed.
- * 
- * \attention Supported formats are .mat and .GRAPHML. 
- * 
+ *
+ * \attention Supported formats are .mat and .GRAPHML.
+ *
  * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for .mat adjacency matrix format guideline.
  * \see <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html"> Here </a> for GraphML format guideline.
- * 
+ *
  * \ref create_matrix_from_graphml.cpp "Example of creating the object from .GRAPHML file"\b
  * \ref create_matrix_from_mat.cpp "Example of creating the object from .mat file"\b
  */
@@ -48,7 +49,7 @@ Graph::Matrix::Matrix(const std::string& file_path, Type type)
 			throw std::runtime_error("Could not open file");
 		}
 		file.close();
-		
+
 		calculate_degrees();
 	}
 	// loading the .GRAPHML file
@@ -67,7 +68,7 @@ Graph::Matrix::Matrix(const std::string& file_path, Type type)
 
 		calculate_degrees();
 	}
-	// signalizing the unsupported file format 
+	// signalizing the unsupported file format
 	else
 	{
 		throw std::invalid_argument("File not supported");
@@ -79,7 +80,7 @@ Graph::Matrix::Matrix(const std::string& file_path, Type type)
 
 /**
  * \brief Constructor creating a graph based on the given matrix made up of vectors.
- * 
+ *
  * \param mat Vector of vectors containing the adjacency matrix values (weights of the connections).
  * \param name Name of the graph (user-given).
  * \param type Type of the graph (from the Graph::Type enum).
@@ -96,13 +97,13 @@ Graph::Matrix::Matrix(const std::vector<std::vector<int32_t>>& mat, Type type) n
 
 /**
  * Conversion constructor allowing to create a Graph::Matrix object based on any supported graph representation.
- * 
+ *
  * This constructor allows user to switch current graph representation to adjacency matrix representation.
- * 
+ *
  * \param l Reference to a different supported graph representation.
  */
 Graph::Matrix::Matrix(const GraphBase& graph) noexcept
-{ 
+{
 	// get general graph info
 	type = graph.get_type();
 	const std::size_t count = graph.get_nodes_amount();
@@ -125,7 +126,7 @@ Graph::Matrix::Matrix(const GraphBase& graph) noexcept
 
 /**
  * \brief Simple copy constructor allowing for creating a deep copy from lvalue reference.
- * 
+ *
  * \param m lvalue reference to the copied Graph::Matrix object.
  */
 Graph::Matrix::Matrix(const Matrix& m) noexcept
@@ -138,9 +139,9 @@ Graph::Matrix::Matrix(const Matrix& m) noexcept
 
 /**
  * \brief Simple move constructor allowing for creating a deep copy from rvalue reference.
- * 
+ *
  * The move constructor causes the rvalue referenced object to be emptied after the copy is performed.
- * 
+ *
  * \param m rvalue reference to the copied Graph::Matrix object.
  */
 Graph::Matrix::Matrix(Matrix&& m) noexcept
@@ -159,12 +160,12 @@ Graph::Matrix::Matrix(Matrix&& m) noexcept
 
 /**
  * \brief Function displaying the information regarding current graph on standard output.
- * 
+ *
  * The function displays following information:
  * - type of the graph
  * - graph structure along with weights in form of adjacency matrix
  * - degrees of each of the vertices
- * 
+ *
  * \note Based on the type of the graph, the degree is presented either as a single value for undirected graph,
  *		 or as a indegree|outdegree pair for directed graph.
  */
@@ -172,7 +173,7 @@ auto Graph::Matrix::print() const noexcept -> void
 {
 	// display type information
 	std::cout << "Type = ";
-	
+
 	switch (type)
 	{
 	case Type::undirected:
@@ -189,7 +190,7 @@ auto Graph::Matrix::print() const noexcept -> void
 	}
 
 	std::cout << std::endl;
-	
+
 	// display vertices count
 	std::cout << "Vertices = " << matrix.size() << '\n';
 
@@ -222,17 +223,17 @@ auto Graph::Matrix::print() const noexcept -> void
 
 /**
  * \brief Function for adding a weighted edge between the source and destination vertices.
- * 
+ *
  * In case of undirected graph, this function will insert the edge both ways.
- * 
+ *
  * \param source ID of the source vertex of the edge.
  * \param destination ID of the end vertex of the edge.
  * \param weight Weight of inserted edge.
- * 
+ *
  * \warning Exceptions to guard against:
  *		- std::out_of_range - when either of the IDs exceed the count of vertices.
  *		- std::invalid_argument - when the weight value is equal to 0.
- * 
+ *
  * \ref make_edge_matrix_insert.cpp "Adding a new edge to the graph structure"\n
  * \ref make_edge_matrix_override.cpp "Changing the weight of an existing edge"\n
  */
@@ -249,7 +250,7 @@ auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32
 	}
 	// save the previous weight for degree calculation
 	const uint32_t previous_weight = matrix[source][destination];
-	
+
 	// update the weight of the connection
 	matrix[source][destination] = weight;
 
@@ -285,10 +286,10 @@ auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32
 
 /**
  * \brief Function adding an isolated vertex to the graph structure.
- * 
+ *
  * This function adds an isolated vertex to the graph structure. All degree information
  * regarding the added vertex is set to zeros.
- * 
+ *
  * \ref add_node_matrix.cpp "Example of adding an isolated vertex"
  */
 auto Graph::Matrix::add_node() noexcept -> void
@@ -311,15 +312,15 @@ auto Graph::Matrix::add_node() noexcept -> void
 
 /**
  * \brief Function for removing an edge between two given vertices.
- * 
+ *
  * If the graph is undirected the edge will be removed both ways.
- * 
+ *
  * \param source ID of the source vertex of the edge (counting from 0).
  * \param destination ID of the destination vertex of the edge (counting from 0).
- * 
+ *
  * \warning Exception to guard against:
  *		- std::out_of_range - when either of the IDs exceed the count of vertices.
- * 
+ *
  * \ref remove_edge_matrix.cpp "Example of removing an edge from graph structure"
  */
 auto Graph::Matrix::remove_edge(std::size_t source, std::size_t destination) -> void
@@ -329,7 +330,7 @@ auto Graph::Matrix::remove_edge(std::size_t source, std::size_t destination) -> 
 	{
 		throw std::out_of_range("Index out of bounds");
 	}
-	
+
 	// if the edge existed, remove it
 	if (matrix[source][destination] != 0)
 	{
@@ -363,15 +364,15 @@ auto Graph::Matrix::remove_edge(std::size_t source, std::size_t destination) -> 
 
 /**
  * \brief Function for removing a vertex along with all its connections from the graph structure.
- * 
+ *
  * \param node_id ID of the removed vertex (counting from 0).
- * 
+ *
  * \warning Removing a vertex causes re-enumeration of each subsequent vertex in the graph, by decreasing
  *			their indexes by 1.
- * 
+ *
  * \warning Exception to guard against:
  *		- std::out_of_range - when given ID exceeds the count of vertices.
- * 
+ *
  * \ref remove_node_matrix.cpp "Example of removing a vertex"
  */
 auto Graph::Matrix::remove_node(std::size_t node_id) -> void
@@ -381,8 +382,6 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 	{
 		throw std::out_of_range("ID out of bounds");
 	}
-
-	
 
 	// remove the column of the deleted vertex and update degree of each vertex if necessary
 	for (std::size_t i = 0; i < matrix.size(); i++)
@@ -408,15 +407,15 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 		}
 		// find and decrease all degrees of vertices that have an outcoming edge to the deleted vertex
 		else if (matrix[i][node_id] != 0)
-		{	
+		{
 			degrees[i].out_deg--;
-			
+
 			if (type == Type::undirected)
 			{
 				degrees[i].deg--;
 			}
 		}
-		
+
 		// remove the column of deleted vertex
 		std::ranges::advance(itr, node_id);
 		matrix[i].erase(itr);
@@ -441,13 +440,13 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
 
 /**
  * \brief Function generating a .GRAPHML file containing the graph information.
- * 
+ *
  * This format does contain the weights of the graph's edges.
- * 
+ *
  * \note In case of undefined graph type, function assumes the graph is directed.
- * 
+ *
  * \param output_file_path Path to the output file
- * 
+ *
  * \ref save_matrix_to_graphml.cpp "Example of saving the graph structure in .GRAPHML file"
  */
 auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const noexcept -> void
@@ -520,14 +519,14 @@ auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const n
 
 /**
  * \brief Function for creating a line graph of the current graph.
- * 
- * The resulting line graph is returned as a separate object. 
- * 
+ *
+ * The resulting line graph is returned as a separate object.
+ *
  * \warning Resulting line graph is undirected and does not contain any weights (all weights
- * are defaulted to 1). As such, the functionality currently does not support digraphs. 
- * 
+ * are defaulted to 1). As such, the functionality currently does not support digraphs.
+ *
  * \return Graph::Matrix object containing the line graph.
- * 
+ *
  * \todo Modify the function to support directed graphs.
  */
 auto Graph::Matrix::change_to_line_graph() const noexcept -> Graph::Matrix
@@ -550,7 +549,7 @@ auto Graph::Matrix::change_to_line_graph() const noexcept -> Graph::Matrix
 	std::vector<std::vector<int32_t>> mat;
 
 	const std::size_t size = edges.size();
-	
+
 	for (std::size_t i = 0; i < size; i++)
 	{
 		mat.emplace_back(size);
@@ -601,16 +600,16 @@ auto Graph::Matrix::change_to_line_graph() const noexcept -> Graph::Matrix
 
 /**
  * \brief Function loading the throughtput matrix for the modified Belman-Ford algorithm.
- * 
- * The loaded throughtput matrix ought to be in a .mat format, and is stored within the current 
+ *
+ * The loaded throughtput matrix ought to be in a .mat format, and is stored within the current
  * object. This function can be called multiple times to update the throughtput matrix for the
  * same graph, without need of creating a separate object.
- * 
+ *
  * \param file_path Path to the throughtput matrix .mat file.
- * 
+ *
  * \attention The user has to make sure that the throughtput matrix is just as big as
  * the adjacency matrix. Other dimentions may result in an undefined behaviour.
- * 
+ *
  * \warning Exceptions to guard against:
  *		- std::invalid_argument - when the file has an unsupported extension.
  *		- std::runtime_error - when the file could not be accessed.
@@ -660,15 +659,15 @@ auto Graph::Matrix::load_throughtput(const std::string& file_path) -> void
 
 /**
  * Coloring function generating ordering for greedy coloring.
- * 
+ *
  * This function creates an order of vertices for the greedy coloring algorithm to use with
  * greedy_coloring_core() function. Depending on the parameter, this function will generate
  * a random permutation of the vertices set according to the greedy coloring algorithm rules.
- * 
+ *
  * \note The function does not guarantee that multiple calls to it will result in only unique permuatations.
- * 
+ *
  * \see Graph::Matrix::greedy_coloring_core()
- * 
+ *
  * \param permutate Flag stating whether the function should permutate the set.
  * \param log_stream Pointer to the log output stream. If different than nullptr, this function and core
  *					 coloring function will produce logs during runtime. Nullptr by default.
@@ -692,7 +691,7 @@ auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) co
 		// permutate the vector
 		auto rng = std::default_random_engine{};
 		std::shuffle(vertices.begin(), vertices.end(), rng);
-		
+
 		// append permutation to the map
 		for (std::size_t i = 0; const auto& vertex : vertices)
 		{
@@ -725,7 +724,7 @@ auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) co
 		}
 		*log_stream << std::endl;
 	}
-	
+
 	// pass the map and arguments to the coloring core function
 	return greedy_coloring_core(m, log_stream);
 }
@@ -735,17 +734,17 @@ auto Graph::Matrix::greedy_coloring(bool permutate, std::ostream* log_stream) co
 
 /**
  * Implementation of modified Bellman-Ford path searching algorithm in one-to-all variant.
- * 
- * This function implements a Bellman-Ford algorithm for SSP problem. The process is optimized by checking 
- * whether a difference was found in previous iterations. If no change occured, all subsequent iterations will 
- * not improve the result, so they are optimized out. As a result, the function creates predecessing vectors 
+ *
+ * This function implements a Bellman-Ford algorithm for SSP problem. The process is optimized by checking
+ * whether a difference was found in previous iterations. If no change occured, all subsequent iterations will
+ * not improve the result, so they are optimized out. As a result, the function creates predecessing vectors
  * and calculates distance from selected starting vertex to all other vertices within the graph structure.
- * 
+ *
  * \param start Vertex from which to start the path searching.
  * \param log_stream Stream deciding whether this function should output logs. If passed a nullptr,
  *					 the function will not produce any logs. Nullptr by default.
  * \return A structure containing predecessing vectors and distance information.
- * 
+ *
  * \see Graph::Roadmap for returned structure reference
  */
 auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stream) const noexcept -> Roadmap
@@ -805,7 +804,7 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 			std::cout << index << ": ";
 
 			if (!vec.empty())
-			{	
+			{
 				for (const auto& vertex : vec)
 				{
 					std::cout << vertex << ", ";
@@ -841,13 +840,13 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 			// get the currently processed prev node vector
 			auto vec = ret.prev_node.begin();
 			std::ranges::advance(vec, edge.y);
-			
+
 			const int32_t val = matrix[edge.x][edge.y];
 
 			// process the edge
 			if (ret.distances[edge.x] < std::numeric_limits<int32_t>::max() - val)
 			{
-				// if the new distance is smaller, erase previous vertices and update the distance 
+				// if the new distance is smaller, erase previous vertices and update the distance
 				if (ret.distances[edge.y] > ret.distances[edge.x] + val)
 				{
 					change_found = true;
@@ -891,11 +890,11 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
 
 /**
  * \brief Function loads the data from .mat file into the matrix object.
- * 
+ *
  * This function is an internal function and is not to be called directly by the user.
- * 
+ *
  * \param file Reference to the std::fstream data source file object.
- * 
+ *
  * \warning Exception to guard against:
  *		- std::runtime_error - A row length deviates from the length set by the first row,
  *							   or the adjacency matrix contains a negative value.
@@ -910,7 +909,7 @@ auto Graph::Matrix::load_mat_file(std::istream& file) -> void
 	auto extract_val = [&line, &pos]() -> int32_t
 	{
 		const int32_t val = std::stoi(line);
-		
+
 		if (val < 0)
 		{
 			throw std::runtime_error("Negative weight of an edge");
@@ -949,14 +948,14 @@ auto Graph::Matrix::load_mat_file(std::istream& file) -> void
 
 /**
  * \brief Function loads the data from .GRAPHML file.
- * 
+ *
  * This function is an internal function and is not to be called directly by the user.
- * 
+ *
  * \param file Reference to the std::fstream data source file object.
- * 
+ *
  * \warning Exception to guard against:
  *		- std::runtime_error - When loaded weight of the connection is less or equal to 0.
- * 
+ *
  */
 auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 {
@@ -978,7 +977,7 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 	std::string weight_key = "";
 
 	// acquire the weight key
-	while (weight_node && strcmp(weight_node->first_attribute("attr.name")->value(), "weight") != 0)
+	while (weight_node && std::strcmp(weight_node->first_attribute("attr.name")->value(), "weight") != 0)
 	{
 		weight_node = weight_node->next_sibling("key");
 	}
@@ -1048,14 +1047,14 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 
 		for (rapidxml::xml_node<>* key = edge->first_node("data"); key; key = key->next_sibling())
 		{
-			if (strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
+			if (std::strcmp(key->first_attribute("key")->value(), weight_key.c_str()) == 0)
 			{
 				weight = std::stoi(key->value());
 			}
 		}
 		const std::size_t index1 = static_cast<std::size_t>(std::stoi(id1));
 		const std::size_t index2 = static_cast<std::size_t>(std::stoi(id2));
-		
+
 		matrix[index1][index2] = weight;
 
 		if (type == Type::undirected && id1 != id2)
@@ -1071,9 +1070,9 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
 
 /**
  * \brief Function calculating the degrees of each vertex in the graph structure.
- * 
+ *
  * This function is for internal purpose and is not to be called directly by the user.
- * 
+ *
  */
 auto Graph::Matrix::calculate_degrees() noexcept -> void
 {
@@ -1115,18 +1114,18 @@ auto Graph::Matrix::calculate_degrees() noexcept -> void
 
 /**
  * Core coloring function performing the coloring operation.
- * 
+ *
  * This function performs the coloring operation based on the ordering passed
  * in form of a map. It returns a structure containing the total amount of colors used,
  * and a vector stating which color was assigned to each of the vertices. The function
- * produces logs depending on whether a log stream pointer was provided or not. If 
+ * produces logs depending on whether a log stream pointer was provided or not. If
  * this parameter is nullptr, logs will not be produced.
- * 
+ *
  * \note log_stream is nullptr by default.
- * 
+ *
  * \param m Map containing the order of vertices to color by.
  * \param log_stream Pointer to an output stream for logs to be produced.
- * \return 
+ * \return
  */
 auto Graph::Matrix::greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream) const noexcept -> Graph::Coloring
 {

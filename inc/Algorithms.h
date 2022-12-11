@@ -31,8 +31,6 @@ namespace Graph
 			throughtput(throughtput)
 		{}
 
-		friend auto operator << (std::ostream& stream, const Path& p) noexcept -> std::ostream&;
-
 		std::vector<std::size_t> path;  /**< Vector containing the path in order. */
 		uint32_t distance;				/**< Summed distance from the start to the end. */
 		uint32_t throughtput;			/**< Minimal throughtput of the path. This member is used with the throughtput belman-ford
@@ -43,8 +41,8 @@ namespace Graph
 
 
 	/**
-	 * \brief Structure for storing data from path-searching algorithms. 
-	 * 
+	 * \brief Structure for storing data from path-searching algorithms.
+	 *
 	 * \note The class does allow for storing several paths of the same length.
 	 */
 	struct [[nodiscard]] Roadmap
@@ -53,7 +51,7 @@ namespace Graph
 		std::vector<int32_t> distances; /**< The distance value from start vertex to any given vertex */
 		std::vector<int32_t> throughtputs;
 		std::size_t start;
-	
+
 		/**
 		 * Constructor creating internal vectors of given size.
 		 *
@@ -105,19 +103,19 @@ namespace Graph
 
 	/**
 	 * \brief Virtual class providing the algorithmic interface.
-	 * 
+	 *
 	 * The class provides common algorithmic interface for each of its inheriting
 	 * classes. Its main purpose is to provide the Data::Benchmark class with an
 	 * ability to use those functions without the knowledge of which graph representation
 	 * was received as a parameter.
-	 * 
+	 *
 	 * \attention Each of the coloring algorithms public function provide permutation
 	 * functionality for randomized trials of efficiency. This functionality is triggered via a parameter
 	 * to the chosen coloring function. As such, user might try to get an average result by running the function once,
 	 * or try to get optimal results for the algorithm by running it multiple times with permutations, as does the
 	 * Data::Benchmark class. For the latter purpose, the use of Data::Benchmark class is recommended, as it provides
 	 * API to automate the process.
-	 * 
+	 *
 	 * \note The permutation feature allows the same permutation to be generated multiple times. As such, the minimal color
 	 *		 acquired from this function might still not be an optimal value.
 	 */
@@ -129,7 +127,7 @@ namespace Graph
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the greedy algorithm rules.
-		 * 
+		 *
 		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
 		 *					False by default.
 		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
@@ -143,7 +141,7 @@ namespace Graph
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the LF algorithm rules. 
-		 * 
+		 *
 		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
 		 *					False by default.
 		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
@@ -157,7 +155,7 @@ namespace Graph
 
 		/**
 		 * Common definition of the function providing ordering and permutation sequence according to the SL algorithm rules.
-		 * 
+		 *
 		 * \param permutate Flag signifing whether the function is supposed to perform a random permutation of the ordering for the coloring.
 		 *					False by default.
 		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
@@ -171,7 +169,7 @@ namespace Graph
 
 		/**
 		 * Common definition of the function providing the Belman-Ford point-to-all path-searching algorithm implementation.
-		 * 
+		 *
 		 * \param start ID of the vertex (starting from 0) from which the search for paths to all other
 		 * vertices should begin.
 		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
@@ -186,9 +184,9 @@ namespace Graph
 
 		/**
 		 * Common definition of the function providing the core coloring functionality.
-		 * This functionality is designed for the algorithms that base on the greedy coloring sequence 
+		 * This functionality is designed for the algorithms that base on the greedy coloring sequence
 		 * (once provided the right order of vertices according to their own rules).
-		 * 
+		 *
 		 * \param m Map containing the created ordering of vertices.
 		 * \param log_stream Pointer to the output stream in which logs should be saved. If passed a nullptr, logs will not be produced.
 		 *					 Nullptr by default.
@@ -197,3 +195,5 @@ namespace Graph
 		virtual auto greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream = nullptr) const -> Coloring = 0;
 	};
 }
+
+auto operator << (std::ostream& stream, const Graph::Path& p) noexcept -> std::ostream&;

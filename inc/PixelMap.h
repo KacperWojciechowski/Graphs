@@ -10,9 +10,9 @@ namespace Data
 {
 	/**
 	 * \brief Class representing a map of binary pixels.
-	 * 
+	 *
 	 * Used to create an adjacency list representation of a graph of pathways between adjacent pixels.
-	 * 
+	 *
 	 * \attention Zeros indicate the fields while ones indicate the walls.
 	 */
 	class PixelMap
@@ -22,27 +22,27 @@ namespace Data
 		static constexpr uint8_t WALL = 1; /**< A wall field within the pixel map structure */
 
 		// constructors
-		PixelMap(std::istream& stream) noexcept;
+		PixelMap(std::istream& stream);
 
 		PixelMap(const PixelMap& p) noexcept;
 		PixelMap(PixelMap&& p) noexcept;
 
 		// interface
-		auto print() const -> void;
+		auto print() const noexcept -> void;
 
 		// getters
 
-		auto [[nodiscard]] get_rows() const noexcept -> std::size_t
+		[[nodiscard]] auto get_rows() const noexcept -> std::size_t
 		{
 			return map.size();
 		}
 
-		auto [[nodiscard]] get_columns() const -> std::size_t
+		[[nodiscard]] auto get_columns() const -> std::size_t
 		{
 			return map[0].size();
 		}
 
-		auto [[nodiscard]] get_field(const Data::Coord& coord) const -> uint8_t
+		[[nodiscard]] auto get_field(const Data::Coord& coord) const -> uint8_t
 		{
 			if (coord.x >= map.size() || coord.y >= map[0].size())
 			{

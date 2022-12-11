@@ -6,15 +6,15 @@
  * Constructor creating PixelMap object based on the data loaded from input stream.
  * As this constructor accepts a stream reference, it allows user to load data from a file
  * or from a standard input stream.
- * 
+ *
  * \warning Exception to guard against:
  *			- std::runtime_error - A row is deviating from the length set by the first row.
- * 
+ *
  * \param stream Input stream to read the data from.
- * 
+ *
  * \ref create_pixel_map.cpp "Example of creating a Data::PixelMap object"
  */
-Data::PixelMap::PixelMap(std::istream& stream) noexcept
+Data::PixelMap::PixelMap(std::istream& stream)
 {
 	std::string line;
 
@@ -62,7 +62,7 @@ Data::PixelMap::PixelMap(std::istream& stream) noexcept
 
 /**
  * Simple copy constructor.
- * 
+ *
  * \param p l-value reference to a Data::PixelMap object.
  */
 Data::PixelMap::PixelMap(const PixelMap& p) noexcept
@@ -75,7 +75,7 @@ Data::PixelMap::PixelMap(const PixelMap& p) noexcept
 
 /**
  * Simple move constructor.
- * 
+ *
  * \param p r-value reference to a Data::PixelMap object.
  */
 Data::PixelMap::PixelMap(PixelMap&& p) noexcept
@@ -89,7 +89,7 @@ Data::PixelMap::PixelMap(PixelMap&& p) noexcept
 
 /**
  * Print function displaying the map structure on the standard output.
- * 
+ *
  */
 auto Data::PixelMap::print() const noexcept -> void
 {

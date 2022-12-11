@@ -6,7 +6,7 @@
 
 /**
  * \brief Function displaying the data stored within the Roadmap class.
- * 
+ *
  * \note In order to follow the full path, the user needs to recreate the path
  *		 based on the stored data.
  */
@@ -36,7 +36,7 @@ auto Graph::Roadmap::print() const noexcept -> void
 			}
 		}
 		index++;
-		
+
 		// go to new line
 		std::cout << '\n';
 	}
@@ -49,11 +49,11 @@ auto Graph::Roadmap::print() const noexcept -> void
 /**
  * Function extracting a path vector from internally saved starting vertex, to a selected destination
  * vertex from a roadmap.
- * 
+ *
  * This function returns a vector of Paths due to a fact, that in the graph structure there
- * may exist several paths of equal length. The function does not verify whether they 
+ * may exist several paths of equal length. The function does not verify whether they
  * vary in throughtput.
- * 
+ *
  * \param end Destination vertex of the path.
  * \return
  */
@@ -76,13 +76,13 @@ auto Graph::Roadmap::print() const noexcept -> void
 
 /**
  * Recursive function for path building.
- * 
+ *
  * \param paths Reference to a vector containing all the found paths.
  * \param path Reference to a vector containing currently explored path.
  * \param thr Throughtput of the currently explored path.
  * \param distance Distance shared by all the found paths.
  * \param v Currently explored vertex.
- * \return 
+ * \return
  */
 auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size_t>& path, int32_t const& thr, int32_t const& distance, std::size_t v) const noexcept -> void
 {
@@ -109,7 +109,7 @@ auto Graph::Roadmap::path_search(std::vector<Path>& paths, std::vector<std::size
 /**
  * Output stream operator for the Path.
  */
-auto Graph::operator<<(std::ostream& stream, const Path& p) noexcept -> std::ostream&
+auto operator << (std::ostream& stream, const Graph::Path& p) noexcept -> std::ostream&
 {
 	stream << "Distance: " << p.distance << '\n';
 	stream << "Throughtput: " << p.throughtput << '\n';

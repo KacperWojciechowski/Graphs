@@ -23,7 +23,12 @@ namespace
 		else throw std::invalid_argument("Unsupported file format");
 	}
 
-	void checkIfOpenedCorrectly(std::ifstream& file);
+	void checkIfOpenedCorrectly(std::ifstream& file)
+	{
+		if (not file.good()) {
+			throw std::runtime_error("Could not open file. It's possible the file is missing");
+		}
+	}
 }
 
 namespace Graph
@@ -35,7 +40,8 @@ namespace Graph
 		std::ifstream file(path);
 		checkIfOpenedCorrectly(file);
 
-		auto matrix = Matrix(Source{file, fileType}, graphType)
+		auto matrix = Matrix(Source{file, fileType}, graphType);
+		file.close();
 
 		return matrix;
 	}

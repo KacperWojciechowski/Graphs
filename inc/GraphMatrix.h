@@ -37,15 +37,20 @@ namespace Graph
 	class Matrix : public GraphBase//, public Algorithms
 	{
 	public:
-		/* Constructors */
-		[[nodiscard]] static auto constructFromFile(const std::string path, Type type) -> Matrix;
+
+		/* Factory functions */
+		using DynamicMatrix = std::vector<std::vector<int32_t>>;
+
+		[[nodiscard]] static auto constructFromFile(const std::string& path, Type graphType) -> Matrix;
+		[[nodiscard]] static auto constructFromDynamicMatrix(DynamicMatrix&& mat, Type graphType) -> Matrix;
 		
-		Matrix(const std::vector<std::vector<int32_t>>& mat, Type type) noexcept;
-
+		/* Constructors */
+		Matrix(DynamicMatrix&& mat, Type type) noexcept;
 		Matrix(const GraphBase& l) noexcept;
-
 		Matrix(const Matrix& m) noexcept;
 		Matrix(Matrix&& m) noexcept;
+
+		bool operator==(const Matrix& mat) noexcept;
 
 		/* Common interface */
 		auto print() const noexcept -> void;
@@ -137,8 +142,9 @@ namespace Graph
 		auto greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream = nullptr) const noexcept -> Coloring;
 
 		/* Objects containing the graph */
-		std::vector<std::vector<int32_t>> matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/
-		std::vector<std::vector<int32_t>> throughtput;  /**< Structure containing the throughtput matrix corresponding to the adjacency matrix. This matrix
+		
+		DynamicMatrix matrix;		/**< Structure containing the adjacency matrix. Consists of std::vector of std::vector objects.*/
+		DynamicMatrix throughtput;  /**< Structure containing the throughtput matrix corresponding to the adjacency matrix. This matrix
 															 has to be of the same dimentions as the adjacency matrix. This feature is exclusive to the matrix 
 															 representation. */
 		std::vector<Degree> degrees;					/**< Vector of structures storing the degrees of each vertex in Graph::Degree structures. The type of

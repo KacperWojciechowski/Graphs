@@ -4,8 +4,9 @@
 #include <iomanip>
 #include <fstream>
 #include <algorithm>
-#include <random>
 #include <cstring>
+#include <filesystem>
+#include <random>
 
 #pragma warning(push, 0)
 #include "rapidxml/rapidxml.hpp"
@@ -13,17 +14,18 @@
 
 namespace 
 {
-	MatrixFileType getMatrixFileType(std::string path)
+	static MatrixFileType getMatrixFileType(const std::string& path)
 	{
-		auto isMatFile = path.find(".mat") != std::string::npos;
-		auto isGraphmlFile = path.find(".GRAPHML") != std::string::npos;
+		namespace fs = std::filesystem;
+		auto isMatFile = fs::path(path).extension() == ".mat";
+		auto isGraphmlFile = fs::path(path).extension() == ".GRAPHML";
 
 		if(isMatFile) return MatrixFileType::MAT;
 		else if(isGraphmlFile) return MatrixFileType::GRAPHML;
 		else throw std::invalid_argument("Unsupported file format");
 	}
 
-	void checkIfOpenedCorrectly(std::ifstream& file)
+	static void ensureOpenedCorrectly(std::ifstream& file)
 	{
 		if (not file.good()) {
 			throw std::runtime_error("Could not open file. It's possible the file is missing");
@@ -33,78 +35,107 @@ namespace
 
 namespace Graph
 {
-	auto Matrix::constructFromFile(const std::string path, Type graphType) -> Matrix
+	static void ensureIsSquare(const Matrix::DynamicMatrix& matrix)
 	{
-		auto fileType = getMatrixFileType(path);
+		if (matrix.size() != matrix[0].size())
+		{
+			throw std::invalid_argument("Given matrix is not square");
+		}
+	}
+
+	static void ensureIsNotEmpty(const Matrix::DynamicMatrix& matrix)
+	{
+		if (matrix.empty())
+		{
+			throw std::invalid_argument("Given matrix is empty");
+		}
+	}
+
+	/**
+	 * @brief Factory function veryfing the Matrix source file, and creating an object. 
+	 * 
+	 * @param path Path of the data source file
+	 * @param graphType Type of the graph (from the Graph::Type enum)
+	 * @return R-value reference to the Matrix object
+	 */
+	auto Matrix::constructFromFile(const std::string& path, Type graphType) -> Matrix
+	{
+		const auto fileType = getMatrixFileType(path);
 		
 		std::ifstream file(path);
-		checkIfOpenedCorrectly(file);
+		ensureOpenedCorrectly(file); 
+		
+		return Matrix(Source{file, fileType}, graphType);
+	}
 
-		auto matrix = Matrix(Source{file, fileType}, graphType);
-		file.close();
+
+
+
+	/**
+	 * @brief Factory function creating a Matrix object by moving DynamicMatrix into object.
+	 * 
+	 */
+	auto Matrix::constructFromDynamicMatrix(Matrix::DynamicMatrix&& mat, Type graphType) -> Matrix
+	{
+		ensureIsNotEmpty(mat);
+		ensureIsSquare(mat);
+
+		const auto matrix = Matrix(std::move(mat), graphType);
 
 		return matrix;
 	}
 
+
+
+
 	/**
-	 * \brief Constructor loading the graph from file.
+	 * \brief Constructor loading the graph from given file.
 	 *
 	 * \param source Package containing stream and file type of the input file.
-	 * \param graphType Type of the graph (from the Graph::Type enum).
 	 */
 	Matrix::Matrix(Source source, Type graphType)
 		: type(type)
 	{
-		load_mat_file(file);
-			file.close();
-
-			calculate_degrees();
-		}
-		// loading the .GRAPHML file
-		else if (file_path.find(".GRAPHML", 0) != std::string::npos)
+		switch(source.type)
 		{
-			std::fstream file(file_path, std::ios::in);
-			if(file.good())
-			{
-				load_graphml_file(file);
-			}
-			else
-			{
-				throw std::runtime_error("Could not open file");
-			}
-			file.close();
-
-			calculate_degrees();
+			case MatrixFileType::MAT:
+				load_mat_file(source.stream);
+				break;
+			case MatrixFileType::GRAPHML:
+				load_graphml_file(source.stream);
+				break;
 		}
-		// signalizing the unsupported file format
-		else
-		{
-			throw std::invalid_argument("File not supported");
-		}
+		
+		calculate_degrees();
 	}
 
+	/**
+	* \brief Constructor creating a graph based on the given matrix made up of vectors.
+	*
+	* \param mat Vector of vectors containing the adjacency matrix values (weights of the connections).
+	* \param type Type of the graph (from the Graph::Type enum).
+	*/
+	Matrix::Matrix(Matrix::DynamicMatrix&& mat, Type type) noexcept
+		: matrix(mat),
+		type(type)
+	{
+		calculate_degrees();
+	}
+
+	bool Matrix::operator==(const Matrix& mat) noexcept
+	{
+		const bool hasSameStructure = (mat.matrix == matrix);
+		const bool hasSameType = (mat.type == type);
+		const bool hasSameThroughtput = (mat.throughtput == throughtput);
+
+		return (hasSameStructure && hasSameType && hasSameThroughtput);
+	}
 }
 
 
 
 
 
-
-
-
-/**
- * \brief Constructor creating a graph based on the given matrix made up of vectors.
- *
- * \param mat Vector of vectors containing the adjacency matrix values (weights of the connections).
- * \param name Name of the graph (user-given).
- * \param type Type of the graph (from the Graph::Type enum).
- */
-Graph::Matrix::Matrix(const std::vector<std::vector<int32_t>>& mat, Type type) noexcept
-	: matrix(mat),
-	type(type)
-{
-	calculate_degrees();
-}
 
 
 
@@ -605,7 +636,7 @@ auto Graph::Matrix::change_to_line_graph() const noexcept -> Graph::Matrix
 	}
 
 	// create and return the line graph object based on created matrix
-	Matrix matrix(mat, type);
+	Matrix matrix(std::move(mat), type);
 	return matrix;
 }
 

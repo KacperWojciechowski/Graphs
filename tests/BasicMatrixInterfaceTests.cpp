@@ -17,7 +17,16 @@ TEST(MatrixInterfaceTests, CreatingMatrixFromFileWithIncorrectExtension)
     EXPECT_THROW({
         auto matrix = Graph::Matrix::constructFromFile("../samples/listDirected.lst",
                                                        Graph::Type::directed);
-    }, std::invalid_argument);
+        }, std::invalid_argument
+    );
+}
+
+TEST(MatrixInterfaceTests, CreatingMatrixFromMissingFile)
+{
+    EXPECT_THROW(
+        {auto matrix = Graph::Matrix::constructFromFile("missing.mat", Graph::Type::directed);
+        }, std::runtime_error
+    );
 }
 
 TEST(MatrixInterfaceTests, CompareTheSameMatrices)

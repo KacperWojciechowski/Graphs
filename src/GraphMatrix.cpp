@@ -24,7 +24,7 @@ namespace
 
 namespace Graph
 {
-	auto Matrix::constructFromFile(std::string path, Type type) -> Matrix
+	auto Matrix::constructFromFile(const std::string path, Type type) -> Matrix
 	{
 		if(not isSupportedFileType(path))
 		{
@@ -36,9 +36,8 @@ namespace Graph
 		{
 			throw std::runtime_error("Could not open file. It's possible that the file is missing.");
 		}
-		file.close();
 
-		return Matrix(path, type);
+		return Matrix(file, type);
 	}
 }
 

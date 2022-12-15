@@ -13,99 +13,75 @@
 
 namespace 
 {
-	bool isSupportedFileType(std::string path)
+	MatrixFileType getMatrixFileType(std::string path)
 	{
 		auto isMatFile = path.find(".mat") != std::string::npos;
 		auto isGraphmlFile = path.find(".GRAPHML") != std::string::npos;
 
-		return (isMatFile || isGraphmlFile);
+		if(isMatFile) return MatrixFileType::MAT;
+		else if(isGraphmlFile) return MatrixFileType::GRAPHML;
+		else throw std::invalid_argument("Unsupported file format");
 	}
+
+	void checkIfOpenedCorrectly(std::ifstream& file);
 }
 
 namespace Graph
 {
-	auto Matrix::constructFromFile(const std::string path, Type type) -> Matrix
+	auto Matrix::constructFromFile(const std::string path, Type graphType) -> Matrix
 	{
-		if(not isSupportedFileType(path))
-		{
-			throw std::invalid_argument("Unsupported file format");
-		}
-
+		auto fileType = getMatrixFileType(path);
+		
 		std::ifstream file(path);
-		if(!file.good())
-		{
-			throw std::runtime_error("Could not open file. It's possible that the file is missing.");
-		}
+		checkIfOpenedCorrectly(file);
 
-		return Matrix(file, type);
+		auto matrix = Matrix(Source{file, fileType}, graphType)
+
+		return matrix;
 	}
+
+	/**
+	 * \brief Constructor loading the graph from file.
+	 *
+	 * \param source Package containing stream and file type of the input file.
+	 * \param graphType Type of the graph (from the Graph::Type enum).
+	 */
+	Matrix::Matrix(Source source, Type graphType)
+		: type(type)
+	{
+		load_mat_file(file);
+			file.close();
+
+			calculate_degrees();
+		}
+		// loading the .GRAPHML file
+		else if (file_path.find(".GRAPHML", 0) != std::string::npos)
+		{
+			std::fstream file(file_path, std::ios::in);
+			if(file.good())
+			{
+				load_graphml_file(file);
+			}
+			else
+			{
+				throw std::runtime_error("Could not open file");
+			}
+			file.close();
+
+			calculate_degrees();
+		}
+		// signalizing the unsupported file format
+		else
+		{
+			throw std::invalid_argument("File not supported");
+		}
+	}
+
 }
 
 
 
-/**
- * \brief Constructor loading the graph from file.
- *
- * The constructor accepts the path to a file in supported format. If format is incorrect
- * or the file cannot be accessed, an exception is returned.
- *
- * \param file_path Path of the data source file.
- * \param name Name of the graph (user-given).
- * \param type Type of the graph (from the Graph::Type enum).
- *
- * \warning Exceptions to guard against:
- *		- std::invalid_argument - when given file extension is not supported.
- *		- std::runtime_error	- when given file cannot be accessed.
- *
- * \attention Supported formats are .mat and .GRAPHML.
- *
- * \see <a href="https://hog.grinvin.org/Formats.action"> Here </a> for .mat adjacency matrix format guideline.
- * \see <a href="http://graphml.graphdrawing.org/primer/graphml-primer.html"> Here </a> for GraphML format guideline.
- *
- * \ref create_matrix_from_graphml.cpp "Example of creating the object from .GRAPHML file"\b
- * \ref create_matrix_from_mat.cpp "Example of creating the object from .mat file"\b
- */
-Graph::Matrix::Matrix(const std::string& file_path, Type type)
-	: type(type)
-{
-	// loading the .mat file
-	if (file_path.find(".mat", 0) != std::string::npos)
-	{
-		std::ifstream file(file_path);
-		if (file.good())
-		{
-			load_mat_file(file);
-		}
-		else
-		{
-			throw std::runtime_error("Could not open file");
-		}
-		file.close();
 
-		calculate_degrees();
-	}
-	// loading the .GRAPHML file
-	else if (file_path.find(".GRAPHML", 0) != std::string::npos)
-	{
-		std::fstream file(file_path, std::ios::in);
-		if(file.good())
-		{
-			load_graphml_file(file);
-		}
-		else
-		{
-			throw std::runtime_error("Could not open file");
-		}
-		file.close();
-
-		calculate_degrees();
-	}
-	// signalizing the unsupported file format
-	else
-	{
-		throw std::invalid_argument("File not supported");
-	}
-}
 
 
 

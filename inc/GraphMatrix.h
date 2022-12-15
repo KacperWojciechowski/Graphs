@@ -7,6 +7,22 @@
 #include "GraphBase.h"
 #include "Algorithms.h"
 
+namespace 
+{
+	enum class MatrixFileType
+	{
+		MAT = 0,
+		GRAPHML,
+		UNSUPPORTED
+	};
+
+	struct Source 
+	{
+		std::ifstream& stream;
+		MatrixFileType type;
+	};
+}
+
 namespace Graph
 {
 
@@ -109,7 +125,7 @@ namespace Graph
 		auto throughtput_bellman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, std::ostream* log_stream) const noexcept -> Roadmap;
 
 	private:
-		Matrix(std::istream& file, Type type);
+		Matrix(Source source, Type type);
 
 
 		/* Load functions for specific file formats */

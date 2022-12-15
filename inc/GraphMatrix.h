@@ -21,9 +21,9 @@ namespace Graph
 	class Matrix : public GraphBase//, public Algorithms
 	{
 	public:
-
 		/* Constructors */
-		Matrix(const std::string& file_path, Type type);
+		[[nodiscard]] static auto constructFromFile(const std::string path, Type type) -> Matrix;
+		
 		Matrix(const std::vector<std::vector<int32_t>>& mat, Type type) noexcept;
 
 		Matrix(const GraphBase& l) noexcept;
@@ -109,6 +109,9 @@ namespace Graph
 		auto throughtput_bellman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, std::ostream* log_stream) const noexcept -> Roadmap;
 
 	private:
+		Matrix(std::istream& file, Type type);
+
+
 		/* Load functions for specific file formats */
 		auto load_mat_file(std::istream& file) -> void;
 		auto load_graphml_file(std::istream& file) -> void;

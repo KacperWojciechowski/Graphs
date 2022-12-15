@@ -1,4 +1,4 @@
-#include "Graph_list.h"
+#include "GraphList.h"
 #include "PixelMap.h"
 
 #pragma warning(push, 0)

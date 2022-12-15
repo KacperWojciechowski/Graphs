@@ -1,7 +1,12 @@
-#include <iostream>
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-int main()
+#include <GraphMatrix.h>
+
+TEST(MatrixInterfaceTest, CreatingMatrixFromCorrectFile)
 {
-    std::cout << "Hello TDD!" << std::endl;
-    return 0;
+    EXPECT_NO_THROW({
+        auto matrix = Graph::Matrix::constructFromFile("../samples/matrixDirected.mat", 
+                                                       Graph::Type::directed);
+    });
 }

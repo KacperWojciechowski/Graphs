@@ -1,4 +1,4 @@
-#include "Graph_matrix.h"
+#include "GraphMatrix.h"
 #include "Coord.h"
 
 #include <iomanip>
@@ -10,6 +10,39 @@
 #pragma warning(push, 0)
 #include "rapidxml/rapidxml.hpp"
 #pragma warning(pop)
+
+namespace 
+{
+	bool isSupportedFileType(std::string path)
+	{
+		auto isMatFile = path.find(".mat") != std::string::npos;
+		auto isGraphmlFile = path.find(".GRAPHML") != std::string::npos;
+
+		return (isMatFile || isGraphmlFile);
+	}
+}
+
+namespace Graph
+{
+	auto Matrix::constructFromFile(std::string path, Type type) -> Matrix
+	{
+		if(not isSupportedFileType(path))
+		{
+			throw std::invalid_argument("Unsupported file format");
+		}
+
+		std::ifstream file(path);
+		if(!file.good())
+		{
+			throw std::runtime_error("Could not open file. It's possible that the file is missing.");
+		}
+		file.close();
+
+		return Matrix(path, type);
+	}
+}
+
+
 
 /**
  * \brief Constructor loading the graph from file.

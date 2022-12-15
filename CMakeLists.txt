@@ -18,6 +18,13 @@ FetchContent_MakeAvailable(googletest)
 
 file(GLOB Sources "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
+set(Sources src/Algorithms.cpp
+			src/Coord.cpp
+			src/Generator.cpp
+			src/GraphList.cpp
+			src/GraphMatrix.cpp
+			src/PixelMap.cpp)
+
 add_library(Graph_lib ${Sources})
 
 target_include_directories(Graph_lib PUBLIC inc
@@ -41,7 +48,7 @@ target_include_directories(Tests PUBLIC inc)
 
 target_compile_options(Tests PUBLIC -Wall -Wextra -pedantic -Werror)
 
-add_custom_target(run_tests COMMAND ./tests DEPENDS Tests)
+add_custom_target(run_tests COMMAND ./Tests DEPENDS Tests)
 enable_testing()
 
 add_test(

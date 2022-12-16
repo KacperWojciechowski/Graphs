@@ -46,13 +46,13 @@ namespace Graph
 
 		/* Interface */
 		auto print() const noexcept -> void;
-		auto make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void;
-		auto add_node() noexcept -> void;
+		auto addEdge(std::size_t source, std::size_t destination, int32_t weight) -> void;
+		auto addNode() noexcept -> void;
 
-		auto remove_edge(std::size_t source, std::size_t destination) -> void;
-		auto remove_node(std::size_t node_id) -> void;
+		auto removeEdge(std::size_t source, std::size_t destination) -> void;
+		auto removeNode(std::size_t node_id) -> void;
 
-		[[nodiscard]] auto get_nodes_amount() const noexcept -> std::size_t
+		[[nodiscard]] auto getNodesAmount() const noexcept -> std::size_t
 		{
 			return list.size();
 		}
@@ -66,7 +66,7 @@ namespace Graph
 		 * \param node_id ID of the vertex.
 		 * \return
 		 */
-		auto get_node_degree(std::size_t node_id) const -> Degree
+		auto getNodeDegree(std::size_t node_id) const -> Degree
 		{
 			if (node_id >= degrees.size())
 			{
@@ -87,7 +87,7 @@ namespace Graph
 		 * \param destination ID of the end vertex of the edge.
 		 * \return Weight of the connection.
 		 */
-		[[nodiscard]] auto get_edge(std::size_t source, std::size_t destination) const -> int32_t
+		[[nodiscard]] auto getEdge(std::size_t source, std::size_t destination) const -> int32_t
 		{
 			int32_t ret = 0;
 			if (source >= list.size() || destination >= list.size())
@@ -105,21 +105,21 @@ namespace Graph
 			return ret;
 		}
 
-		[[nodiscard]] auto get_type() const noexcept -> Type
+		[[nodiscard]] auto getType() const noexcept -> Type
 		{
 			return type;
 		}
 
-		auto save_graphml(std::ostream& stream, std::string name) const noexcept -> void;
+		auto saveToGraphml(std::ostream& stream, std::string name) const noexcept -> void;
 
-		[[nodiscard]] auto change_to_line_graph() const -> List;
+		[[nodiscard]] auto changeToLineGraph() const -> List;
 
 	private:
 
 		/* Load functions for specific file formats */
-		auto load_lst_file(std::istream& file) noexcept -> void;
-		auto load_graphml_file(std::istream& file) -> void;
-		auto calculate_degrees() noexcept -> void;
+		auto loadLstFile(std::istream& file) noexcept -> void;
+		auto loadGraphmlFile(std::istream& file) -> void;
+		auto calculateDegrees() noexcept -> void;
 
 		/* Objects containing the graph information */
 

@@ -2,7 +2,9 @@
 #include <gmock/gmock.h>
 
 #include <GraphMatrix.h>
+
 #include <stdexcept>
+#include <iostream>
 
 TEST(MatrixInterfaceTests, CreatingMatrixFromCorrectFile)
 {
@@ -45,4 +47,24 @@ TEST(MatrixInterfaceTests, CompareDifferentMatrices)
     auto matrix2 = Graph::Matrix::constructFromFile("../samples/matrixUndirected.mat",
                                                     Graph::Type::undirected);
     EXPECT_FALSE(matrix1 == matrix2);
+}
+
+bool isExpectedOutput(Graph::Matrix& m)
+{
+    testing::internal::CaptureStdout();
+    std::cout << m;
+    std::string receivedOutput = testing::internal::GetCapturedStdout();
+    std::string expectedOutput = "";
+
+    return receivedOutput == expectedOutput;
+}
+
+TEST(MatrixInterfaceTests, OutputMatrixStructure)
+{
+    Graph::Matrix::DynamicMatrix dynamicMatrix = {{1, 1}, {1, 0}};
+    auto matrix = Graph::Matrix::constructFromDynamicMatrix(std::move(dynamicMatrix),
+                                                    Graph::Type::directed);
+    
+    EXPECT_TRUE(isExpectedOutput(matrix));
+    EXPECT_TRUE(&(std::cout << matrix) == &std::cout);
 }

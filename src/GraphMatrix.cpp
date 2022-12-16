@@ -14,7 +14,7 @@
 
 namespace 
 {
-	static MatrixFileType getMatrixFileType(const std::string& path)
+	static auto getMatrixFileType(const std::string& path) -> MatrixFileType
 	{
 		namespace fs = std::filesystem;
 		auto isMatFile = fs::path(path).extension() == ".mat";
@@ -25,7 +25,7 @@ namespace
 		else throw std::invalid_argument("Unsupported file format");
 	}
 
-	static void ensureOpenedCorrectly(std::ifstream& file)
+	static auto ensureOpenedCorrectly(std::ifstream& file) -> void
 	{
 		if (not file.good()) {
 			throw std::runtime_error("Could not open file. It's possible the file is missing");
@@ -35,7 +35,7 @@ namespace
 
 namespace Graph
 {
-	static void ensureIsSquare(const Matrix::DynamicMatrix& matrix)
+	static auto ensureIsSquare(const Matrix::DynamicMatrix& matrix) -> void
 	{
 		if (matrix.size() != matrix[0].size())
 		{
@@ -43,7 +43,7 @@ namespace Graph
 		}
 	}
 
-	static void ensureIsNotEmpty(const Matrix::DynamicMatrix& matrix)
+	static auto ensureIsNotEmpty(const Matrix::DynamicMatrix& matrix) -> void
 	{
 		if (matrix.empty())
 		{
@@ -99,36 +99,46 @@ namespace Graph
 		switch(source.type)
 		{
 			case MatrixFileType::MAT:
-				load_mat_file(source.stream);
+				loadMatFile(source.stream);
 				break;
 			case MatrixFileType::GRAPHML:
-				load_graphml_file(source.stream);
+				loadGraphmlFile(source.stream);
 				break;
 		}
 		
-		calculate_degrees();
+		calculateDegrees();
 	}
 
-	/**
-	* \brief Constructor creating a graph based on the given matrix made up of vectors.
-	*
-	* \param mat Vector of vectors containing the adjacency matrix values (weights of the connections).
-	* \param type Type of the graph (from the Graph::Type enum).
-	*/
 	Matrix::Matrix(Matrix::DynamicMatrix&& mat, Type type) noexcept
 		: matrix(mat),
 		type(type)
 	{
-		calculate_degrees();
+		calculateDegrees();
 	}
 
-	bool Matrix::operator==(const Matrix& mat) noexcept
+	auto Matrix::operator==(const Matrix& mat) noexcept -> bool
 	{
 		const bool hasSameStructure = (mat.matrix == matrix);
 		const bool hasSameType = (mat.type == type);
 		const bool hasSameThroughtput = (mat.throughtput == throughtput);
 
 		return (hasSameStructure && hasSameType && hasSameThroughtput);
+	}
+
+	auto operator<<(std::ostream& out, const Matrix& mat) noexcept -> std::ostream&
+	{
+		out << "[\n";
+		
+		printType();
+		for(std::size_t rowIndex = 0; auto& row : mat.matrix)
+		{
+			printRow(row);
+			printDegree(rowIndex);
+			rowIndex++;
+		}
+		out << "]\n";
+
+		return out;
 	}
 }
 
@@ -150,18 +160,18 @@ namespace Graph
 Graph::Matrix::Matrix(const GraphBase& graph) noexcept
 {
 	// get general graph info
-	type = graph.get_type();
-	const std::size_t count = graph.get_nodes_amount();
+	type = graph.getType();
+	const std::size_t count = graph.getNodesAmount();
 
 	matrix.resize(count);
 
 	for (std::size_t i = 0; i < count; i++)
 	{
-		degrees.emplace_back(graph.get_node_degree(i));
+		degrees.emplace_back(graph.getNodeDegree(i));
 
 		for (std::size_t j = 0; j < count; j++)
 		{
-			matrix[i].emplace_back(graph.get_edge(i, j));
+			matrix[i].emplace_back(graph.getEdge(i, j));
 		}
 	}
 }
@@ -282,7 +292,7 @@ auto Graph::Matrix::print() const noexcept -> void
  * \ref make_edge_matrix_insert.cpp "Adding a new edge to the graph structure"\n
  * \ref make_edge_matrix_override.cpp "Changing the weight of an existing edge"\n
  */
-auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void
+auto Graph::Matrix::addEdge(std::size_t source, std::size_t destination, int32_t weight) -> void
 {
 	// validate the parameters
 	if (source >= matrix.size() || destination >= matrix.size())
@@ -337,7 +347,7 @@ auto Graph::Matrix::make_edge(std::size_t source, std::size_t destination, int32
  *
  * \ref add_node_matrix.cpp "Example of adding an isolated vertex"
  */
-auto Graph::Matrix::add_node() noexcept -> void
+auto Graph::Matrix::addNode() noexcept -> void
 {
 	// add zeros at the end of each row to mark the new vertex to be added
 	for (auto& row : matrix)
@@ -368,7 +378,7 @@ auto Graph::Matrix::add_node() noexcept -> void
  *
  * \ref remove_edge_matrix.cpp "Example of removing an edge from graph structure"
  */
-auto Graph::Matrix::remove_edge(std::size_t source, std::size_t destination) -> void
+auto Graph::Matrix::removeEdge(std::size_t source, std::size_t destination) -> void
 {
 	// validate the vertices indexes
 	if (source >= matrix.size() || destination >= matrix.size())
@@ -420,7 +430,7 @@ auto Graph::Matrix::remove_edge(std::size_t source, std::size_t destination) -> 
  *
  * \ref remove_node_matrix.cpp "Example of removing a vertex"
  */
-auto Graph::Matrix::remove_node(std::size_t node_id) -> void
+auto Graph::Matrix::removeNode(std::size_t node_id) -> void
 {
 	// validate the vertex ID
 	if (node_id >= matrix.size())
@@ -494,7 +504,7 @@ auto Graph::Matrix::remove_node(std::size_t node_id) -> void
  *
  * \ref save_matrix_to_graphml.cpp "Example of saving the graph structure in .GRAPHML file"
  */
-auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const noexcept -> void
+auto Graph::Matrix::saveToGraphml(std::ostream& stream, std::string name) const noexcept -> void
 {
 	// header
 	stream << "<?xml version=\"1.0\"";
@@ -574,7 +584,7 @@ auto Graph::Matrix::save_graphml(std::ostream& stream, std::string name) const n
  *
  * \todo Modify the function to support directed graphs.
  */
-auto Graph::Matrix::change_to_line_graph() const noexcept -> Graph::Matrix
+auto Graph::Matrix::changeToLineGraph() const noexcept -> Graph::Matrix
 {
 	std::vector<Data::Coord> edges;
 
@@ -659,7 +669,7 @@ auto Graph::Matrix::change_to_line_graph() const noexcept -> Graph::Matrix
  *		- std::invalid_argument - when the file has an unsupported extension.
  *		- std::runtime_error - when the file could not be accessed.
  */
-auto Graph::Matrix::load_throughtput(const std::string& file_path) -> void
+auto Graph::Matrix::loadThroughtput(const std::string& file_path) -> void
 {
 	int32_t value;
 
@@ -944,7 +954,7 @@ auto Graph::Matrix::bellman_ford(std::size_t start, const std::ostream* log_stre
  *		- std::runtime_error - A row length deviates from the length set by the first row,
  *							   or the adjacency matrix contains a negative value.
  */
-auto Graph::Matrix::load_mat_file(std::istream& file) -> void
+auto Graph::Matrix::loadMatFile(std::istream& file) -> void
 {
 	std::string line;
 	std::size_t vertices = 0;
@@ -1002,7 +1012,7 @@ auto Graph::Matrix::load_mat_file(std::istream& file) -> void
  *		- std::runtime_error - When loaded weight of the connection is less or equal to 0.
  *
  */
-auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
+auto Graph::Matrix::loadGraphmlFile(std::istream& file) -> void
 {
 	// create the document and nodes instances
 	auto document = std::make_unique< rapidxml::xml_document<>>();
@@ -1119,7 +1129,7 @@ auto Graph::Matrix::load_graphml_file(std::istream& file) -> void
  * This function is for internal purpose and is not to be called directly by the user.
  *
  */
-auto Graph::Matrix::calculate_degrees() noexcept -> void
+auto Graph::Matrix::calculateDegrees() noexcept -> void
 {
 	// create the degrees table
 	degrees.resize(matrix.size());

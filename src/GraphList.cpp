@@ -43,7 +43,7 @@ Graph::List::List(const std::string& file_path, Type type)
 		std::ifstream file(file_path);
 		if (file.good())
 		{
-			load_lst_file(file);
+			loadLstFile(file);
 		}
 		else
 		{
@@ -51,7 +51,7 @@ Graph::List::List(const std::string& file_path, Type type)
 		}
 		file.close();
 
-		calculate_degrees();
+		calculateDegrees();
 	}
 	// loading the .GRAPHML file
 	else if (file_path.find(".GRAPHML") != std::string::npos)
@@ -59,7 +59,7 @@ Graph::List::List(const std::string& file_path, Type type)
 		std::fstream file(file_path, std::ios::in);
 		if (file.good())
 		{
-			load_graphml_file(file);
+			loadGraphmlFile(file);
 		}
 		else
 		{
@@ -67,7 +67,7 @@ Graph::List::List(const std::string& file_path, Type type)
 		}
 		file.close();
 
-		calculate_degrees();
+		calculateDegrees();
 	}
 	// signalizing the unsupported file format
 	else
@@ -87,18 +87,18 @@ Graph::List::List(const std::string& file_path, Type type)
 Graph::List::List(const GraphBase& graph) noexcept
 {
 	// get general graph info
-	type = graph.get_type();
-	const std::size_t count = graph.get_nodes_amount();
+	type = graph.getType();
+	const std::size_t count = graph.getNodesAmount();
 
 	// build list
 	for (std::size_t i = 0; i < count; i++)
 	{
 		list.emplace_back(0);
-		degrees.emplace_back(graph.get_node_degree(i));
+		degrees.emplace_back(graph.getNodeDegree(i));
 
-		for (std::size_t j = 0; j < graph.get_nodes_amount(); j++)
+		for (std::size_t j = 0; j < graph.getNodesAmount(); j++)
 		{
-			const std::size_t val = graph.get_edge(i, j);
+			const std::size_t val = graph.getEdge(i, j);
 			if (val != 0)
 			{
 				list[i].emplace_back( j, val );
@@ -189,7 +189,7 @@ Graph::List::List(const Data::PixelMap& map) noexcept
 		index++;
 	}
 
-	calculate_degrees();
+	calculateDegrees();
 }
 
 
@@ -205,7 +205,7 @@ Graph::List::List(const Data::PixelMap& map) noexcept
  *
  * \param file Reference to the file object of the data source.
  */
-auto Graph::List::load_lst_file(std::istream& file) noexcept -> void
+auto Graph::List::loadLstFile(std::istream& file) noexcept -> void
 {
 	std::string line;
 	size_t pos;
@@ -254,7 +254,7 @@ auto Graph::List::load_lst_file(std::istream& file) noexcept -> void
  * \warning Exceptions to guard against:
  *		- std::runtime_error When weight is less or equal to 0.
  */
-auto Graph::List::load_graphml_file(std::istream& file) -> void
+auto Graph::List::loadGraphmlFile(std::istream& file) -> void
 {
 	// create the document and nodes instances
 	auto document = std::make_unique< rapidxml::xml_document<>>();
@@ -373,7 +373,7 @@ auto Graph::List::load_graphml_file(std::istream& file) -> void
  * This function is for internal use only.
  *
  */
-auto Graph::List::calculate_degrees() noexcept -> void
+auto Graph::List::calculateDegrees() noexcept -> void
 {
 	degrees.resize(list.size());
 
@@ -522,7 +522,7 @@ auto Graph::List::print() const noexcept -> void
  * \ref add_edge_list_insert.cpp "Example of adding an edge between two vertices"\n
  * \ref add_edge_list_override.cpp "Example of modifying the weight of an existing edge"
  */
-auto Graph::List::make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void
+auto Graph::List::addEdge(std::size_t source, std::size_t destination, int32_t weight) -> void
 {
 	// validate arguments
 	if (source >= list.size() || destination >= list.size())
@@ -584,7 +584,7 @@ auto Graph::List::make_edge(std::size_t source, std::size_t destination, int32_t
  *
  * \see add_node_list.cpp "Example of adding an isolated vertex"
  */
-auto Graph::List::add_node() noexcept -> void
+auto Graph::List::addNode() noexcept -> void
 {
 	list.emplace_back(0);
 	degrees.emplace_back( 0, 0, 0 );
@@ -606,7 +606,7 @@ auto Graph::List::add_node() noexcept -> void
  *
  * \ref remove_edge_list.cpp "Example of removing an edge from graph structure"
  */
-auto Graph::List::remove_edge(std::size_t source, std::size_t destination) -> void
+auto Graph::List::removeEdge(std::size_t source, std::size_t destination) -> void
 {
 	// validate the parameter
 	if (source >= list.size() || destination >= list.size())
@@ -662,7 +662,7 @@ auto Graph::List::remove_edge(std::size_t source, std::size_t destination) -> vo
  *
  * \ref remove_node_list.cpp "Example of removing a vertex from graph structure"
  */
-auto Graph::List::remove_node(std::size_t node_id) -> void
+auto Graph::List::removeNode(std::size_t node_id) -> void
 {
 	// validate parameter
 	if (node_id >= list.size())
@@ -742,7 +742,7 @@ auto Graph::List::remove_node(std::size_t node_id) -> void
  *
  * \ref save_list_to_graphml.cpp "Example of saving current graph structure in .GRAPHML format"
  */
-auto Graph::List::save_graphml(std::ostream& stream, std::string name) const noexcept -> void
+auto Graph::List::saveToGraphml(std::ostream& stream, std::string name) const noexcept -> void
 {
 	// header
 	stream << "<?xml version=\"1.0\"";

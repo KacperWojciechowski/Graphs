@@ -43,25 +43,39 @@ namespace Graph
 
 		[[nodiscard]] static auto constructFromFile(const std::string& path, Type graphType) -> Matrix;
 		[[nodiscard]] static auto constructFromDynamicMatrix(DynamicMatrix&& mat, Type graphType) -> Matrix;
-		
+
 		/* Constructors */
-		Matrix(DynamicMatrix&& mat, Type type) noexcept;
 		Matrix(const GraphBase& l) noexcept;
 		Matrix(const Matrix& m) noexcept;
 		Matrix(Matrix&& m) noexcept;
 
+		/* Operators */
 		bool operator==(const Matrix& mat) noexcept;
+		friend auto operator<< (std::ostream& out, const Matrix& mat) noexcept -> std::ostream&;
+
+		/* Getters */
+		[[nodiscard]] auto getType() const noexcept -> Type
+		{
+			return type;
+		}
+
+
+
+
+
+
+
 
 		/* Common interface */
 		auto print() const noexcept -> void;
 
-		auto make_edge(std::size_t source, std::size_t destination, int32_t weight) -> void;
-		auto add_node() noexcept -> void;
+		auto addEdge(std::size_t source, std::size_t destination, int32_t weight) -> void;
+		auto addNode() noexcept -> void;
 
-		auto remove_edge(std::size_t source, std::size_t destination) -> void;
-		auto remove_node(std::size_t node_id) -> void;
+		auto removeEdge(std::size_t source, std::size_t destination) -> void;
+		auto removeNode(std::size_t node_id) -> void;
 
-		[[nodiscard]] auto get_nodes_amount() const noexcept -> std::size_t
+		[[nodiscard]] auto getNodesAmount() const noexcept -> std::size_t
 		{
 			return matrix.size();
 		}
@@ -75,7 +89,7 @@ namespace Graph
 		 * \warning Exception to guard against:
 		 *		- std::out_of_range - when given ID exceeds the count of vertices.
 		 */
-		auto get_node_degree(std::size_t node_id) const -> Degree
+		auto getNodeDegree(std::size_t node_id) const -> Degree
 		{
 			if (node_id >= degrees.size())
 				throw std::out_of_range("ID out of bounds");
@@ -94,7 +108,7 @@ namespace Graph
 		 * \warning Exception to guard against:
 		 *		- std::out_of_range - when either of the IDs exceeds the count of vertices.
 		 */
-		[[nodiscard]] auto get_edge(std::size_t source, std::size_t destination) const -> int32_t
+		[[nodiscard]] auto getEdge(std::size_t source, std::size_t destination) const -> int32_t
 		{
 			if (source >= matrix.size() || destination >= matrix.size())
 			{
@@ -106,18 +120,15 @@ namespace Graph
 			}
 		}
 
-		[[nodiscard]] auto get_type() const noexcept -> Type
-		{
-			return type;
-		}
+		
 
-		auto save_graphml(std::ostream& stream, std::string name) const noexcept -> void;
+		auto saveToGraphml(std::ostream& stream, std::string name) const noexcept -> void;
 
-		[[nodiscard]] auto change_to_line_graph() const noexcept -> Matrix;
+		[[nodiscard]] auto changeToLineGraph() const noexcept -> Matrix;
 
 		/* Extended interface */
-		auto load_throughtput(const std::string& file_path) -> void;
-		auto print_throughtput() const -> void;
+		auto loadThroughtput(const std::string& file_path) -> void;
+		auto printThroughtput() const -> void;
 
 		/* Algorithmic interface*/
 		auto greedy_coloring(bool permutate = false, std::ostream* log_stream = nullptr) const noexcept -> Coloring;
@@ -131,12 +142,19 @@ namespace Graph
 
 	private:
 		Matrix(Source source, Type type);
+		Matrix(DynamicMatrix&& mat, Type type) noexcept;
+
+		void printType();
+		void printRow(const std::vector<int32_t>& row);
+		void printDegree(std::size_t rowIndex);
+
+
 
 
 		/* Load functions for specific file formats */
-		auto load_mat_file(std::istream& file) -> void;
-		auto load_graphml_file(std::istream& file) -> void;
-		auto calculate_degrees() noexcept -> void;
+		auto loadMatFile(std::istream& file) -> void;
+		auto loadGraphmlFile(std::istream& file) -> void;
+		auto calculateDegrees() noexcept -> void;
 
 		/* Private algorithmic functions */
 		auto greedy_coloring_core(const std::map<std::size_t, std::size_t>& m, std::ostream* log_stream = nullptr) const noexcept -> Coloring;

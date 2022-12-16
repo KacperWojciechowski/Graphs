@@ -127,17 +127,18 @@ namespace Graph
 
 	auto operator<<(std::ostream& out, const Matrix& mat) noexcept -> std::ostream&
 	{
-		out << "[\n";
+		std::string msg = "[\n";
 		
-		printType();
+		msg += formatType();
 		for(std::size_t rowIndex = 0; auto& row : mat.matrix)
 		{
-			printRow(row);
-			printDegree(rowIndex);
+			msg += formatRow(row);
+			msg += formatDegree(rowIndex);
 			rowIndex++;
 		}
-		out << "]\n";
-
+		msg += "]\n";
+		out << msg;
+		
 		return out;
 	}
 }

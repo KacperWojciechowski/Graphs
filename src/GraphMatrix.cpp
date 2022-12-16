@@ -125,20 +125,25 @@ namespace Graph
 		return (hasSameStructure && hasSameType && hasSameThroughtput);
 	}
 
+	std::string Matrix::formatType()
+	{
+		return type == Type::directed ? "directed" : "undirected";
+	}
+
 	auto operator<<(std::ostream& out, const Matrix& mat) noexcept -> std::ostream&
 	{
 		std::string msg = "[\n";
 		
-		msg += formatType();
+		msg += mat.formatType();
 		for(std::size_t rowIndex = 0; auto& row : mat.matrix)
 		{
-			msg += formatRow(row);
-			msg += formatDegree(rowIndex);
+			msg += mat.formatRow(row);
+			msg += mat.formatDegree(rowIndex);
 			rowIndex++;
 		}
 		msg += "]\n";
 		out << msg;
-		
+
 		return out;
 	}
 }

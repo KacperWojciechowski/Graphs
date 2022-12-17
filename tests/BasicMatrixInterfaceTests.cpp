@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <iostream>
 
-TEST(MatrixInterfaceTests, CreatingMatrixFromCorrectFile)
+TEST(MatrixInterfaceTests, ConstructingMatrixFromCorrectFile)
 {
     EXPECT_NO_THROW({
         auto matrix = Graph::Matrix::constructFromFile("../samples/matrixDirected.mat", 
@@ -14,7 +14,7 @@ TEST(MatrixInterfaceTests, CreatingMatrixFromCorrectFile)
     });
 }
 
-TEST(MatrixInterfaceTests, CreatingMatrixFromFileWithIncorrectExtension)
+TEST(MatrixInterfaceTests, ConstructingMatrixFromFileWithIncorrectExtension)
 {
     EXPECT_THROW({
         auto matrix = Graph::Matrix::constructFromFile("../samples/listDirected.lst",
@@ -23,7 +23,7 @@ TEST(MatrixInterfaceTests, CreatingMatrixFromFileWithIncorrectExtension)
     );
 }
 
-TEST(MatrixInterfaceTests, CreatingMatrixFromMissingFile)
+TEST(MatrixInterfaceTests, ConstructingMatrixFromMissingFile)
 {
     EXPECT_THROW(
         {auto matrix = Graph::Matrix::constructFromFile("missing.mat", Graph::Type::directed);
@@ -49,14 +49,19 @@ TEST(MatrixInterfaceTests, CompareDifferentMatrices)
     EXPECT_FALSE(matrix1 == matrix2);
 }
 
-bool isExpectedOutput(Graph::Matrix& m)
+std::string getExpectedPrintOutput()
+{
+    return "";
+}
+
+bool isExpectedPrintOutput(Graph::Matrix& m)
 {
     testing::internal::CaptureStdout();
     std::cout << m;
     std::string receivedOutput = testing::internal::GetCapturedStdout();
-    std::string expectedOutput = "";
+    std::string expectedOutput = getExpectedPrintOutput();
 
-    return receivedOutput == expectedOutput;
+    return (receivedOutput == expectedOutput);
 }
 
 TEST(MatrixInterfaceTests, OutputMatrixStructure)
@@ -65,6 +70,10 @@ TEST(MatrixInterfaceTests, OutputMatrixStructure)
     auto matrix = Graph::Matrix::constructFromDynamicMatrix(std::move(dynamicMatrix),
                                                     Graph::Type::directed);
     
-    EXPECT_TRUE(isExpectedOutput(matrix));
+    EXPECT_TRUE(isExpectedPrintOutput(matrix));
     EXPECT_TRUE(&(std::cout << matrix) == &std::cout);
 }
+
+// Add test for constructing from DynamicMatrix
+// Add test for constructing from not square DynamicMatrix
+// Add test for constructing from empty DynamicMatrix

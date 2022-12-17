@@ -1,11 +1,11 @@
 #include "GraphMatrix.h"
 #include "Coord.h"
 
-#include <iomanip>
-#include <fstream>
 #include <algorithm>
 #include <cstring>
 #include <filesystem>
+#include <fstream>
+#include <iomanip>
 #include <random>
 
 #pragma warning(push, 0)
@@ -125,20 +125,55 @@ namespace Graph
 		return (hasSameStructure && hasSameType && hasSameThroughtput);
 	}
 
-	std::string Matrix::formatType()
+	auto Matrix::formatType() const -> std::string
 	{
-		return type == Type::directed ? "directed" : "undirected";
+		char buffer[50];
+		sprintf(buffer, "Type = %s", type == Type::directed ? "directed" : "undirected");
+		return std::string(buffer);
+	}
+
+	auto Matrix::formatRow(const std::vector<int32_t>& row) const -> std::string
+	{
+		std::string output;
+		char buffer[10];
+		for(std::size_t index = 0; auto& element : row)
+		{
+			sprintf(buffer, "%3d", element);
+			output += buffer;
+			output += index != row.size() - 1 ? ", " : " ";
+			index++;
+		}
+		return output;
+	}
+
+	auto Matrix::formatDegree(std::size_t rowIndex) const -> std::string
+	{
+		char buffer[50];
+		if(type == Type::undirected)
+		{
+			sprintf(buffer, "{deg = %ld}", degrees[rowIndex].deg);
+		}
+		else
+		{
+			sprintf(buffer, "{in_deg = %ld, out_deg = %ld}", degrees[rowIndex].in_deg,
+														   degrees[rowIndex].out_deg);
+		}
+		return std::string(buffer);
+	}
+
+	auto Matrix::formatLine(const std::vector<int32_t>& row, std::size_t rowIndex) const -> std::string
+	{
+		return formatRow(row) + formatDegree(rowIndex) + "\n";
 	}
 
 	auto operator<<(std::ostream& out, const Matrix& mat) noexcept -> std::ostream&
 	{
 		std::string msg = "[\n";
 		
-		msg += mat.formatType();
+		msg += mat.formatType() + "\n";
 		for(std::size_t rowIndex = 0; auto& row : mat.matrix)
 		{
-			msg += mat.formatRow(row);
-			msg += mat.formatDegree(rowIndex);
+			msg += mat.formatLine(row, rowIndex);
 			rowIndex++;
 		}
 		msg += "]\n";

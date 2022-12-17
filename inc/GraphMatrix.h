@@ -144,9 +144,11 @@ namespace Graph
 		Matrix(Source source, Type type);
 		Matrix(DynamicMatrix&& mat, Type type) noexcept;
 
-		auto formatType() const -> void;
-		auto formatRow(const std::vector<int32_t>& row) const -> void;
-		auto formatDegree(std::size_t rowIndex) const -> void;
+		/* Print formatting functions */
+		auto formatType() const -> std::string;
+		auto formatLine(const std::vector<int32_t>& row, std::size_t rowIndex) const -> std::string;
+		auto formatRow(const std::vector<int32_t>& row) const -> std::string;
+		auto formatDegree(std::size_t rowIndex) const -> std::string;
 
 
 

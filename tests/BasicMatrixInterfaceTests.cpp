@@ -49,27 +49,38 @@ TEST(MatrixInterfaceTests, CompareDifferentMatrices)
     EXPECT_FALSE(matrix1 == matrix2);
 }
 
-std::string getExpectedPrintOutput()
+std::string getExpectedPrintOutput(const Graph::Matrix& m)
 {
-    return "";
+    return m.getType() == Graph::Type::directed
+            ? "[\nType = directed\n  1,   1 {in_deg = 2, out_deg = 2}\n  1,   0 {in_deg = 1, out_deg = 1}\n]\n"
+            : "[\nType = undirected\n  1,   0 {deg = 2}\n  0,   1 {deg = 2}\n]\n";
 }
 
-bool isExpectedPrintOutput(Graph::Matrix& m)
+bool isExpectedPrintOutput(const Graph::Matrix& m)
 {
     testing::internal::CaptureStdout();
     std::cout << m;
     std::string receivedOutput = testing::internal::GetCapturedStdout();
-    std::string expectedOutput = getExpectedPrintOutput();
+    std::string expectedOutput = getExpectedPrintOutput(m);
 
     return (receivedOutput == expectedOutput);
 }
 
-TEST(MatrixInterfaceTests, PrintMatrixTest)
+TEST(MatrixInterfaceTests, PrintDirectedMatrixTest)
 {
     Graph::Matrix::DynamicMatrix dynamicMatrix = {{1, 1}, {1, 0}};
     auto matrix = Graph::Matrix::constructFromDynamicMatrix(std::move(dynamicMatrix),
-                                                    Graph::Type::directed);
+                                                            Graph::Type::directed);
     
+    EXPECT_TRUE(isExpectedPrintOutput(matrix));
+    EXPECT_TRUE(&(std::cout << matrix) == &std::cout);
+}
+
+TEST(MatrixInterfaceTests, PrintUndirectedMatrixTest)
+{
+    Graph::Matrix::DynamicMatrix dynamicMatrix = {{1, 0}, {0, 1}};
+    auto matrix = Graph::Matrix::constructFromDynamicMatrix(std::move(dynamicMatrix),
+                                                            Graph::Type::undirected);
     EXPECT_TRUE(isExpectedPrintOutput(matrix));
     EXPECT_TRUE(&(std::cout << matrix) == &std::cout);
 }

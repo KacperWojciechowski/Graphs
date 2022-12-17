@@ -43,9 +43,19 @@ namespace Graph
 		}
 	}
 
+	static auto isAnyEmpty(const Matrix::DynamicMatrix& matrix) -> bool
+	{
+		bool empty = matrix.empty();
+		for (std::size_t i = 0; i < matrix.size() && not empty; i++)
+		{
+			empty = matrix[i].empty();
+		}
+		return empty;
+	}
+
 	static auto ensureIsNotEmpty(const Matrix::DynamicMatrix& matrix) -> void
 	{
-		if (matrix.empty())
+		if (isAnyEmpty(matrix))
 		{
 			throw std::invalid_argument("Given matrix is empty");
 		}

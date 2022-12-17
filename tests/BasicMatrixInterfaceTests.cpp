@@ -66,6 +66,43 @@ bool isExpectedPrintOutput(const Graph::Matrix& m)
     return (receivedOutput == expectedOutput);
 }
 
+TEST(MatrixInterfaceTests, ConstructMatrixFromDynamicMatrix)
+{
+    Graph::Matrix::DynamicMatrix dynamicMatrix = {{1, 0}, {0, 1}};
+    EXPECT_NO_THROW({auto matrix = Graph::Matrix::constructFromDynamicMatrix(std::move(dynamicMatrix),
+                                                            Graph::Type::undirected);   
+    });
+}
+
+struct DynamicMatrixSet
+{
+    Graph::Matrix::DynamicMatrix matrix;
+    Graph::Type type;
+};
+
+struct MatrixInterfaceTestsParametric : public testing::TestWithParam<DynamicMatrixSet>
+{};
+
+TEST_P(MatrixInterfaceTestsParametric, InvalidConstructionFromDynamicMatrix)
+{
+    auto dynamicMatrixSet = GetParam();
+
+    EXPECT_THROW({auto matrix = Graph::Matrix::constructFromDynamicMatrix(std::move(dynamicMatrixSet.matrix),
+                                                                          dynamicMatrixSet.type);
+    }, std::invalid_argument);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    ParametricInstantiation,
+    MatrixInterfaceTestsParametric,
+    ::testing::Values(DynamicMatrixSet{Graph::Matrix::DynamicMatrix{{1, 0, 1}, {}, {0, 0, 1}}, // partially empty 
+                                       Graph::Type::undirected},
+                      DynamicMatrixSet{Graph::Matrix::DynamicMatrix{{}}, // empty
+                                       Graph::Type::undirected},
+                      DynamicMatrixSet{Graph::Matrix::DynamicMatrix{{1, 0, 1}, {0, 1}}, // not square 
+                                       Graph::Type::undirected}));
+
+
 TEST(MatrixInterfaceTests, PrintDirectedMatrixTest)
 {
     Graph::Matrix::DynamicMatrix dynamicMatrix = {{1, 1}, {1, 0}};
@@ -84,7 +121,3 @@ TEST(MatrixInterfaceTests, PrintUndirectedMatrixTest)
     EXPECT_TRUE(isExpectedPrintOutput(matrix));
     EXPECT_TRUE(&(std::cout << matrix) == &std::cout);
 }
-
-// Add test for constructing from DynamicMatrix
-// Add test for constructing from not square DynamicMatrix
-// Add test for constructing from empty DynamicMatrix

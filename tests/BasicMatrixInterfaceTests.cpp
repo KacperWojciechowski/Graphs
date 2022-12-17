@@ -64,7 +64,7 @@ bool isExpectedPrintOutput(Graph::Matrix& m)
     return (receivedOutput == expectedOutput);
 }
 
-TEST(MatrixInterfaceTests, OutputMatrixStructure)
+TEST(MatrixInterfaceTests, PrintMatrixTest)
 {
     Graph::Matrix::DynamicMatrix dynamicMatrix = {{1, 1}, {1, 0}};
     auto matrix = Graph::Matrix::constructFromDynamicMatrix(std::move(dynamicMatrix),

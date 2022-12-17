@@ -41,15 +41,6 @@ namespace Graph
 		// basic operations interface -------------------------------------------------------------------------------------------
 
 		/**
-		 * \brief Comomn function definition for printing the representation of a graph.
-		 *
-		 */
-		virtual auto print() const -> void = 0;
-
-
-
-
-		/**
 		 * \brief Common function definition for adding an edge to the graph object.
 		 *
 		 * \param Source source vertex of an edge.

@@ -126,7 +126,7 @@ namespace Graph
 		calculateDegrees();
 	}
 
-	auto Matrix::operator==(const Matrix& mat) noexcept -> bool
+	auto Matrix::operator==(const Matrix& mat) const noexcept -> bool
 	{
 		const bool hasSameStructure = (mat.matrix == matrix);
 		const bool hasSameType = (mat.type == type);
@@ -135,14 +135,14 @@ namespace Graph
 		return (hasSameStructure && hasSameType && hasSameThroughtput);
 	}
 
-	auto Matrix::formatType() const -> std::string
+	auto Matrix::formatType() const noexcept -> std::string
 	{
 		char buffer[50];
 		sprintf(buffer, "Type = %s", type == Type::directed ? "directed" : "undirected");
 		return std::string(buffer);
 	}
 
-	auto Matrix::formatRow(const std::vector<int32_t>& row) const -> std::string
+	auto Matrix::formatRow(const std::vector<int32_t>& row) const noexcept -> std::string
 	{
 		std::string output;
 		char buffer[10];
@@ -156,7 +156,7 @@ namespace Graph
 		return output;
 	}
 
-	auto Matrix::formatDegree(std::size_t rowIndex) const -> std::string
+	auto Matrix::formatDegree(std::size_t rowIndex) const noexcept -> std::string
 	{
 		char buffer[50];
 		if(type == Type::undirected)
@@ -171,7 +171,8 @@ namespace Graph
 		return std::string(buffer);
 	}
 
-	auto Matrix::formatLine(const std::vector<int32_t>& row, std::size_t rowIndex) const -> std::string
+	auto Matrix::formatLine(const std::vector<int32_t>& row, 
+							std::size_t rowIndex) const noexcept -> std::string
 	{
 		return formatRow(row) + formatDegree(rowIndex) + "\n";
 	}
@@ -190,6 +191,24 @@ namespace Graph
 		out << msg;
 
 		return out;
+	}
+
+	Matrix::Matrix(const Matrix& m) noexcept
+		: matrix(m.matrix),
+		type(m.type),
+		degrees(m.degrees),
+		throughtput(m.throughtput)
+	{}
+
+	Matrix::Matrix(Matrix&& m) noexcept
+		: matrix(m.matrix),
+		type(m.type),
+		degrees(m.degrees),
+		throughtput(m.throughtput)
+	{
+		m.matrix.clear();
+		m.degrees.clear();
+		m.throughtput.clear();
 	}
 }
 
@@ -230,99 +249,11 @@ Graph::Matrix::Matrix(const GraphBase& graph) noexcept
 
 
 
-/**
- * \brief Simple copy constructor allowing for creating a deep copy from lvalue reference.
- *
- * \param m lvalue reference to the copied Graph::Matrix object.
- */
-Graph::Matrix::Matrix(const Matrix& m) noexcept
-	: matrix(m.matrix),
-	type(m.type),
-	degrees(m.degrees),
-	throughtput(m.throughtput)
-{
-}
-
-/**
- * \brief Simple move constructor allowing for creating a deep copy from rvalue reference.
- *
- * The move constructor causes the rvalue referenced object to be emptied after the copy is performed.
- *
- * \param m rvalue reference to the copied Graph::Matrix object.
- */
-Graph::Matrix::Matrix(Matrix&& m) noexcept
-	: matrix(m.matrix),
-	type(m.type),
-	degrees(m.degrees),
-	throughtput(m.throughtput)
-{
-	m.matrix.clear();
-	m.degrees.clear();
-	m.throughtput.clear();
-}
 
 
 
 
-/**
- * \brief Function displaying the information regarding current graph on standard output.
- *
- * The function displays following information:
- * - type of the graph
- * - graph structure along with weights in form of adjacency matrix
- * - degrees of each of the vertices
- *
- * \note Based on the type of the graph, the degree is presented either as a single value for undirected graph,
- *		 or as a indegree|outdegree pair for directed graph.
- */
-auto Graph::Matrix::print() const noexcept -> void
-{
-	// display type information
-	std::cout << "Type = ";
 
-	switch (type)
-	{
-	case Type::undirected:
-		std::cout << "undirected ";
-		break;
-
-	case Type::directed:
-		std::cout << "directed ";
-		break;
-
-	default:
-		std::cout << "undefined ";
-		break;
-	}
-
-	std::cout << std::endl;
-
-	// display vertices count
-	std::cout << "Vertices = " << matrix.size() << '\n';
-
-	// display adjacency matrix
-	std::cout << "[\n";
-
-	for (std::size_t index = 0; const auto& row : matrix)
-	{
-		for (const auto& element : row)
-		{
-			std::cout << std::setw(3) << std::right << element << ", ";
-		}
-		if (type == Type::undirected)
-		{
-			std::cout << "  degree: " << degrees[index].deg << '\n';
-		}
-		else
-		{
-			std::cout << "  degrees: (in|out) " << degrees[index].in_deg
-				<< " | " << degrees[index].out_deg << '\n';
-		}
-		index++;
-	}
-
-	std::cout << "]" << std::endl;
-}
 
 
 

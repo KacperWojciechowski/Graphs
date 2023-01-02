@@ -10,6 +10,7 @@
 #include <cstring>
 #include <ranges>
 #include <algorithm>
+#include <memory>
 
 /**
  * \brief Constructor creating the graph from file.

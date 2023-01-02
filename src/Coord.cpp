@@ -17,7 +17,7 @@
  */
 auto Data::find_index(const std::vector<Data::Coord>& nodes, const Data::Coord& coord) noexcept -> std::size_t
 {
-	size_t size = nodes.size();
+	std::size_t size = nodes.size();
 
 	// set the default value
 	std::size_t ret = std::numeric_limits<std::size_t>::max();

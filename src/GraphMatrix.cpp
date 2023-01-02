@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iomanip>
 #include <random>
+#include <memory>
 
 #pragma warning(push, 0)
 #include "rapidxml/rapidxml.hpp"

@@ -16,8 +16,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
-file(GLOB Sources "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
-
 set(Sources src/Algorithms.cpp
 			src/Coord.cpp
 			src/Generator.cpp
@@ -31,7 +29,8 @@ target_include_directories(Graph_lib PUBLIC inc
 									 PUBLIC "third-party/rapidxml/include")
 
 
-file(GLOB TestSources "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+set(TestSources tests/BasicMatrixInterfaceTests.cpp
+				tests/GraphFactoryTests.cpp)
 
 add_executable(Tests ${TestSources})
 

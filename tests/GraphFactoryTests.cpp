@@ -4,13 +4,11 @@
 #include <gtest/gtest.h>
 
 #include <GraphMatrix.h>
-#include <DesignatedFactory.h>
 
 TEST(GraphFactoryTests, CreateMatrixFromFile)
 {
-    Graph::Factory<Graph::Matrix>&& gf = Graph::DesignatedFactory<Graph::Matrix>{};
-    EXPECT_NO_THROW({auto matrix = gf.createFromFile("../samples/matrixDirected.mat",
-                                                    Graph::Type::directed);
+    EXPECT_NO_THROW({auto matrix = Graph::constructFromFile<Graph::Matrix>("../samples/matrixDirected.mat",
+                                                                           Graph::Type::directed);
     });
 }
 

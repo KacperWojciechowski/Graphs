@@ -4,13 +4,17 @@
 
 namespace Graph
 {
-    template<typename T>
-    class Factory
+    template<class T>
+    [[nodiscard]] auto constructFromFile(const std::string& path, Graph::Type graphType) -> T
     {
-        public:    
-        [[nodiscard]] virtual auto createFromFile(const std::string& path, Graph::Type graphType) -> T = 0;
+        static_assert(std::is_base_of<GraphBase, T>::value, "Expected type is not a graph representation");
 
-        [[nodiscard]] virtual auto createFromOther(const GraphBase& other) -> T = 0;
-
-    };
+        return T::constructFromFile(path, graphType);
+    }
+    
+    template<class T>
+    [[nodiscard]] auto constructFromOther(const GraphBase& other) -> T
+    {
+        return T(other);
+    }
 }

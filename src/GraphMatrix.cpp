@@ -138,9 +138,7 @@ namespace Graph
 
 	auto Matrix::formatType() const noexcept -> std::string
 	{
-		char buffer[50];
-		sprintf(buffer, "Type = %s", type == Type::directed ? "directed" : "undirected");
-		return std::string(buffer);
+		return std::format("Type = {}", type == Type::directed ? "directed" : "undirected");
 	}
 
 	auto Matrix::formatRow(const std::vector<int32_t>& row) const noexcept -> std::string
@@ -149,8 +147,7 @@ namespace Graph
 		char buffer[10];
 		for(std::size_t index = 0; auto& element : row)
 		{
-			sprintf(buffer, "%3d", element);
-			output += buffer;
+			output += std::format("{:3}", element);
 			output += index != row.size() - 1 ? ", " : " ";
 			index++;
 		}
@@ -159,17 +156,15 @@ namespace Graph
 
 	auto Matrix::formatDegree(std::size_t rowIndex) const noexcept -> std::string
 	{
-		char buffer[50];
 		if(type == Type::undirected)
 		{
-			sprintf(buffer, "{deg = %ld}", degrees[rowIndex].deg);
+			return std::format("{{deg = {}}}", degrees[rowIndex].deg);
 		}
 		else
 		{
-			sprintf(buffer, "{in_deg = %ld, out_deg = %ld}", degrees[rowIndex].in_deg,
-														   degrees[rowIndex].out_deg);
+			return std::format("{{in_deg = {}, out_deg = {}}}", degrees[rowIndex].in_deg,
+														   		degrees[rowIndex].out_deg);
 		}
-		return std::string(buffer);
 	}
 
 	auto Matrix::formatLine(const std::vector<int32_t>& row, 

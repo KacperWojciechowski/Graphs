@@ -6,7 +6,7 @@
 
 namespace Graph
 {
-	enum class [[nodiscard]] GraphType
+	enum class [[nodiscard]] Type
 	{
 		undirected = 0,
 		directed,
@@ -39,16 +39,24 @@ namespace Graph
 		[[nodiscard]] virtual auto getNodesAmount() const -> std::size_t = 0;
 		[[nodiscard]] virtual auto getNodeDegree(std::size_t node_id) const -> Degree = 0;
 		[[nodiscard]] virtual auto getEdge(std::size_t source, std::size_t destination) const -> int32_t = 0;
-		[[nodiscard]] virtual auto getType() const -> GraphType = 0;
 
-	protected:
-		virtual auto calculateDegrees() -> void = 0;
-
-		auto [[nodiscard]] getGraphType() const noexcept -> GraphType
+		[[nodiscard]] virtual auto getGraphType() const noexcept -> Type
 		{
 			return type;
 		}
 
-		GraphType type;
+	protected:
+		// field assignment constructor
+		IGraph(Type type) noexcept
+			: type(type) {}
+
+		virtual auto calculateDegrees() -> void = 0;
+
+		virtual auto setGraphType(Type desiredType) -> void
+		{
+			type = desiredType;
+		}
+
+		Type type;
 	};
 }

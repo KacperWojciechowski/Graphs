@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 
-#include "GraphBase.h"
+#include "IGraph.h"
 
 namespace Data
 {

@@ -36,7 +36,7 @@
  * \ref create_list_from_graphml.cpp "Example of using .GRAPHML file as data source"
  */
 Graph::List::List(const std::string& file_path, Type type)
-	: type(type)
+	: IGraph(type)
 {
 	// loading the .lst file
 	if (file_path.find(".lst") != std::string::npos)
@@ -85,10 +85,10 @@ Graph::List::List(const std::string& file_path, Type type)
  *
  * \param matrix Reference to the Graph::Matrix object.
  */
-Graph::List::List(const GraphBase& graph) noexcept
+Graph::List::List(const IGraph& graph) noexcept
+	: IGraph(graph.getGraphType())
 {
 	// get general graph info
-	type = graph.getType();
 	const std::size_t count = graph.getNodesAmount();
 
 	// build list
@@ -126,7 +126,7 @@ Graph::List::List(const GraphBase& graph) noexcept
  * \ref create_list_from_pixelmap.cpp "Example of creating a list graph based on pixel map"
  */
 Graph::List::List(const Data::PixelMap& map) noexcept
-	: type(Graph::Type::undirected)
+	: IGraph(Graph::Type::undirected)
 {
 	const std::size_t columns = map.get_columns();
 	const std::size_t rows = map.get_rows();
@@ -407,8 +407,8 @@ auto Graph::List::calculateDegrees() noexcept -> void
  * \param l lvalue reference to the data source object.
  */
 Graph::List::List(const List& l) noexcept
-	: list(l.list),
-	type(l.type),
+	: IGraph(l.type),
+	list(l.list),
 	degrees(l.degrees)
 {
 }
@@ -422,8 +422,8 @@ Graph::List::List(const List& l) noexcept
  * \param l rvalue reference to the data source object
  */
 Graph::List::List(List&& l) noexcept
-	: list(l.list),
-	type(l.type),
+	: IGraph(l.type),
+	list(std::move(l.list)),
 	degrees(l.degrees)
 {
 	l.list.clear();

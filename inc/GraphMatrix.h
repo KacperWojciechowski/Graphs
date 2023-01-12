@@ -25,8 +25,8 @@ namespace Graph
 		/* Factory functions */
 		using DynamicMatrix = std::vector<std::vector<int32_t>>;
 
-		[[nodiscard]] static auto constructFromFile(const std::string& path, GraphType graphType) -> Matrix;
-		[[nodiscard]] static auto constructFromDynamicMatrix(DynamicMatrix&& mat, GraphType graphType) -> Matrix;
+		[[nodiscard]] static auto constructFromFile(const std::string& path, Type graphType) -> Matrix;
+		[[nodiscard]] static auto constructFromDynamicMatrix(DynamicMatrix&& mat, Type graphType) -> Matrix;
 
 		/* Constructors */
 		Matrix(const IGraph& l) noexcept;
@@ -113,7 +113,6 @@ namespace Graph
 		auto throughtput_bellman_ford(uint32_t start_vertex, uint32_t minimal_throughtput, std::ostream* log_stream) const noexcept -> Roadmap;
 
 	private:
-		Matrix(Source source, Type type);
 		Matrix(DynamicMatrix&& mat, Type type) noexcept;
 
 		/* Print formatting functions */
@@ -131,7 +130,6 @@ namespace Graph
 															 representation. */
 		std::vector<Degree> degrees;					/**< Vector of structures storing the degrees of each vertex in Graph::Degree structures. The type of
 															 the graph decides which members of the structure should be used. */
-		Type type;										/**< Enum signifying the type of the graph. */
 
 
 

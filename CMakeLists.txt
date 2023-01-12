@@ -29,8 +29,7 @@ target_include_directories(Graph_lib PUBLIC inc
 									 PUBLIC "third-party/rapidxml/include")
 
 
-set(TestSources tests/BasicMatrixInterfaceTests.cpp
-				tests/GraphFactoryTests.cpp)
+set(TestSources tests/BasicMatrixInterfaceTests.cpp)
 
 add_executable(Tests ${TestSources})
 

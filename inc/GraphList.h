@@ -32,7 +32,7 @@ namespace Graph
 
 
 		/* Constructors */
-		List(const std::string& file_path, GraphType type);
+		List(const std::string& file_path, Type type);
 
 		List(const IGraph& matrix) noexcept;
 		List(const Data::PixelMap& map) noexcept;

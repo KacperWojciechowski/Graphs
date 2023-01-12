@@ -15,17 +15,6 @@
 
 namespace 
 {
-	static auto getMatrixFileType(const std::string& path) -> MatrixFileType
-	{
-		namespace fs = std::filesystem;
-		auto isMatFile = fs::path(path).extension() == ".mat";
-		auto isGraphmlFile = fs::path(path).extension() == ".GRAPHML";
-
-		if(isMatFile) return MatrixFileType::MAT;
-		else if(isGraphmlFile) return MatrixFileType::GRAPHML;
-		else throw std::invalid_argument("Unsupported file format");
-	}
-
 	static auto ensureOpenedCorrectly(std::ifstream& file) -> void
 	{
 		if (not file.good()) {
@@ -62,67 +51,12 @@ namespace Graph
 		}
 	}
 
-	/**
-	 * @brief Factory function veryfing the Matrix source file, and creating an object. 
-	 * 
-	 * @param path Path of the data source file
-	 * @param graphType Type of the graph (from the Graph::Type enum)
-	 * @return R-value reference to the Matrix object
-	 */
-	auto Matrix::constructFromFile(const std::string& path, Type graphType) -> Matrix
-	{
-		const auto fileType = getMatrixFileType(path);
-		
-		std::ifstream file(path);
-		ensureOpenedCorrectly(file); 
-		
-		return Matrix(Source{file, fileType}, graphType);
-	}
 
 
-
-
-	/**
-	 * @brief Factory function creating a Matrix object by moving DynamicMatrix into object.
-	 * 
-	 */
-	auto Matrix::constructFromDynamicMatrix(Matrix::DynamicMatrix&& mat, Type graphType) -> Matrix
-	{
-		ensureIsNotEmpty(mat);
-		ensureIsSquare(mat);
-
-		const auto matrix = Matrix(std::move(mat), graphType);
-
-		return matrix;
-	}
-
-
-
-
-	/**
-	 * \brief Constructor loading the graph from given file.
-	 *
-	 * \param source Package containing stream and file type of the input file.
-	 */
-	Matrix::Matrix(Source source, Type graphType)
-		: type(type)
-	{
-		switch(source.type)
-		{
-			case MatrixFileType::MAT:
-				loadMatFile(source.stream);
-				break;
-			case MatrixFileType::GRAPHML:
-				loadGraphmlFile(source.stream);
-				break;
-		}
-		
-		calculateDegrees();
-	}
 
 	Matrix::Matrix(Matrix::DynamicMatrix&& mat, Type type) noexcept
-		: matrix(mat),
-		type(type)
+		: IGraph(type),
+		matrix(mat)
 	{
 		calculateDegrees();
 	}
@@ -138,7 +72,9 @@ namespace Graph
 
 	auto Matrix::formatType() const noexcept -> std::string
 	{
-		return std::format("Type = {}", type == Type::directed ? "directed" : "undirected");
+		char buffer[50];
+		std::sprintf(buffer, "Type = %s", type == Type::directed ? "directed" : "undirected");
+		return std::string(buffer);
 	}
 
 	auto Matrix::formatRow(const std::vector<int32_t>& row) const noexcept -> std::string
@@ -147,7 +83,8 @@ namespace Graph
 		char buffer[10];
 		for(std::size_t index = 0; auto& element : row)
 		{
-			output += std::format("{:3}", element);
+			sprintf(buffer, "%3d", element);
+			output += buffer;
 			output += index != row.size() - 1 ? ", " : " ";
 			index++;
 		}
@@ -156,15 +93,17 @@ namespace Graph
 
 	auto Matrix::formatDegree(std::size_t rowIndex) const noexcept -> std::string
 	{
+		char buffer[100];
 		if(type == Type::undirected)
 		{
-			return std::format("{{deg = {}}}", degrees[rowIndex].deg);
+			sprintf(buffer, "{deg = %ld}", degrees[rowIndex].deg);
 		}
 		else
 		{
-			return std::format("{{in_deg = {}, out_deg = {}}}", degrees[rowIndex].in_deg,
-														   		degrees[rowIndex].out_deg);
+			sprintf(buffer, "{in_deg = %ld, out_deg = %ld}", degrees[rowIndex].in_deg,
+														   	 degrees[rowIndex].out_deg);
 		}
+		return std::string(buffer);
 	}
 
 	auto Matrix::formatLine(const std::vector<int32_t>& row, 
@@ -190,21 +129,29 @@ namespace Graph
 	}
 
 	Matrix::Matrix(const Matrix& m) noexcept
-		: matrix(m.matrix),
-		type(m.type),
+		: IGraph(m.type),
+		matrix(m.matrix),
 		degrees(m.degrees),
 		throughtput(m.throughtput)
 	{}
 
 	Matrix::Matrix(Matrix&& m) noexcept
-		: matrix(m.matrix),
-		type(m.type),
+		: IGraph(m.type),
+		matrix(m.matrix),
 		degrees(m.degrees),
 		throughtput(m.throughtput)
 	{
 		m.matrix.clear();
 		m.degrees.clear();
 		m.throughtput.clear();
+	}
+
+	auto Matrix::constructFromDynamicMatrix(DynamicMatrix&& mat, Type graphType) -> Matrix
+	{
+		ensureIsNotEmpty(mat);
+		ensureIsSquare(mat);
+
+		return Matrix(std::move(mat), graphType);
 	}
 }
 
@@ -223,10 +170,10 @@ namespace Graph
  *
  * \param l Reference to a different supported graph representation.
  */
-Graph::Matrix::Matrix(const GraphBase& graph) noexcept
+Graph::Matrix::Matrix(const IGraph& graph) noexcept
+ : IGraph(graph.getGraphType())
 {
 	// get general graph info
-	type = graph.getType();
 	const std::size_t count = graph.getNodesAmount();
 
 	matrix.resize(count);

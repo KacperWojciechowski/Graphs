@@ -4,24 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "GraphBase.h"
+#include "IGraph.h"
 #include "Algorithms.h"
-
-namespace 
-{
-	enum class MatrixFileType
-	{
-		MAT = 0,
-		GRAPHML,
-		UNSUPPORTED
-	};
-
-	struct Source 
-	{
-		std::ifstream& stream;
-		MatrixFileType type;
-	};
-}
 
 namespace Graph
 {
@@ -30,22 +14,22 @@ namespace Graph
 	 * @brief This class provides an adjacency matrix graph representation.
 	 *
 	 * The representation is based on the STL vector class. It does provide a
-	 * standard graph interface stated by the Graph virtual class.
+	 * standard graph interface stated by the IGraph interface.
 	 *
 	 * \warning This class requires from graph have only non-negative weights of the edges.
 	 */
-	class Matrix : public GraphBase//, public Algorithms
+	class Matrix : public IGraph
 	{
 	public:
 
 		/* Factory functions */
 		using DynamicMatrix = std::vector<std::vector<int32_t>>;
 
-		[[nodiscard]] static auto constructFromFile(const std::string& path, Type graphType) -> Matrix;
-		[[nodiscard]] static auto constructFromDynamicMatrix(DynamicMatrix&& mat, Type graphType) -> Matrix;
+		[[nodiscard]] static auto constructFromFile(const std::string& path, GraphType graphType) -> Matrix;
+		[[nodiscard]] static auto constructFromDynamicMatrix(DynamicMatrix&& mat, GraphType graphType) -> Matrix;
 
 		/* Constructors */
-		Matrix(const GraphBase& l) noexcept;
+		Matrix(const IGraph& l) noexcept;
 		Matrix(const Matrix& m) noexcept;
 		Matrix(Matrix&& m) noexcept;
 

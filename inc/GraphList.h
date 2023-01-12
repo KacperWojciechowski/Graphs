@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "GraphBase.h"
+#include "IGraph.h"
 
 // forward declaration of PixelMap class for convertion constructor
 namespace Data
@@ -17,17 +17,13 @@ namespace Graph
 	 * \brief Class representing a graph in the adjacency list form.
 	 *
 	 * The representation is based on the STL list and vector classes. It does provide a
-	 * standard graph interface stated by the Graph virtual class.
+	 * standard graph interface stated by the IGraph interface.
 	 *
 	 * \warning This class requires from the graph to have only non-negative weights of the edges.
 	 */
-	class List : public GraphBase
+	class List : public IGraph
 	{
 	public:
-		/**
-		 * \brief Structure containing the information regarding the connection
-		 * between a given vertex and its adjacent vertex.
-		*/
 		struct Node
 		{
 			std::size_t ID;  /**< Adjacent vertex ID */
@@ -36,9 +32,9 @@ namespace Graph
 
 
 		/* Constructors */
-		List(const std::string& file_path, Type type);
+		List(const std::string& file_path, GraphType type);
 
-		List(const GraphBase& matrix) noexcept;
+		List(const IGraph& matrix) noexcept;
 		List(const Data::PixelMap& map) noexcept;
 
 		List(const List& l) noexcept;
@@ -105,11 +101,6 @@ namespace Graph
 			return ret;
 		}
 
-		[[nodiscard]] auto getType() const noexcept -> Type
-		{
-			return type;
-		}
-
 		auto saveToGraphml(std::ostream& stream, std::string name) const noexcept -> void;
 
 		[[nodiscard]] auto changeToLineGraph() const -> List;
@@ -127,6 +118,5 @@ namespace Graph
 												containing std::lists of neighbour vertices for a given vertex. */
 		std::vector<Degree> degrees;	   /**< Vector containing degrees of each vertex. Degrees are stored within the Graph::Degree
 												structure, and the type field decides which fields of the structure should be used. */
-		Type type;						   /**< Enum signifying the type of the graph */
 	};
 }

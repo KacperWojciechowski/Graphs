@@ -57,3 +57,4 @@ bld/
 .vs/
 src/main.cpp
 build/*
+.vscode/

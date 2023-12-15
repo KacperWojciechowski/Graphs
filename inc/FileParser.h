@@ -1,8 +1,0 @@
-
-namespace Graph
-{
-    class FileParser
-    {
-
-    };
-}

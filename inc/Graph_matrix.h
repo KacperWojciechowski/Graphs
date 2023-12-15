@@ -39,6 +39,9 @@ namespace Graph
 
 		void change_to_line_graph();
 
+        int belman_ford(uint32_t vertex, bool log);
+        int throughtput_belman_ford(uint32_t searched_throughtput, uint32_t vertex, bool log);
+
 		~Matrix();
 
 	private:

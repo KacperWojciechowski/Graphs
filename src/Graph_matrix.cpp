@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-//#include <algorithm>
+#include <chrono>
 
 Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 	: matrix(nullptr),
@@ -22,7 +22,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 		std::getline(file, line);
 		size_t offset = 0;
 		size_t pos = 0;
-		
+
 		while (true)
 		{
 			pos = line.find(' ', offset);
@@ -37,7 +37,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 			}
 		}
 		vertexes++;
-	
+
 		this->nodes_amount = vertexes;
 		this->matrix = new uint32_t * [this->nodes_amount];
 		for (uint32_t i = 0; i < this->nodes_amount; i++)
@@ -62,8 +62,8 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 
 		std::cout << "Zaczynam Prace" << std::endl;
 		using namespace std;
-		//===================== TAKA "PROTEZA" NA KOD, KTÓRA OBLICZA N BY BYLO STATYCZNE
-		
+		//===================== TAKA "PROTEZA" NA KOD, KTï¿½RA OBLICZA N BY BYLO STATYCZNE
+
 		ifstream odczyt2(file_path);
 		string linia2;
 		vector <string> istnieja2{};
@@ -71,7 +71,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 		while (getline(odczyt2, linia2))
 		{
 			std::string::size_type pos = linia2.find("node");
-			if (pos != string::npos) //Je¿eli jest to wierzcho³ek, to zazyna zczytywanie wierzcho³ka
+			if (pos != string::npos) //Jeï¿½eli jest to wierzchoï¿½ek, to zazyna zczytywanie wierzchoï¿½ka
 			{
 				string::size_type pos2 = linia2.find("=n");
 				string::size_type pos3 = linia2.find("\"/>");
@@ -79,7 +79,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 				string id = linia2.substr(pos2 + 2, pos3);
 
 
-				// Sprawdza czy dane id jest ju¿ w vectorze, je¿eli nie to dopisuje je
+				// Sprawdza czy dane id jest juï¿½ w vectorze, jeï¿½eli nie to dopisuje je
 				if (find(istnieja2.begin(), istnieja2.end(), id) == istnieja2.end())
 				{
 					istnieja2.push_back(id);
@@ -91,7 +91,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 
 		odczyt2.close();
 		this->nodes_amount = static_cast<uint32_t>(istnieja2.size());
-		std::cout << "Liczba wierzcho³ków: " << this->nodes_amount << std::endl;
+		std::cout << "Liczba wierzchoï¿½kï¿½w: " << this->nodes_amount << std::endl;
 		//==========================================================WLASCIWE OBLICZENIA
 
 		string linia;
@@ -107,7 +107,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 			{
 				this->matrix[i][j] = 0;
 			}
-		}		
+		}
 
 		while (getline(odczyt, linia))
 		{
@@ -125,7 +125,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 
 			}
 
-			if (pos != string::npos) //Je¿eli jest to wierzcho³ek, to zazyna zczytywanie wierzcho³ka
+			if (pos != string::npos) //Jeï¿½eli jest to wierzchoï¿½ek, to zazyna zczytywanie wierzchoï¿½ka
 			{
 
 				string::size_type pos2 = linia.find("id");
@@ -135,9 +135,9 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 			}
 
 			pos = linia.find("edge");
-			if (pos != string::npos) // Je¿eli jest to krawêdŸ, to zazyna tworzenie zczytywanie po³¹czenia
+			if (pos != string::npos) // Jeï¿½eli jest to krawï¿½dï¿½, to zazyna tworzenie zczytywanie poï¿½ï¿½czenia
 			{
-				//================== BUDOWANIE I WYCINANIE Z TEKSTU KRAWÊDZI
+				//================== BUDOWANIE I WYCINANIE Z TEKSTU KRAWï¿½DZI
 				string::size_type pos2 = linia.find("source=");
 				string::size_type pos3 = linia.find("\" target=");
 				pos3 = pos3 - pos2 - 9;
@@ -158,7 +158,7 @@ Graph::Matrix::Matrix(std::string file_path, std::string ng, std::string type)
 		// Close the file
 		odczyt.close();
 
-		
+
 	}
 	else
 	{
@@ -187,7 +187,7 @@ void Graph::Matrix::printGraphML()
 	}
 	cout << endl;
 
-	// Pocz¹tek realnej pracy
+	// Poczï¿½tek realnej pracy
 	cout << "\nZaczynam tworzyc plik" << "\n---\n";
 	ofstream plik("macierz_out.txt");
 	const string quote = "\"";
@@ -217,7 +217,7 @@ void Graph::Matrix::printGraphML()
 
 
 
-	for (int i = 0; i < N; i++) // Tworzy wiersze nodów <node id="n0"/>
+	for (int i = 0; i < N; i++) // Tworzy wiersze nodï¿½w <node id="n0"/>
 	{
 		plik << "  <node id=\"";
 		plik << "n";
@@ -228,7 +228,7 @@ void Graph::Matrix::printGraphML()
 
 	}
 
-	//Tworzenie krawêdzi
+	//Tworzenie krawï¿½dzi
 	for (int i = 0; i < N; i++)
 	{
 		for (int j = 0; j < N; j++)
@@ -268,28 +268,28 @@ void Graph::Matrix::zad_3_c()
 	cout << "Wczytuje parametry" << endl;
 
 
-	int* tablica_stopni_v = new int[this->nodes_amount];		 //stopnie wierzcho³ków [zmienna sama siê liczy]
-	int liczba_krawedzi_wykresu = 0; //krawêddzie			[zmienna sama siê liczy]
+	int* tablica_stopni_v = new int[this->nodes_amount];		 //stopnie wierzchoï¿½kï¿½w [zmienna sama siï¿½ liczy]
+	int liczba_krawedzi_wykresu = 0; //krawï¿½ddzie			[zmienna sama siï¿½ liczy]
 	int* tablica_potencjalu_wierzcholka = new int[this->nodes_amount];
 	int potencjal_grafu = 0;
 
 	/* KONCEPCJA
 	 Indeks Ekstrady dla grafu to suma  x1 + x2 +.... xn,  gdzie   Xi =  pierwiastek[ ( d(u) + d(v) - 2 ) / d(u) * d(v)}
-	 Xi - wyraz wartoœci x dla danego numery i
-	 v - wierzcho³ek
-	 u - wierzcho³ek drugi
-	 d - stopieñ
+	 Xi - wyraz wartoï¿½ci x dla danego numery i
+	 v - wierzchoï¿½ek
+	 u - wierzchoï¿½ek drugi
+	 d - stopieï¿½
 	 ]
 
-	Z tego co rozumiem, wartoœæ ABC jest sum¹ wartoœci X liczonych dla par wszystkich wierzho³ków
-	gdzie ka¿dy wyraz X  okreœliæ mo¿na wzorem:
-	Pierwiastek( (stopieñ(u) + stopieñ(v) - 2 )/ (stopieñ(u) * stopieñ(V) )).
-	liczymi to dla ka¿dej pray wierzcho³ków,
+	Z tego co rozumiem, wartoï¿½ï¿½ ABC jest sumï¿½ wartoï¿½ci X liczonych dla par wszystkich wierzhoï¿½kï¿½w
+	gdzie kaï¿½dy wyraz X  okreï¿½liï¿½ moï¿½na wzorem:
+	Pierwiastek( (stopieï¿½(u) + stopieï¿½(v) - 2 )/ (stopieï¿½(u) * stopieï¿½(V) )).
+	liczymi to dla kaï¿½dej pray wierzchoï¿½kï¿½w,
 
 	*/
 
 	//============================== TU SIE OBLICZENIA ZACZYNAJA
-	//Liczenie stopni wierzcho³ków macierzy
+	//Liczenie stopni wierzchoï¿½kï¿½w macierzy
 	for (uint32_t i = 0; i < this->nodes_amount; i++)
 	{
 		tablica_stopni_v[i] = 0;
@@ -321,25 +321,25 @@ void Graph::Matrix::zad_3_c()
 		int k = 0;
 		for (uint32_t j = 0; j < this->nodes_amount; j++)
 		{
-			if (this->matrix[i][j] == 1) // ³apie s¹siada
+			if (this->matrix[i][j] == 1) // ï¿½apie sï¿½siada
 			{
-				
+
 				int u = i;
 				int v = j;
 				int d_u = tablica_stopni_v[u];
 				int d_v = tablica_stopni_v[v];
-				float X = sqrt( static_cast<float>(d_u + d_v - 2)/(d_u * d_v) ); 
+				float X = sqrt( static_cast<float>(d_u + d_v - 2)/(d_u * d_v) );
 				ABC = ABC + X;
-				
+
 			}
 		}
 		//cout << "wierzcholek:" << i << " ma potencjal: " << k << endl;
-		
+
 	}
-	cout << "Wartoœæ indeksu Estrady to: " << ABC << endl;
+	cout << "Wartoï¿½ï¿½ indeksu Estrady to: " << ABC << endl;
 	delete[] tablica_stopni_v;
 	delete[] tablica_potencjalu_wierzcholka;
-	
+
 
 }
 
@@ -430,33 +430,33 @@ void Graph::Matrix::remove_node(uint32_t node_id)
 
 
 
-void Graph::Matrix::zad_3_d() 
+void Graph::Matrix::zad_3_d()
 {
 	using namespace std;
 	cout << "Zaczynam prace" << endl;
 	cout << "Wczytuje parametry" << endl;
 
 
-	uint32_t *tablica_stopni_v = new uint32_t[this->nodes_amount];		 //stopnie wierzcho³ków [zmienna sama siê liczy]
-	int liczba_krawedzi_wykresu = 0; //krawêddzie			[zmienna sama siê liczy]
+	uint32_t *tablica_stopni_v = new uint32_t[this->nodes_amount];		 //stopnie wierzchoï¿½kï¿½w [zmienna sama siï¿½ liczy]
+	int liczba_krawedzi_wykresu = 0; //krawï¿½ddzie			[zmienna sama siï¿½ liczy]
 	int *tablica_potencjalu_wierzcholka = new int[this->nodes_amount];
 	uint32_t potencjal_grafu = 0;
 
-	
-	/* KONCEPCJA
-	 potencja³ wierzcho³ka grafu, to liczba k, bêd¹ca liczb¹ s¹siadów danego 'u' wierzcho³ka,
-	 których (ka¿dego z osobna) stopieñ jest wiêkszy/równy temu w³aœnie wartoœci k.
-	 Potencja³ grafu, to najwiêkszy potencja³ wierzcho³ka który jest w nim zawarty.
 
-	 Program najpierw liczy stopnie wierzcho³ków i liczbe krawêdzi.
-	 Nastêpnie liczy dla ka¿dego wierzcho³ka z osobna wartoœæ jego potencja³u.
-	 Finalnie okreœla potencja³ grafu i koñczy zadanie
-	
-	
+	/* KONCEPCJA
+	 potencjaï¿½ wierzchoï¿½ka grafu, to liczba k, bï¿½dï¿½ca liczbï¿½ sï¿½siadï¿½w danego 'u' wierzchoï¿½ka,
+	 ktï¿½rych (kaï¿½dego z osobna) stopieï¿½ jest wiï¿½kszy/rï¿½wny temu wï¿½aï¿½nie wartoï¿½ci k.
+	 Potencjaï¿½ grafu, to najwiï¿½kszy potencjaï¿½ wierzchoï¿½ka ktï¿½ry jest w nim zawarty.
+
+	 Program najpierw liczy stopnie wierzchoï¿½kï¿½w i liczbe krawï¿½dzi.
+	 Nastï¿½pnie liczy dla kaï¿½dego wierzchoï¿½ka z osobna wartoï¿½ï¿½ jego potencjaï¿½u.
+	 Finalnie okreï¿½la potencjaï¿½ grafu i koï¿½czy zadanie
+
+
 	*/
 
 	//============================== TU SIE OBLICZENIA ZACZYNAJA
-	//Liczenie stopni wierzcho³ków macierzy
+	//Liczenie stopni wierzchoï¿½kï¿½w macierzy
 	for (uint32_t i = 0; i < this->nodes_amount; i++)
 	{
 		tablica_stopni_v[i] = 0;
@@ -485,10 +485,10 @@ void Graph::Matrix::zad_3_d()
 		uint32_t k = 0;
 		for (uint32_t j = 0; j < this->nodes_amount; j++)
 		{
-			if (this->matrix[i][j] == 1) // ³apie s¹siada
+			if (this->matrix[i][j] == 1) // ï¿½apie sï¿½siada
 			{
-				//sprawdza mu potenccja³
-				if (i != j && tablica_stopni_v[j] >= k) //sprawdza warunek czy s¹siad ma wiêkszy stopien niz k
+				//sprawdza mu potenccjaï¿½
+				if (i != j && tablica_stopni_v[j] >= k) //sprawdza warunek czy sï¿½siad ma wiï¿½kszy stopien niz k
 				{
 					//nalicza k i zapisuje do tabelki wierzcholka
 					k++;
@@ -647,4 +647,202 @@ uint32_t Graph::Matrix::find_index(std::vector<coord>& edges, uint32_t x, uint32
 		}
 	}
 	return ret;
+}
+
+/*
+	Function provides the shortests paths between selected vertex and all other
+	vertices. Results are stored inside the class. Value 0xFFFFFFFF in the distance
+	array signifies that no path between given vertices exist. In case of several
+	paths found, the algorithm remembers only the first path found.
+
+	Params:
+	vertex	- vertex from which to search for the paths
+	log		- flag signaling whether to print logs during algorithm run
+
+	Return:
+	The duration of algorithm operations. Note that the duration is affected by
+	logs, so for true algorithm performance, it must be measured with logs turned
+	off by setting the log flag to false.
+
+	this->distance	- distance from selected vertex to all other vertices
+	this->prev_node - previous node in the path to given vertex
+*/
+int Graph::Matrix::belman_ford(uint32_t vertex, bool log)
+{
+	// set default values for the distances and previous vertices
+	for (uint32_t i = 0; i < this->nodes_amount; i++)
+	{
+		this->distance[i] = 0x7FFFFFFF;
+		this->prev_node[i].clear();
+	}
+
+	// set zero as a distance for the starting vertex
+	this->distance[vertex] = 0;
+
+	bool change_found;
+
+	auto start = std::chrono::system_clock::now();
+
+	// search through the graph multiple times to find shortest paths
+	for (uint32_t i = 0; i < this->nodes_amount; i++)
+	{
+		// assume change in distance was not found
+		change_found = false;
+		for (uint32_t x = 0; x < this->nodes_amount; x++)
+		{
+			for (uint32_t j = 0; j < this->nodes_amount; j++)
+			{
+				// if change in distance between connected vertices was found, save said information
+				if (this->distance[j] > this->distance[x] + this->matrix[x][j] && this->matrix[x][j] != 0)
+				{
+					// remember that change was found, to continue search
+					change_found = true;
+					this->distance[j] = this->distance[x] + this->matrix[x][j];
+					this->prev_node[j].clear();
+					this->prev_node[j].push_back(x);
+				}
+			}
+			// if log flag is set, print informations about distance and previous nodes
+			if (log)
+			{
+				// distance information
+				std::cout << "Distances: " << std::endl;
+				for (uint32_t j = 0; j < this->nodes_amount; j++)
+				{
+					std::cout << this->distance[j] << ", ";
+				}
+				// previous vertices information
+				std::cout << std::endl << "Previous: " << std::endl;
+				for (uint32_t j = 0; j < this->nodes_amount; j++)
+				{
+					for (auto itr = this->prev_node[j].begin(); itr != this->prev_node[j].end(); itr++)
+						std::cout << *itr << ", ";
+					std::cout << std::endl;
+				}
+				std::cout << std::endl;
+			}
+		}
+		// if change was not found, optimize the algorithm by stopping the search
+		if (!change_found)
+		{
+			break;
+		}
+	}
+
+	// calculate how long the algorithm was running
+	auto end = std::chrono::system_clock::now();
+	auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+	// if log flag is set, print the duration
+	if (log)
+	{
+		std::cout << "Duration: " << diff.count() << " us" << std::endl;
+	}
+	return diff.count();
+}
+
+/*
+	Modified Belman-Fort algorithm finding the shortests paths with
+	additionally fulfilling the throughtput requirement. As a result, several
+	paths may be stored within the prev_node vectors, for all the previous
+	vertices fulfilling the minimum throughtput requirement.
+
+	Params:
+	searched_throughtput	- the minimal throughtput the path must fulfill
+	vertex					- the vertex to begin the search from
+	log						- flag signaling whether to print logs during run
+
+	Result:
+	The duration of algorithm operations. Note that the duration is affected by
+	logs, so for true algorithm performance, it must be measured with logs turned
+	off by setting the log flag to false.
+
+	this->distance	- array of distances from the beginning vertex to all other
+					  vertices
+	this->prev_node - array of vectors containing the possible paths fulfilling
+					  the minimal throughtput requirement
+*/
+int Graph::Matrix::throughtput_belman_ford(uint32_t searched_throughtput, uint32_t vertex, bool log)
+{
+	// set default values for the distances and previous vertices
+	for (uint32_t i = 0; i < this->nodes_amount; i++)
+	{
+		this->distance[i] = 0x7FFFFFFF;
+		this->prev_node[i].clear();
+	}
+
+	// set zero as a distance for the starting vertex
+	this->distance[vertex] = 0;
+
+	bool change_found;
+
+	auto start = std::chrono::system_clock::now();
+	// search through the graph multiple times to find shortest paths
+	for (uint32_t i = 0; i < this->nodes_amount; i++)
+	{
+		// assume change in distance was not found
+		change_found = false;
+		for (uint32_t x = 0; x < this->nodes_amount; x++)
+		{
+			for (uint32_t j = 0; j < this->nodes_amount; j++)
+			{
+				// if change in distance between connected vertices was found while fulfilling the throughtput requirement,
+				// save said information
+				if (this->distance[j] > this->distance[x] + this->matrix[x][j] && this->throughtput[x][j] >= searched_throughtput)
+				{
+					// remember the change was found to continue search
+					change_found = true;
+					this->distance[j] = this->distance[x] + this->matrix[x][j];
+					this->prev_node[j].clear();
+					this->prev_node[j].push_back(x);
+				}
+				// if a path of the same distance was found, fulfilling the throughtput requirement, and is not already
+				// saved, save it in prev_node vector.
+				else if (this->distance[j] == this->distance[x] + this->matrix[x][j]
+					&& this->throughtput[x][j] >= searched_throughtput
+					&& std::find(this->prev_node[j].begin(), this->prev_node[j].end(), x) == this->prev_node[j].end())
+				{
+					// remember the change was found to continue search
+					change_found = true;
+					this->prev_node[j].push_back(x);
+				}
+			}
+			// if log flag is set, print informations about distance and previous nodes
+			if (log)
+			{
+				// distance information
+				std::cout << "Distances: " << std::endl;
+				for (uint32_t j = 0; j < this->nodes_amount; j++)
+				{
+					std::cout << this->distance[j] << ", ";
+				}
+				// previous vertices information
+				std::cout << std::endl << "Previous: " << std::endl;
+				for (uint32_t j = 0; j < this->nodes_amount; j++)
+				{
+					for (auto itr = this->prev_node[j].begin(); itr != this->prev_node[j].end(); itr++)
+						std::cout << *itr << ", ";
+					std::cout << std::endl;
+				}
+				std::cout << std::endl;
+			}
+		}
+		// if change was not found, optimize the algorithm by stopping the search
+		if (!change_found)
+		{
+			break;
+		}
+	}
+
+	// calculate how long the algorithm was running
+	auto end = std::chrono::system_clock::now();
+	auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+	// if log flag is set, print the duration
+	if (log)
+	{
+		std::cout << "Duration: " << diff.count() << " us" << std::endl;
+	}
+
+	return diff.count();
 }

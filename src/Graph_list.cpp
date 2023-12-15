@@ -9,7 +9,7 @@ Graph::List::List(std::string file_path)
 {
 	std::fstream file;
 	file.open(file_path, std::ios::in);
-	
+
 	uint32_t amount = 0;
 
 	if (file.is_open())
@@ -25,7 +25,7 @@ Graph::List::List(std::string file_path)
 				amount++;
 			}
 		}
-		
+
 		this->nodes = new Node* [amount];
 		this->degrees = new uint32_t[amount];
 
@@ -61,7 +61,7 @@ Graph::List::List(std::string file_path)
 
 					pos = line.find(' ');
 				}
-				
+
 			}
 		}
 	}
@@ -156,7 +156,7 @@ Graph::List::List(Data::Pixel_map& map)
 				this->degrees[i]++;
 			}
 		}
-		
+
 		if (static_cast<int32_t>(coord.y) - 1 >= 0)
 		{
 			if (map.get_field(coord.x, coord.y - 1) == 0)
@@ -312,7 +312,7 @@ void Graph::List::remove_edge(uint32_t source, uint32_t destination)
 			this->degrees[index]--;
 		}
 	}
-	
+
 	index = this->node_map.find(destination)->second;
 	ptr = this->nodes[index];
 	if (ptr != nullptr)
@@ -336,8 +336,8 @@ void Graph::List::add_node()
 	uint32_t amount = static_cast<uint32_t>(this->node_map.size());
 	Node** ptr = new Node * [amount + static_cast<unsigned __int64>(1)];
 	memcpy(ptr, this->nodes, sizeof(Node*) * amount);
-	
-	
+
+
 	uint32_t* deg_ptr = new uint32_t[amount + static_cast<unsigned __int64>(1)];
 	memcpy(deg_ptr, this->degrees, sizeof(uint32_t) * amount);
 
@@ -348,7 +348,7 @@ void Graph::List::add_node()
 
 	delete[] this->degrees;
 	delete[] this->nodes;
-	
+
 	this->degrees = deg_ptr;
 	this->nodes = ptr;
 }
@@ -420,4 +420,234 @@ uint32_t Graph::find_index(std::vector<Data::coord>& nodes, uint32_t x, uint32_t
 		}
 	}
 	return ret;
+}
+
+int32_t Graph::List::greedy_coloring(bool log)
+{
+	std::vector<int> v;
+	std::map<int, int>::iterator itr;
+
+	for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
+	{
+		v.push_back(itr->second);
+	}
+	shuffle(v, log);
+	std::map<int, int> map;
+	uint32_t count = v.size();
+	for (uint32_t i = 0; i < count; i++)
+	{
+		map.insert(std::pair<int, int>(i, v[i]));
+	}
+	return this->greedy_coloring_core(&map, log);
+}
+
+int32_t Graph::List::greedy_coloring_core(std::map<int, int>* map, bool log)
+{
+	if (map == nullptr)
+	{
+		map = &(this->node_map);
+	}
+	uint32_t nodes_count = static_cast<uint32_t>(map->size());
+	int32_t* nodes_colors = new int32_t[nodes_count];
+	bool* colors_taken = new bool[nodes_count];
+
+	for (uint32_t i = 0; i < nodes_count; i++)
+	{
+		nodes_colors[i] = -1;
+	}
+
+	std::map<int, int>::iterator itr = map->begin();
+	nodes_colors[itr->second] = 0;
+	uint32_t color;
+	Node* ptr;
+
+	for (++itr; itr != map->end(); itr++)
+	{
+			for (uint32_t i = 0; i < nodes_count; i++)
+			{
+				colors_taken[i] = false;
+			}
+		ptr = this->nodes[itr->second];
+
+		while (ptr != nullptr)
+		{
+			if (nodes_colors[ptr->neighbour-1] > -1)
+			{
+				colors_taken[nodes_colors[ptr->neighbour-1]] = true;
+			}
+
+			ptr = ptr->next;
+		}
+
+		for (color = 0; colors_taken[color] == true; color++);
+		nodes_colors[itr->second] = color;
+	}
+
+	int32_t max = -1;
+
+	for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
+	{
+		if (log)
+		{
+			std::cout << "Node " << itr->second + 1 << " has color " << nodes_colors[itr->second] << std::endl;
+		}
+		if (nodes_colors[itr->second] > max) max = nodes_colors[itr->second];
+	}
+	if (log)
+	{
+		std::cout << "Amount of colors used: " << max + 1 << std::endl;
+	}
+
+	delete[] nodes_colors;
+	delete[] colors_taken;
+
+	return max + 1;
+}
+
+int32_t Graph::List::lf_coloring(bool log)
+{
+	int32_t deg = 0;
+	uint32_t nodes_count = this->node_map.size();
+
+	for (uint32_t i = 0; i < nodes_count; i++)
+	{
+		if (this->degrees[i] > deg) deg = this->degrees[i];
+	}
+
+	std::map<int, int> map;
+	uint32_t map_index = 0;
+
+	std::vector<int> v;
+
+	std::map<int, int>::iterator itr;
+
+	for (deg; deg > -1; deg--)
+	{
+		v.clear();
+		for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
+		{
+			if (this->degrees[itr->second] == deg)
+			{
+				v.push_back(itr->second);
+			}
+		}
+		this->shuffle(v, log);
+		for (uint32_t i = 0; i < v.size(); i++)
+		{
+			map.insert(std::pair<int, int>(map_index, v[i]));
+			map_index++;
+		}
+	}
+	if (log)
+	{
+		for (itr = map.begin(); itr != map.end(); itr++)
+		{
+			std::cout << itr->second << " ";
+		}
+		std::cout << std::endl;
+	}
+	return this->greedy_coloring_core(&map, log);
+}
+
+int32_t Graph::List::sl_coloring(bool log)
+{
+
+	uint32_t nodes_count = this->node_map.size();
+	int32_t* degrees = new int32_t[nodes_count];
+	Node* ptr;
+	std::map<int, int>::iterator itr;
+	std::vector<int> v;
+	std::vector<int> temp;
+	std::map<int, int> map;
+	uint32_t min;
+	int32_t min_j;
+
+	for (uint32_t i = 0; i < nodes_count; i++)
+	{
+		for (uint32_t j = 0; j < nodes_count; j++)
+		{
+			degrees[j] = -1;
+		}
+		v.clear();
+
+		for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
+		{
+			if (std::find(std::begin(temp), std::end(temp), itr->second) == std::end(temp))
+			{
+				degrees[itr->second] = 0;
+				ptr = this->nodes[itr->second];
+
+				while (ptr != nullptr)
+				{
+
+					if (std::find(std::begin(temp), std::end(temp), ptr->neighbour - 1) == std::end(temp))
+					{
+						degrees[itr->second]++;
+					}
+					ptr = ptr->next;
+				}
+			}
+		}
+
+		min = 0xFFFFFFFF;
+		for (int32_t j = 0; j < nodes_count; j++)
+		{
+			if (degrees[j] < min && degrees[j] > -1)
+			{
+				min = degrees[j];
+			}
+		}
+		for (uint32_t j = 0; j < nodes_count; j++)
+		{
+			if (degrees[j] == min)
+			{
+				v.push_back(j);
+			}
+		}
+		this->shuffle(v, log);
+		temp.push_back(v[0]);
+	}
+
+    uint32_t map_index = 0;
+	for (int32_t i = temp.size() - 1; i >= 0; i--)
+	{
+		map.insert(std::pair<int, int>(map_index, temp[i]));
+		map_index++;
+	}
+	if (log)
+	{
+		for (itr = map.begin(); itr != map.end(); itr++)
+		{
+			std::cout << itr->second << " ";
+		}
+		std::cout << std::endl;
+	}
+
+	return this->greedy_coloring_core(&map, log);
+}
+
+void Graph::List::shuffle(std::vector<int>& v, bool log)
+{
+	uint32_t count = v.size();
+	uint32_t index_a;
+	uint32_t index_b;
+	srand(time(NULL));
+	uint32_t val;
+	for (uint32_t i = 0; i < count; i++)
+	{
+		index_a = rand() % count;
+		index_b = rand() % count;
+		val = v[index_a];
+		v[index_a] = v[index_b];
+		v[index_b] = val;
+	}
+	if (log)
+	{
+		std::cout << "shuffle" << std::endl;
+		for (uint32_t i = 0; i < count; i++)
+		{
+			std::cout << v[i] << " ";
+		}
+		std::cout << std::endl;
+	}
 }

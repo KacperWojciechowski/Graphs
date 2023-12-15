@@ -37,6 +37,12 @@ namespace Graph
 
 		void remove_node(uint32_t node_id);
 
+        int32_t greedy_coloring_core(std::map<int, int>* map, bool log);
+        int32_t greedy_coloring(bool log);
+        int32_t lf_coloring(bool log);
+        int32_t sl_coloring(bool log);
+        void shuffle(std::vector<int>& v, bool log);
+
 		~List();
 	private:
 		struct Node
@@ -44,7 +50,7 @@ namespace Graph
 			uint32_t neighbour;
 			Node* next;
 		};
-		
+
 		std::map<int, int> node_map;
 
 		Node** nodes;

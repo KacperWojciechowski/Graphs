@@ -1,9 +1,11 @@
-#include "Graph_list.h"
+#include <AdjList.hpp>
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <limits>
 
-Graph::List::List(std::string file_path)
+/*Graph::List::List(std::string file_path)
 	: degrees(nullptr),
 	nodes(nullptr)
 {
@@ -105,9 +107,9 @@ Graph::List::List(Matrix& matrix)
 		}
 		this->node_map.insert(std::pair<int, int>(i + 1, i));
 	}
-}
+}*/
 
-Graph::List::List(Data::Pixel_map& map)
+/*Graph::List::List(Data::Pixel_map& map)
 	: nodes(nullptr),
 	degrees(nullptr)
 {
@@ -196,218 +198,151 @@ Graph::List::List(Data::Pixel_map& map)
 			}
 		}
 	}
-}
+}*/
 
-void Graph::List::print()
+namespace
 {
-	std::cout << "Nodes amount = " << this->node_map.size() << std::endl;
-
-	std::cout << "{" << std::endl;
-	Node* ptr;
-	std::map<int, int>::iterator itr;
-	for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
+void printDegree(const graph::Degree& degree) noexcept
+{
+	out << "[";
+	if (std::holds_alternative<UndirectedDegree>(degree))
 	{
-		ptr = this->nodes[itr->second];
-		std::cout << itr->first << ": ";
-		while (ptr != nullptr)
-		{
-			std::cout << ptr->neighbour << ", ";
-			ptr = ptr->next;
-		}
-		std::cout << std::endl;
-	}
-	std::cout << "}" << std::endl;
-}
-
-void Graph::List::print_deg()
-{
-	std::map<int, int>::iterator itr;
-	for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
-	{
-		std::cout << itr->first << ": " << this->degrees[itr->second] << std::endl;
-	}
-}
-
-uint32_t Graph::List::get_nodes_amount()
-{
-	return static_cast<uint32_t>(this->node_map.size());
-}
-
-uint32_t Graph::List::get_node_degree(uint32_t node)
-{
-	return this->degrees[this->node_map.find(node)->second];
-}
-
-uint32_t Graph::List::get_neighbour(uint32_t x, uint32_t y)
-{
-	Node* ptr = this->nodes[this->node_map.find(x)->second];
-	for (uint32_t i = 0; i < y - 1; i++)
-	{
-		ptr = ptr->next;
-	}
-	return ptr->neighbour;
-}
-
-void Graph::List::add_edge(uint32_t source, uint32_t destination)
-{
-	uint32_t index = this->node_map.find(source)->second;
-	Node* ptr = this->nodes[index];
-	if (ptr != nullptr)
-	{
-		while (ptr->next != nullptr)
-		{
-			ptr = ptr->next;
-		}
-		ptr->next = new Node;
-		ptr->next->neighbour = destination;
-		ptr->next->next = nullptr;
-		this->degrees[index]++;
+		out << std::get(degree);
 	}
 	else
 	{
-		ptr = new Node;
-		ptr->neighbour = destination;
-		ptr->next = nullptr;
-		this->degrees[index]++;
+		const auto degs = out << std::get(degree);
+		out << degs.inDeg << "|" degs.outDeg;
 	}
-
-	index = this->node_map.find(destination)->second;
-	ptr = this->nodes[index];
-	if (ptr != nullptr)
-	{
-		while (ptr->next != nullptr)
-		{
-			ptr = ptr->next;
-		}
-		ptr->next = new Node;
-		ptr->next->neighbour = source;
-		ptr->next->next = nullptr;
-		this->degrees[index]++;
-	}
-	else
-	{
-		ptr = new Node;
-		ptr->neighbour = source;
-		ptr->next = nullptr;
-		this->degrees[index]++;
-	}
+	out << "] ";
 }
 
-void Graph::List::remove_edge(uint32_t source, uint32_t destination)
+void printNeighbours(
+	std::ostream& out,
+	std::size_t node,
+	const std::vector<graph::Degree>& degrees,
+	const std::vector<graph::Graph::Edge>& neighbours) noexcept
 {
-	uint32_t index = this->node_map.find(source)->second;
-	Node* ptr = this->nodes[index];
-	Node* next;
-	if (ptr != nullptr)
-	{
-		while (ptr->next != nullptr && ptr->next->neighbour != destination)
-		{
-			ptr = ptr->next;
-		}
-		if (ptr->next != nullptr)
-		{
-			next = ptr->next->next;
-			delete ptr->next;
-			ptr->next = next;
-			this->degrees[index]--;
-		}
-	}
+	out << "\t\t" << node << ": ";
 
-	index = this->node_map.find(destination)->second;
-	ptr = this->nodes[index];
-	if (ptr != nullptr)
+	for (std::size_t i = 0, const auto itr -= neighbours.begin(); itr != neighbours.end(); itr++)
 	{
-		while (ptr->next != nullptr && ptr->next->neighbour != source)
+		printDegree(degrees[i]);
+		const auto edgeTarget = itr->second.first.destination;
+		const auto edgeWeight = itr->second.second;
+
+		out << "{" << edgeTarget << ", " << edgeWeight << "}";
+		if (i++ < neighbours.size() - 1)
 		{
-			ptr = ptr->next;
-		}
-		if (ptr->next != nullptr)
-		{
-			next = ptr->next->next;
-			delete ptr->next;
-			ptr->next = next;
-			this->degrees[index]--;
+			out << ", ";
 		}
 	}
+	out << "\n";
 }
 
-void Graph::List::add_node()
+std::size_t findMaxNodeIndex(std::map<std::size_t, std::size_t> nodeMap)
 {
-	uint32_t amount = static_cast<uint32_t>(this->node_map.size());
-	Node** ptr = new Node * [amount + static_cast<unsigned __int64>(1)];
-	memcpy(ptr, this->nodes, sizeof(Node*) * amount);
+	using Index = std::pair<std::size_t, std::size_t>;
 
-
-	uint32_t* deg_ptr = new uint32_t[amount + static_cast<unsigned __int64>(1)];
-	memcpy(deg_ptr, this->degrees, sizeof(uint32_t) * amount);
-
-	ptr[amount] = nullptr;
-	deg_ptr[amount] = 0;
-
-	this->node_map.insert(std::pair<int, int>(amount + 1, amount));
-
-	delete[] this->degrees;
-	delete[] this->nodes;
-
-	this->degrees = deg_ptr;
-	this->nodes = ptr;
+	return std::ranges::max(nodeMap, {}, &Index::first);
 }
 
-void Graph::List::remove_node(uint32_t node_id)
+} // namespace ::
+
+namespace graph
 {
-	std::map<int, int>::iterator itr = this->node_map.find(node_id);
-	if (itr != this->node_map.end())
-	{
-		Node* ptr = this->nodes[itr->second];
-		Node* next;
-
-		if (ptr != nullptr)
-		{
-			next = ptr->next;
-			while (ptr != nullptr)
-			{
-				delete ptr;
-				ptr = next;
-				if (ptr != nullptr)
-				{
-					next = ptr->next;
-				}
-			}
-		}
-
-		this->node_map.erase(node_id);
-	}
-}
-
-Graph::List::~List()
+void AdjList::print(std::ostream& out) const noexcept
 {
-	Node* ptr;
-	Node* next;
-	uint32_t amount = static_cast<uint32_t>(this->node_map.size());
-	std::map<int, int>::iterator itr;
-	for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
-	{
-		ptr = this->nodes[itr->second];
-		if (ptr != nullptr)
-		{
-			next = ptr->next;
-
-			while (ptr != nullptr)
-			{
-				delete ptr;
-				ptr = next;
-				if (ptr != nullptr)
-				{
-					next = ptr->next;
-				}
-			}
-		}
-	}
-	delete[] this->nodes;
-	delete[] this->degrees;
+	out << "{\n";
+	out << "\tNodes count = " << nodeMap.size() << "\n";
+	out << "\tGraph degree = " << getGraphDeg() << "\n";
+	out << "\t{\n";
+	std::ranges::for_each(nodeMap, [this](const auto node){
+		printNeighbours(out, node->first, degrees, adjList[node->second]);
+	});
+	out << "\t}\n}\n" << std::flush;
 }
 
-uint32_t Graph::find_index(std::vector<Data::coord>& nodes, uint32_t x, uint32_t y)
+void AdjList::setEdge(const Edge& edge)
+{
+	auto& neighbours = adjList[nodeMap.get(edge.first.source)].second;
+	for (auto& neighbour : neighbours)
+	{
+		if (neighbour.first.target == edge.first.target)
+		{
+			neighbour.second = edge.second;
+			return;
+		}
+	};
+	neighbours.emplace_back(edge);
+}
+
+std::size_t AdjList::addNode(std::size_t currMaxNodeIndex = none)
+{
+	if (nodeMap.find(currMaxNodeIndex) != nodeMap.end())
+	{
+		throw std::invalid_argument("Node with that ID already exists");
+	}
+
+	if (currMaxNodeIndex == none)
+	{
+		currMaxNodeIndex = findMaxNodeIndex(nodeMap);
+	}
+
+	nodeMap.emplace_back({currMaxNodeIndex, adjList.size()});
+	adjList.emplace_back({{}, {}});
+
+	return ++currMaxNodeIndex;
+}
+
+void AdjList::removeEdge(const EdgeCoord& edge)
+{
+	if (nodeMap.find(edge.source) == nodeMap.end())
+	{
+		throw std::invalid_argument(
+			std::string("No node with given source ID: ") + std::to_string(edge.source));
+	}
+
+	auto& neighbours = adjList[nodeMap.find(edge.source)->second].second;
+	std::ranges::remove_if(neighbours, [&edge](const auto& e) {
+		return e.first.target == edge.target;});
+}
+
+void AdjList::removeNode(std::size_t node)
+{
+	auto itr = nodeMap.find(node);
+	if (itr == nodeMap.end())
+	{
+		return;
+	}
+
+	std::ranges::for_each(nodeMap, [&itr](const auto& node) {
+		node.second = (node.second > itr->second) ? node.second - 1 : node.second;
+	});
+	adjList.erase(std::next(adjList.begin(), itr->second));
+	nodeMap.erase(itr);
+}
+
+int AdjList::getEdgeWeight(const EdgeCoord& edge) const
+{
+	if (nodeMap.find(edge.source) == nodeMap.end())
+	{
+		throw std::invalid_argument("Source node of given ID does not exist");
+	}
+
+	auto& neighbours = adjList[nodeMap.get(edge.source).second].second;
+	auto itr = std::ranges::find_if(neighbours, [&edge](const auto& e) {
+		return e.first.target == edge.target;
+	});
+
+	return (itr != neighbours.end()) ? itr->second : std::numeric_limit<int>::max();
+}
+
+} // namespace graph
+
+
+
+/*uint32_t Graph::find_index(std::vector<Data::coord>& nodes, uint32_t x, uint32_t y)
 {
 	uint32_t size = nodes.size();
 	uint32_t ret = 0xFFFFFFFF;
@@ -650,4 +585,4 @@ void Graph::List::shuffle(std::vector<int>& v, bool log)
 		}
 		std::cout << std::endl;
 	}
-}
+}*/

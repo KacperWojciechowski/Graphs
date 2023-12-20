@@ -29,7 +29,7 @@ namespace graph
 
 		Degree getNodeDeg(std::size_t node) const noexcept
 		{
-			return degrees[nodeMap.get(node).second].first;
+			return degrees[nodeMap.at(node)];
 		}
 
 		std::vector<std::size_t> getNodeIds() const noexcept
@@ -41,16 +41,9 @@ namespace graph
 			return nodeIdx;
 		}
 
-		std::vector<std::size_t> getNeighboursOf(std::size_t node) const
-		{
-			if (nodeMap.find(node) == nodeMap.end())
-			{
-				throw std::invalid_argument("Node of given ID does not exist");
-			}
-			return adjList[nodeMap.get(node).second];
-		}
+		std::vector<std::size_t> getNeighboursOf(std::size_t node) const;
 
-		inty getEdgeWeight(const EdgeCoord& edge) const;
+		int getEdgeWeight(const EdgeCoord& edge) const;
 
 		void setEdge(const Edge& edge);
 		std::size_t addNode(std::size_t currMaxNodeIndex = none);
@@ -69,10 +62,11 @@ namespace graph
 	private:
 		using NodeInformation = std::vector<Edge>;
 
+		using Graph<AdjList>::graphType;
 		using Graph<AdjList>::graphDeg;
 		using Graph<AdjList>::degrees;
 
-		std::map<std::size_t, std::size_t> nodeMap;\
+		std::map<std::size_t, std::size_t> nodeMap;
 		std::vector<NodeInformation> adjList;
 	};
 }

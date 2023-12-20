@@ -5,7 +5,6 @@
 #include <iostream>
 #include <limits>
 #include <ranges>
-#include <filesystem>
 
 /*Graph::List::List(std::string file_path)
 	: degrees(nullptr),
@@ -204,17 +203,17 @@ Graph::List::List(Matrix& matrix)
 
 namespace
 {
-void printDegree(const graph::Degree& degree) noexcept
+void printDegree(std::ostream& out, const graph::Degree& degree) noexcept
 {
 	out << "[";
-	if (std::holds_alternative<UndirectedDegree>(degree))
+	if (std::holds_alternative<graph::UndirectedDegree>(degree))
 	{
-		out << std::get(degree);
+		out << std::get<graph::UndirectedDegree>(degree);
 	}
 	else
 	{
-		const auto degs = out << std::get(degree);
-		out << degs.inDeg << "|" degs.outDeg;
+		const auto degs = std::get<graph::DirectedDegree>(degree);
+		out << degs.inDeg << "|" << degs.outDeg;
 	}
 	out << "] ";
 }
@@ -222,16 +221,17 @@ void printDegree(const graph::Degree& degree) noexcept
 void printNeighbours(
 	std::ostream& out,
 	std::size_t node,
-	const std::vector<graph::Degree>& degrees,
-	const std::vector<graph::Graph::Edge>& neighbours) noexcept
+	const graph::Degree& degree,
+	const std::vector<graph::Edge>& neighbours) noexcept
 {
 	out << "\t\t" << node << ": ";
 
-	for (std::size_t i = 0, const auto itr -= neighbours.begin(); itr != neighbours.end(); itr++)
+	std::size_t i = 0;
+	for (auto itr = neighbours.begin(); itr != neighbours.end(); itr++)
 	{
-		printDegree(degrees[i]);
-		const auto edgeTarget = itr->second.first.destination;
-		const auto edgeWeight = itr->second.second;
+		printDegree(out, degree);
+		const auto edgeTarget = itr->first.target;
+		const auto edgeWeight = itr->second;
 
 		out << "{" << edgeTarget << ", " << edgeWeight << "}";
 		if (i++ < neighbours.size() - 1)
@@ -246,7 +246,7 @@ std::size_t findMaxNodeIndex(std::map<std::size_t, std::size_t> nodeMap)
 {
 	using Index = std::pair<std::size_t, std::size_t>;
 
-	return std::ranges::max(nodeMap, {}, &Index::first);
+	return std::ranges::max(std::views::keys(nodeMap), {});
 }
 
 } // namespace ::
@@ -256,11 +256,11 @@ namespace graph
 std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept
 {
 	out << "{\n";
-	out << "\tNodes count = " << nodeMap.size() << "\n";
-	out << "\tGraph degree = " << getGraphDeg() << "\n";
+	out << "\tNodes count = " << graph.nodeMap.size() << "\n";
+	out << "\tGraph degree = " << graph.getGraphDeg() << "\n";
 	out << "\t{\n";
-	std::ranges::for_each(nodeMap, [this](const auto node){
-		printNeighbours(out, node->first, degrees, adjList[node->second]);
+	std::ranges::for_each(graph.nodeMap, [graph, &out](const auto& node){
+		printNeighbours(out, node.first, graph.degrees[node.second], graph.adjList[node.second]);
 	});
 	out << "\t}\n}\n" << std::flush;
 	return out;
@@ -268,7 +268,7 @@ std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept
 
 void AdjList::setEdge(const Edge& edge)
 {
-	auto& neighbours = adjList[nodeMap.get(edge.first.source)];
+	auto& neighbours = adjList[nodeMap.at(edge.first.source)];
 	for (auto& neighbour : neighbours)
 	{
 		if (neighbour.first.target == edge.first.target)
@@ -280,7 +280,7 @@ void AdjList::setEdge(const Edge& edge)
 	neighbours.emplace_back(edge);
 }
 
-std::size_t AdjList::addNode(std::size_t currMaxNodeIndex = none)
+std::size_t AdjList::addNode(std::size_t currMaxNodeIndex)
 {
 	if (nodeMap.find(currMaxNodeIndex) != nodeMap.end())
 	{
@@ -292,8 +292,16 @@ std::size_t AdjList::addNode(std::size_t currMaxNodeIndex = none)
 		currMaxNodeIndex = findMaxNodeIndex(nodeMap);
 	}
 
-	nodeMap.emplace_back({currMaxNodeIndex, adjList.size()});
-	adjList.emplace_back({});
+	nodeMap.insert({currMaxNodeIndex, adjList.size()});
+	if (graphType == GraphType::undirected)
+	{
+		degrees.emplace_back(std::size_t{0});
+	}
+	else
+	{
+		degrees.emplace_back(Degree{});
+	}
+	adjList.emplace_back();
 
 	return ++currMaxNodeIndex;
 }
@@ -319,10 +327,11 @@ void AdjList::removeNode(std::size_t node)
 		return;
 	}
 
-	std::ranges::for_each(nodeMap, [&itr](const auto& node) {
+	std::ranges::for_each(nodeMap, [&itr](auto& node) {
 		node.second = (node.second > itr->second) ? node.second - 1 : node.second;
 	});
 	adjList.erase(std::next(adjList.begin(), itr->second));
+	degrees.erase(std::next(degrees.begin(), itr->second));
 	nodeMap.erase(itr);
 }
 
@@ -333,14 +342,27 @@ int AdjList::getEdgeWeight(const EdgeCoord& edge) const
 		throw std::invalid_argument("Source node of given ID does not exist");
 	}
 
-	auto& neighbours = adjList[nodeMap.get(edge.source).second];
+	auto& neighbours = adjList[nodeMap.at(edge.source)];
 	auto itr = std::ranges::find_if(neighbours, [&edge](const auto& e) {
 		return e.first.target == edge.target;
 	});
 
-	return (itr != neighbours.end()) ? itr->second : std::numeric_limit<int>::max();
+	return (itr != neighbours.end()) ? itr->second : std::numeric_limits<int>::max();
 }
 
+std::vector<std::size_t> AdjList::getNeighboursOf(std::size_t node) const
+{
+	if (nodeMap.find(node) == nodeMap.end())
+	{
+		throw std::invalid_argument("Node of given ID does not exist");
+	}
+
+	std::vector<std::size_t> neighbours = {};
+	std::ranges::for_each(adjList[nodeMap.at(node)], [&neighbours](const auto& edge) {
+		neighbours.emplace_back(edge.first.target);
+	});
+	return neighbours;
+}
 } // namespace graph
 
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include <vector>
 
 namespace graph
@@ -26,6 +25,14 @@ struct DirectedDegree
 using UndirectedDegree = std::size_t;
 using Degree = std::variant<UndirectedDegree, DirectedDegree>;
 
+template<typename T>
+friend std::ostream& operator<<(std::ostream& out, const Graph<T>& graph) const noexcept
+{
+    out << static_cast<T&>(graph);
+    return out;
+}
+
+template<typename T>
 class Graph {
 
 public:
@@ -33,57 +40,86 @@ public:
 
     static constexpr std::size_t none = 0;
 
-    friend std::ostream& operator<<(std::ostream& out, const Graph& graph) const noexcept
+    Degree getNodeDeg(std::size_t node) const
     {
-        graph.print(out);
+        return static_cast<T&>(*this).getNodeDeg(node);
     }
 
-    virtual void print(std::ostream& out) const = 0;
-    virtual Degree getNodeDeg(std::size_t node) const = 0;
-    virtual std::size_t getGrapDeg() const
+    std::size_t getGrapDeg() const
     {
-        return graphDeg;
+        return static_cast<T&>(*this).graphDeg;
     }
 
-    virtual std::vector<std::size_t> getNodeIds() const noexcept = 0;
-    virtual std::vector<std::size_t> getNeighboursOf(std::size_t node) const = 0;
-    virtual int getEdgeWeight(const EdgeCoord& edge) const = 0;
+    std::vector<std::size_t> getNodeIds() const noexcept
+    {
+        return static_cast<T&>(*this).getNodeIds();
+    }
 
-    virtual void setEdge(const Edge& edge) = 0;
-    virtual void setEdgeSeries(const std::vector<Edge>& edges)
+    std::vector<std::size_t> getNeighboursOf(std::size_t node) const
+    {
+        return static_cast<T&>(*this).getNeighboursOf(node);
+    }
+
+    int getEdgeWeight(const EdgeCoord& edge) const
+    {
+        return static_cast<T&>(*this).getEdgeWeight(edge);
+    }
+
+    void setEdge(const Edge& edge)
+    {
+        static_cast<T&>(*this).setEdge(edge);
+    }
+
+    void setEdgeSeries(const std::vector<Edge>& edges)
     {
         std::ranges::for_each(edges, [](const auto& edge) {
-            setEdge(edge);
+            static_cast<T&>(*this).setEdge(edge);
         });
     }
 
-    virtual std::size_t addNode(std::size_t currMaxNodeIndex = none) = 0;
-    virtual void addNodeSeries(std::size_t count)
+    std::size_t addNode(std::size_t currMaxNodeIndex = none)
+    {
+        return static_cast<T&>(*this).addNode(currMaxNodeIndex);
+    }
+
+    void addNodeSeries(std::size_t count)
     {
         std::size_t currMaxNodeIndex = none;
         for (std::size_t i = 0; i < count; i++)
         {
-            currMaxNodeIndex = addNode(currMaxNodeIndex);
+            currMaxNodeIndex = static_cast<T&>(*this).addNode(currMaxNodeIndex);
         }
     }
 
-    virtual void removeEdge(const EdgeCoord& edge) = 0;
-    virtual void removeEdgeSeries(const std::vector<EdgeCoord>& edges)
+    void removeEdge(const EdgeCoord& edge)
+    {
+        static_cast<T&>(*this).removeEdge(edge);
+    }
+
+    void removeEdgeSeries(const std::vector<EdgeCoord>& edges)
     {
         std::ranges::for_each(edges, [](const auto& edge) {
-            removeEdge(edge);
+            static_cast<T&>(*this).removeEdge(edge);
         });
     }
 
-    virtual void removeNode(std::size_t node) = 0;
-    virtual void removeNodeSeries(const std::vector<std::size_t>& nodes)
+    void removeNode(std::size_t node)
+    {
+        static_cast<T&>(*this).removeNode(node);
+    }
+
+    void removeNodeSeries(const std::vector<std::size_t>& nodes)
     {
         std::ranges::for_each(nodes, [](const auto& node) {
-            removeNode(node);
+            static_cast<T&>(*this).removeNode(node);
         });
     }
 
 private:
     std::size_t graphDeg;
+    std::vector<Degree> degrees;
+
+    friend T;
+    Graph() = default;
 };
 } // namespace graph

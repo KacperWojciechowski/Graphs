@@ -253,18 +253,7 @@ std::size_t findMaxNodeIndex(std::map<std::size_t, std::size_t> nodeMap)
 
 namespace graph
 {
-AdjList::AdjList(std::string_view filePath)
-{
-	namespace fs = std::filesystem;
-
-	fs::path path = filePath;
-	if (path.extension() != ".lst")
-	{
-		throw
-	}
-}
-
-void AdjList::print(std::ostream& out) const noexcept
+std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept
 {
 	out << "{\n";
 	out << "\tNodes count = " << nodeMap.size() << "\n";
@@ -274,11 +263,12 @@ void AdjList::print(std::ostream& out) const noexcept
 		printNeighbours(out, node->first, degrees, adjList[node->second]);
 	});
 	out << "\t}\n}\n" << std::flush;
+	return out;
 }
 
 void AdjList::setEdge(const Edge& edge)
 {
-	auto& neighbours = adjList[nodeMap.get(edge.first.source)].second;
+	auto& neighbours = adjList[nodeMap.get(edge.first.source)];
 	for (auto& neighbour : neighbours)
 	{
 		if (neighbour.first.target == edge.first.target)
@@ -303,7 +293,7 @@ std::size_t AdjList::addNode(std::size_t currMaxNodeIndex = none)
 	}
 
 	nodeMap.emplace_back({currMaxNodeIndex, adjList.size()});
-	adjList.emplace_back({{}, {}});
+	adjList.emplace_back({});
 
 	return ++currMaxNodeIndex;
 }
@@ -316,7 +306,7 @@ void AdjList::removeEdge(const EdgeCoord& edge)
 			std::string("No node with given source ID: ") + std::to_string(edge.source));
 	}
 
-	auto& neighbours = adjList[nodeMap.find(edge.source)->second].second;
+	auto& neighbours = adjList[nodeMap.find(edge.source)->second];
 	std::ranges::remove_if(neighbours, [&edge](const auto& e) {
 		return e.first.target == edge.target;});
 }
@@ -343,7 +333,7 @@ int AdjList::getEdgeWeight(const EdgeCoord& edge) const
 		throw std::invalid_argument("Source node of given ID does not exist");
 	}
 
-	auto& neighbours = adjList[nodeMap.get(edge.source).second].second;
+	auto& neighbours = adjList[nodeMap.get(edge.source).second];
 	auto itr = std::ranges::find_if(neighbours, [&edge](const auto& e) {
 		return e.first.target == edge.target;
 	});

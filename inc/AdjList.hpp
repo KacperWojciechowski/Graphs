@@ -14,7 +14,7 @@ namespace graph
 	class Matrix;
 	//uint32_t find_index(std::vector<Data::coord>& nodes, uint32_t x, uint32_t y);
 
-	class AdjList : public Graph
+	class AdjList : public Graph<AdjList>
 	{
 	public:
 		AdjList(std::string_view filePath);
@@ -25,11 +25,11 @@ namespace graph
 		AdjList(const AdjList& l) = default;
 		AdjList(AdjList&& l) = default;
 
-		void print(std::ostream& out) const noexcept;
+		friend std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept;
 
 		Degree getNodeDeg(std::size_t node) const noexcept
 		{
-			return adjList[nodeMap.get(node).second].first;
+			return degrees[nodeMap.get(node).second].first;
 		}
 
 		std::vector<std::size_t> getNodeIds() const noexcept
@@ -47,7 +47,7 @@ namespace graph
 			{
 				throw std::invalid_argument("Node of given ID does not exist");
 			}
-			return adjList[nodeMap.get(node).second].second;
+			return adjList[nodeMap.get(node).second];
 		}
 
 		inty getEdgeWeight(const EdgeCoord& edge) const;
@@ -65,11 +65,14 @@ namespace graph
         void shuffle(std::vector<int>& v, bool log);*/
 
 		~AdjList() = default;
+
 	private:
-		using NodeInformation = std::pair<Degree, std::vector<Edge>>;
+		using NodeInformation = std::vector<Edge>;
 
-		std::map<std::size_t, std::size_t> nodeMap;
+		using Graph<AdjList>::graphDeg;
+		using Graph<AdjList>::degrees;
 
+		std::map<std::size_t, std::size_t> nodeMap;\
 		std::vector<NodeInformation> adjList;
 	};
 }

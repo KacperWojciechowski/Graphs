@@ -17,9 +17,9 @@ namespace graph
 	class AdjList : public Graph
 	{
 	public:
-		AdjList(std::string_view file_path);
+		AdjList(std::string_view filePath);
 
-		AdjList(Matrix& matrix);
+		AdjList(Graph& graph);
 		//AdjList(Data::Pixel_map& map);
 
 		AdjList(const AdjList& l) = default;

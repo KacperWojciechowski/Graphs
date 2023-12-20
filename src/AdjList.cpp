@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include <ranges>
+#include <filesystem>
 
 /*Graph::List::List(std::string file_path)
 	: degrees(nullptr),
@@ -251,6 +253,17 @@ std::size_t findMaxNodeIndex(std::map<std::size_t, std::size_t> nodeMap)
 
 namespace graph
 {
+AdjList::AdjList(std::string_view filePath)
+{
+	namespace fs = std::filesystem;
+
+	fs::path path = filePath;
+	if (path.extension() != ".lst")
+	{
+		throw
+	}
+}
+
 void AdjList::print(std::ostream& out) const noexcept
 {
 	out << "{\n";

@@ -2,35 +2,54 @@
 
 #include <optional>
 #include <string_view>
-#include <traits>
+#include <type_traits>
 #include <filesystem>
+#include <fstream>
+#include <functional>
 
-#include <NullGraph.hpp>
+#include <FileParser.hpp>
 
 namespace graph
 {
-class GraphFactory
+class GraphFactory final
 {
 public:
-    /*template<typename T, std::enable_if<std::is_same<T, Graph<T>>::value, bool> = true>
-    Graph<T> createFromFile(std::string_view fileName)
+    template<typename T, typename = std::enable_if_t<std::is_base_of<Graph<T>, T>::value>>
+    std::optional<Graph<T>> createFromFile(std::string_view fileName)
     {
         namespace fs = std::filesystem;
 
         fs::path extension = fs::path(fileName).extension();
 
-        if (not isSupportedExtension(extension))
+        auto parsingHandler = selectFileHandler<T>(extension);
+        if (not parsingHandler)
         {
-            return NullGraph;
+            return std::nullopt;
         }
 
+        std::ifstream file(fileName.data());
+        if (not file.good())
+        {
+            return std::nullopt;
+        }
 
+        return parsingHandler(file);
     }
 
 private:
 
-    bool parseFile(std::string_view, std::filesystem::path)
+    template<typename T>
+    std::function<T(std::ifstream&)> selectFileHandler(std::filesystem::path extension)
     {
-    }*/
+        if (extension == ".lst") {
+            return FileParser::parseLstFile<T>;
+        } else if (extension == ".mat") {
+            return FileParser::parseMatFile<T>;
+        } else if (extension == ".graphml" or extension == ".GRAPHML") {
+            return FileParser::parseGraphMlFile<T>;
+        } else {
+            return nullptr;
+        }
+    }
 };
 } // namespace graph

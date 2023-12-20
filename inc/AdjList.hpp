@@ -2,71 +2,61 @@
 
 #include <Graph.hpp>
 
-//#include "Pixel_map.h"
-
 #include <string>
 #include <string_view>
 #include <stdexcept>
 #include <map>
+#include <algorithm>
 
 namespace graph
 {
-	class Matrix;
-	//uint32_t find_index(std::vector<Data::coord>& nodes, uint32_t x, uint32_t y);
+class FileParser;
 
-	class AdjList : public Graph<AdjList>
+class AdjList final : public Graph<AdjList>
+{
+public:
+	AdjList(const AdjList& l) = default;
+	AdjList(AdjList&& l) = default;
+
+	friend std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept;
+
+	Degree getNodeDeg(std::size_t node) const noexcept
 	{
-	public:
-		AdjList(std::string_view filePath);
+		return degrees[nodeMap.at(node)];
+	}
 
-		AdjList(Graph& graph);
-		//AdjList(Data::Pixel_map& map);
+	std::vector<std::size_t> getNodeIds() const noexcept
+	{
+		std::vector<std::size_t> nodeIdx = {};
+		std::ranges::for_each(nodeMap, [&nodeIdx](const auto& node) {
+			nodeIdx.emplace_back(node.first);
+		});
+		return nodeIdx;
+	}
 
-		AdjList(const AdjList& l) = default;
-		AdjList(AdjList&& l) = default;
+	std::vector<std::size_t> getNeighboursOf(std::size_t node) const;
 
-		friend std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept;
+	int getEdgeWeight(const EdgeCoord& edge) const;
 
-		Degree getNodeDeg(std::size_t node) const noexcept
-		{
-			return degrees[nodeMap.at(node)];
-		}
+	void setEdge(const Edge& edge);
+	std::size_t addNode(std::size_t currMaxNodeIndex = none);
+	void removeEdge(const EdgeCoord& edge);
+	void removeNode(std::size_t node);
 
-		std::vector<std::size_t> getNodeIds() const noexcept
- 		{
-			std::vector<std::size_t> nodeIdx = {};
-			std::ranges::for_each(nodeMap, [&nodeIdx](const auto& node) {
-				nodeIdx.emplace_back(node.first);
-			});
-			return nodeIdx;
-		}
+	~AdjList() = default;
 
-		std::vector<std::size_t> getNeighboursOf(std::size_t node) const;
+private:
+	using NodeInformation = std::vector<Edge>;
 
-		int getEdgeWeight(const EdgeCoord& edge) const;
+	using Graph<AdjList>::graphType;
+	using Graph<AdjList>::graphDeg;
+	using Graph<AdjList>::degrees;
 
-		void setEdge(const Edge& edge);
-		std::size_t addNode(std::size_t currMaxNodeIndex = none);
-		void removeEdge(const EdgeCoord& edge);
-		void removeNode(std::size_t node);
+	friend FileParser;
 
-		/*
-        int32_t greedy_coloring_core(std::map<int, int>* map, bool log);
-        int32_t greedy_coloring(bool log);
-        int32_t lf_coloring(bool log);
-        int32_t sl_coloring(bool log);
-        void shuffle(std::vector<int>& v, bool log);*/
+	AdjList() = default;
 
-		~AdjList() = default;
-
-	private:
-		using NodeInformation = std::vector<Edge>;
-
-		using Graph<AdjList>::graphType;
-		using Graph<AdjList>::graphDeg;
-		using Graph<AdjList>::degrees;
-
-		std::map<std::size_t, std::size_t> nodeMap;
-		std::vector<NodeInformation> adjList;
-	};
-}
+	std::map<std::size_t, std::size_t> nodeMap;
+	std::vector<NodeInformation> adjList;
+};
+} // graph

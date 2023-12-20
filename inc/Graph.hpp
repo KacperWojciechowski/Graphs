@@ -35,7 +35,6 @@ template<typename T>
 class Graph {
 
 public:
-
     static constexpr std::size_t none = 0;
 
     Degree getNodeDeg(std::size_t node) const

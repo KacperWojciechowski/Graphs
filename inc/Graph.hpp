@@ -2,6 +2,9 @@
 
 #include <cstdint>
 #include <vector>
+#include <variant>
+#include <iostream>
+#include <algorithm>
 
 namespace graph
 {
@@ -21,7 +24,7 @@ struct DirectedDegree
 {
     std::size_t inDeg;
     std::size_t outDeg;
-}
+};
 
 using UndirectedDegree = std::size_t;
 using Degree = std::variant<UndirectedDegree, DirectedDegree>;
@@ -33,14 +36,15 @@ public:
 
     static constexpr std::size_t none = 0;
 
-    friend std::ostream& operator<<(std::ostream& out, const Graph& graph) const noexcept
+    friend std::ostream& operator<<(std::ostream& out, const Graph& graph) noexcept
     {
         graph.print(out);
+        return out;
     }
 
     virtual void print(std::ostream& out) const = 0;
     virtual Degree getNodeDeg(std::size_t node) const = 0;
-    virtual std::size_t getGrapDeg() const
+    virtual std::size_t getGraphDeg() const
     {
         return graphDeg;
     }
@@ -52,7 +56,7 @@ public:
     virtual void setEdge(const Edge& edge) = 0;
     virtual void setEdgeSeries(const std::vector<Edge>& edges)
     {
-        std::ranges::for_each(edges, [](const auto& edge) {
+        std::ranges::for_each(edges, [this](const auto& edge) {
             setEdge(edge);
         });
     }
@@ -70,7 +74,7 @@ public:
     virtual void removeEdge(const EdgeCoord& edge) = 0;
     virtual void removeEdgeSeries(const std::vector<EdgeCoord>& edges)
     {
-        std::ranges::for_each(edges, [](const auto& edge) {
+        std::ranges::for_each(edges, [this](const auto& edge) {
             removeEdge(edge);
         });
     }
@@ -78,12 +82,13 @@ public:
     virtual void removeNode(std::size_t node) = 0;
     virtual void removeNodeSeries(const std::vector<std::size_t>& nodes)
     {
-        std::ranges::for_each(nodes, [](const auto& node) {
+        std::ranges::for_each(nodes, [this](const auto& node) {
             removeNode(node);
         });
     }
 
-private:
+protected:
+    GraphType graphType;
     std::size_t graphDeg;
 };
 } // namespace graph

@@ -1,10 +1,10 @@
 #include <AdjList.hpp>
 
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <limits>
 #include <ranges>
+#include <stdexcept>
 
 /*Graph::List::List(std::string file_path)
 	: degrees(nullptr),

@@ -4,6 +4,7 @@
 #include <variant>
 #include <iostream>
 #include <algorithm>
+#include <map>
 
 namespace graph
 {
@@ -29,7 +30,6 @@ struct DirectedDegree
 
 using UndirectedDegree = std::size_t;
 using Degree = std::variant<UndirectedDegree, DirectedDegree>;
-
 
 template<typename T>
 class Graph
@@ -120,13 +120,69 @@ public:
         });
     }
 
+
 protected:
     GraphType graphType;
     std::size_t graphDeg;
     std::vector<Degree> degrees;
+    std::map<std::size_t, std::size_t> nodeMap;
 
     friend T;
     Graph(GraphType graphType) : graphType(graphType) { };
+
+    void calculageGraphDeg()
+    {
+        auto comparison = getDegCompFunction();
+        graphDeg = std::ranges::max(degrees, comparison);
+    }
+
+    void calculateDegrees(const Edge& edge, int modifier)
+    {
+        auto& sourceDeg = degrees[nodeMap.at(edge.first.source)];
+        auto& targetDeg = degrees[nodeMap.at(edge.first.target)];
+
+        std::cout << "==" << nodeMap.at(edge.first.source) << ", " << nodeMap.at(edge.first.target) << "\n";
+        outDegModifyFunc(sourceDeg, modifier);
+        inDegModifyFunc(targetDeg, modifier);
+    }
+
+private:
+    auto getDegCompFunction()
+    {
+        if (graphType == GraphType::undirected)
+        {
+            return [this](const auto& lhs, const auto& rhs) {
+                return std::get<UndirectedDegree>(lhs) < std::get<UndirectedDegree>(rhs);
+            };
+        }
+        return [this](const auto& lhs, const auto& rhs) {
+                return std::get<DirectedDegree>(lhs).inDeg < std::get<DirectedDegree>(rhs).inDeg;
+            };
+    }
+
+    void inDegModifyFunc(Degree& degree, int modifier)
+    {
+        if (std::holds_alternative<UndirectedDegree>(degree))
+        {
+            std::get<UndirectedDegree>(degree) += modifier;
+        }
+        else
+        {
+            std::get<DirectedDegree>(degree).inDeg += modifier;
+        }
+    }
+
+    void outDegModifyFunc(Degree& degree, int modifier)
+    {
+        if (std::holds_alternative<UndirectedDegree>(degree))
+        {
+            std::get<UndirectedDegree>(degree) += modifier;
+        }
+        else
+        {
+            std::get<DirectedDegree>(degree).outDeg += modifier;
+        }
+    }
 };
 
 template<typename T>

@@ -48,12 +48,14 @@ private:
 	using Graph<AdjList>::graphType;
 	using Graph<AdjList>::graphDeg;
 	using Graph<AdjList>::degrees;
+	using Graph<AdjList>::nodeMap;
 
 	friend FileParser;
 
 	AdjList(GraphType graphType) : Graph(graphType) { };
 
-	std::map<std::size_t, std::size_t> nodeMap;
+	void setFlippedEdge(const Edge& edge);
+
 	std::vector<NodeInformation> adjList;
 };
 } // graph

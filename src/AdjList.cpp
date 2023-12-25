@@ -5,75 +5,9 @@
 #include <limits>
 #include <ranges>
 #include <stdexcept>
+#include <functional>
 
-/*Graph::List::List(std::string file_path)
-	: degrees(nullptr),
-	nodes(nullptr)
-{
-	std::fstream file;
-	file.open(file_path, std::ios::in);
-
-	uint32_t amount = 0;
-
-	if (file.is_open())
-	{
-		std::string line;
-		size_t pos = 0;
-
-		while (!file.eof())
-		{
-			std::getline(file, line);
-			if (line != "")
-			{
-				amount++;
-			}
-		}
-
-		this->nodes = new Node* [amount];
-		this->degrees = new uint32_t[amount];
-
-		for (uint32_t i = 0; i < amount; i++)
-		{
-			this->nodes[i] = nullptr;
-			this->degrees[i] = 0;
-		}
-
-		Node* ptr;
-		Node** ptr2;
-
-		file.close();
-		file.open(file_path, std::ios::in);
-
-		for(uint32_t i = 0; i < amount; i++)
-		{
-			std::getline(file, line);
-			if (line != "")
-			{
-				this->node_map.insert(std::pair<int, int>(i + 1, i));
-				pos = line.find(' ');
-				ptr2 = &this->nodes[i];
-				while (pos != std::string::npos)
-				{
-					line = line.substr(pos + 1);
-					ptr = new Node;
-					ptr->neighbour = atoi(line.c_str());
-					ptr->next = nullptr;
-					*ptr2 = ptr;
-					ptr2 = &((*ptr2)->next);
-					this->degrees[i]++;
-
-					pos = line.find(' ');
-				}
-
-			}
-		}
-	}
-	else
-	{
-		std::cout << "File not found" << std::endl;
-	}
-	file.close();
-}
+/*
 
 Graph::List::List(Matrix& matrix)
 	: degrees(nullptr),
@@ -201,9 +135,7 @@ Graph::List::List(Matrix& matrix)
 	}
 }*/
 
-namespace
-{
-void printDegree(std::ostream& out, const graph::Degree& degree) noexcept
+std::ostream& operator<<(std::ostream& out, const graph::Degree& degree) noexcept
 {
 	out << "[";
 	if (std::holds_alternative<graph::UndirectedDegree>(degree))
@@ -216,16 +148,19 @@ void printDegree(std::ostream& out, const graph::Degree& degree) noexcept
 		out << degs.inDeg << "|" << degs.outDeg;
 	}
 	out << "] ";
+    return out;
 }
 
+namespace
+{
 void printNeighbours(
 	std::ostream& out,
 	std::size_t node,
 	const graph::Degree& degree,
 	const std::vector<graph::Edge>& neighbours) noexcept
 {
-	out << "\t\t" << node << ": ";
-	printDegree(out, degree);
+	out << "\t\t" << degree << " " << node << ": ";
+
 	std::size_t i = 0;
 	for (auto itr = neighbours.begin(); itr != neighbours.end(); itr++)
 	{
@@ -249,7 +184,6 @@ std::size_t findMaxNodeIndex(std::map<std::size_t, std::size_t> nodeMap)
 	}
 	return std::ranges::max(std::views::keys(nodeMap)) + 1;
 }
-
 } // namespace ::
 
 
@@ -269,6 +203,28 @@ std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept
 }
 
 void AdjList::setEdge(const Edge& edge)
+{
+	std::cout << static_cast<int>(graphType) << "\n";
+	auto& neighbours = adjList[nodeMap.at(edge.first.source)];
+	for (auto& neighbour : neighbours)
+	{
+		if (neighbour.first.target == edge.first.target)
+		{
+			neighbour.second = edge.second;
+			if (graphType == GraphType::undirected)
+			{
+				setFlippedEdge(Edge{{edge.first.target, edge.first.source}, edge.second});
+			}
+			return;
+		}
+	};
+	neighbours.emplace_back(edge);
+	auto degModifier = 1;
+	std::cout << edge.first.source << ", " << edge.first.target << "\n";
+	calculateDegrees(edge, degModifier);
+}
+
+void AdjList::setFlippedEdge(const Edge& edge)
 {
 	auto& neighbours = adjList[nodeMap.at(edge.first.source)];
 	for (auto& neighbour : neighbours)

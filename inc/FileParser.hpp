@@ -16,22 +16,23 @@ public:
     {
         std::vector<Edge> edges = {};
         std::size_t nodesCount = 0;
-        std::regex linePattern("([0-9]+)|\\s?([0-9]+)");
+        std::regex linePattern("[0-9]+");
         while (!file.eof())
         {
             std::string line;
             std::getline(file, line);
-            std::smatch matched;
             if (line.empty())
             {
                 break;
             }
             nodesCount++;
+            std::smatch matched;
             std::regex_search(line, matched, linePattern);
             std::size_t origin = std::stoul(std::string(matched[0]));
             for(auto start = matched.suffix().first; std::regex_search(start, line.cend(), matched, linePattern); start = matched.suffix().first)
             {
-                edges.emplace_back(EdgeCoord{origin, std::stoul(std::string(matched[0]))}, 1);
+                int defaultWeight = 1;
+                edges.emplace_back(EdgeCoord{origin, std::stoul(std::string(matched[0]))}, defaultWeight);
             }
         }
         return fillGraph<T>(graphType, nodesCount, edges);

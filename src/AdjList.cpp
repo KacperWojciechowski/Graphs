@@ -225,15 +225,14 @@ void printNeighbours(
 	const std::vector<graph::Edge>& neighbours) noexcept
 {
 	out << "\t\t" << node << ": ";
-
+	printDegree(out, degree);
 	std::size_t i = 0;
 	for (auto itr = neighbours.begin(); itr != neighbours.end(); itr++)
 	{
-		printDegree(out, degree);
 		const auto edgeTarget = itr->first.target;
 		const auto edgeWeight = itr->second;
 
-		out << "{" << edgeTarget << ", " << edgeWeight << "}";
+		out << " " << edgeTarget << " {" << edgeWeight << "}";
 		if (i++ < neighbours.size() - 1)
 		{
 			out << ", ";
@@ -244,12 +243,15 @@ void printNeighbours(
 
 std::size_t findMaxNodeIndex(std::map<std::size_t, std::size_t> nodeMap)
 {
-	using Index = std::pair<std::size_t, std::size_t>;
-
-	return std::ranges::max(std::views::keys(nodeMap), {});
+	if (nodeMap.empty())
+	{
+		return 1;
+	}
+	return std::ranges::max(std::views::keys(nodeMap)) + 1;
 }
 
 } // namespace ::
+
 
 namespace graph
 {
@@ -259,7 +261,7 @@ std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept
 	out << "\tNodes count = " << graph.nodeMap.size() << "\n";
 	out << "\tGraph degree = " << graph.getGraphDeg() << "\n";
 	out << "\t{\n";
-	std::ranges::for_each(graph.nodeMap, [graph, &out](const auto& node){
+	std::ranges::for_each(graph.nodeMap, [&graph, &out](const auto& node){
 		printNeighbours(out, node.first, graph.degrees[node.second], graph.adjList[node.second]);
 	});
 	out << "\t}\n}\n" << std::flush;
@@ -291,7 +293,6 @@ std::size_t AdjList::addNode(std::size_t currMaxNodeIndex)
 	{
 		currMaxNodeIndex = findMaxNodeIndex(nodeMap);
 	}
-
 	nodeMap.insert({currMaxNodeIndex, adjList.size()});
 	if (graphType == GraphType::undirected)
 	{

@@ -32,17 +32,18 @@ using Degree = std::variant<UndirectedDegree, DirectedDegree>;
 
 
 template<typename T>
-class Graph {
-
+class Graph
+{
 public:
     static constexpr std::size_t none = 0;
+
+    template<typename T1>
+    friend std::ostream& operator<<(std::ostream& out, const graph::Graph<T1>& graph) noexcept;
 
     Degree getNodeDeg(std::size_t node) const
     {
         return static_cast<T&>(*this).getNodeDeg(node);
     }
-
-    friend std::ostream& operator<<(std::ostream& out, const Graph<T>& graph) noexcept;
 
     std::size_t getGraphDeg() const
     {
@@ -125,13 +126,13 @@ protected:
     std::vector<Degree> degrees;
 
     friend T;
-    Graph() = default;
+    Graph(GraphType graphType) : graphType(graphType) { };
 };
 
 template<typename T>
-std::ostream& operator<<(std::ostream& out, const Graph<T>& graph) noexcept
+std::ostream& operator<<(std::ostream& out, const graph::Graph<T>& graph) noexcept
 {
-    out << static_cast<T&>(graph);
+    out << static_cast<const T&>(graph) << "\n";
     return out;
 }
 } // namespace graph

@@ -15,7 +15,7 @@ public:
 	AdjList(const AdjList& l) = default;
 	AdjList(AdjList&& l) = default;
 
-	friend std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept;
+	friend std::ostream& operator<<(std::ostream& out, const graph::AdjList& graph) noexcept;
 
 	Degree getNodeDeg(std::size_t node) const noexcept
 	{
@@ -51,7 +51,7 @@ private:
 
 	friend FileParser;
 
-	AdjList() = default;
+	AdjList(GraphType graphType) : Graph(graphType) { };
 
 	std::map<std::size_t, std::size_t> nodeMap;
 	std::vector<NodeInformation> adjList;

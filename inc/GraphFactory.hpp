@@ -15,7 +15,7 @@ class GraphFactory final
 {
 public:
     template<typename T, typename = std::enable_if_t<std::is_base_of<Graph<T>, T>::value>>
-    std::optional<Graph<T>> createFromFile(std::string_view fileName)
+    std::optional<T> createFromFile(std::string_view fileName, graph::GraphType graphType)
     {
         namespace fs = std::filesystem;
 
@@ -33,13 +33,13 @@ public:
             return std::nullopt;
         }
 
-        return parsingHandler(file);
+        return parsingHandler(file, graphType);
     }
 
 private:
 
     template<typename T>
-    std::function<T(std::ifstream&)> selectFileHandler(std::filesystem::path extension)
+    std::function<T(std::ifstream&, graph::GraphType)> selectFileHandler(std::filesystem::path extension)
     {
         if (extension == ".lst") {
             return FileParser::parseLstFile<T>;

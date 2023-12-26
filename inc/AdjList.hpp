@@ -42,7 +42,7 @@ public:
 
 	~AdjList() = default;
 
-private:
+protected:
 	using NodeInformation = std::vector<Edge>;
 
 	using Graph<AdjList>::graphType;
@@ -50,11 +50,14 @@ private:
 	using Graph<AdjList>::degrees;
 	using Graph<AdjList>::nodeMap;
 
+private:
 	friend FileParser;
 
 	AdjList(GraphType graphType) : Graph(graphType) { };
 
-	void setFlippedEdge(const Edge& edge);
+	//void setFlippedEdge(const Edge& edge);
+	void setEdgeCore(const Edge& edge);
+	void removeEdgeCore(const EdgeCoord& edge);
 
 	std::vector<NodeInformation> adjList;
 };

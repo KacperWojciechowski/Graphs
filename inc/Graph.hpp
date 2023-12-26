@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <map>
+#include <functional>
 
 namespace graph
 {
@@ -133,21 +134,26 @@ protected:
     void calculageGraphDeg()
     {
         auto comparison = getDegCompFunction();
-        graphDeg = std::ranges::max(degrees, comparison);
+        auto deg = std::ranges::max(degrees, comparison);
+        if (std::holds_alternative<UndirectedDegree>(degrees[0]))
+        {
+            graphDeg = std::get<UndirectedDegree>(deg);
+            return;
+        }
+        graphDeg = std::get<DirectedDegree>(deg).outDeg;
     }
 
-    void calculateDegrees(const Edge& edge, int modifier)
+    void calculateDegrees(const EdgeCoord& edge, int modifier)
     {
-        auto& sourceDeg = degrees[nodeMap.at(edge.first.source)];
-        auto& targetDeg = degrees[nodeMap.at(edge.first.target)];
-
-        std::cout << "==" << nodeMap.at(edge.first.source) << ", " << nodeMap.at(edge.first.target) << "\n";
+        auto& sourceDeg = degrees[nodeMap.at(edge.source)];
+        auto& targetDeg = degrees[nodeMap.at(edge.target)];
         outDegModifyFunc(sourceDeg, modifier);
         inDegModifyFunc(targetDeg, modifier);
+        calculageGraphDeg();
     }
 
 private:
-    auto getDegCompFunction()
+    std::function<bool(Degree, Degree)> getDegCompFunction()
     {
         if (graphType == GraphType::undirected)
         {
@@ -156,7 +162,7 @@ private:
             };
         }
         return [this](const auto& lhs, const auto& rhs) {
-                return std::get<DirectedDegree>(lhs).inDeg < std::get<DirectedDegree>(rhs).inDeg;
+                return std::get<DirectedDegree>(lhs).outDeg < std::get<DirectedDegree>(rhs).outDeg;
             };
     }
 

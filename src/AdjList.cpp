@@ -145,7 +145,7 @@ std::ostream& operator<<(std::ostream& out, const graph::Degree& degree) noexcep
 	else
 	{
 		const auto degs = std::get<graph::DirectedDegree>(degree);
-		out << degs.inDeg << "|" << degs.outDeg;
+		out << "in: " << degs.inDeg << "|out: " << degs.outDeg;
 	}
 	out << "] ";
     return out;
@@ -167,7 +167,7 @@ void printNeighbours(
 		const auto edgeTarget = itr->first.target;
 		const auto edgeWeight = itr->second;
 
-		out << " " << edgeTarget << " {" << edgeWeight << "}";
+		out << " " << edgeTarget << " {w: " << edgeWeight << "}";
 		if (i++ < neighbours.size() - 1)
 		{
 			out << ", ";
@@ -204,27 +204,16 @@ std::ostream& operator<<(std::ostream& out, const AdjList& graph) noexcept
 
 void AdjList::setEdge(const Edge& edge)
 {
-	std::cout << static_cast<int>(graphType) << "\n";
-	auto& neighbours = adjList[nodeMap.at(edge.first.source)];
-	for (auto& neighbour : neighbours)
+	setEdgeCore(edge);
+	if (graphType == GraphType::undirected)
 	{
-		if (neighbour.first.target == edge.first.target)
-		{
-			neighbour.second = edge.second;
-			if (graphType == GraphType::undirected)
-			{
-				setFlippedEdge(Edge{{edge.first.target, edge.first.source}, edge.second});
-			}
-			return;
-		}
-	};
-	neighbours.emplace_back(edge);
-	auto degModifier = 1;
-	std::cout << edge.first.source << ", " << edge.first.target << "\n";
-	calculateDegrees(edge, degModifier);
+		setEdgeCore(Edge{{edge.first.target, edge.first.source}, edge.second});
+	}
+	constexpr auto degModifier = 1;
+	calculateDegrees(edge.first, degModifier);
 }
 
-void AdjList::setFlippedEdge(const Edge& edge)
+void AdjList::setEdgeCore(const Edge& edge)
 {
 	auto& neighbours = adjList[nodeMap.at(edge.first.source)];
 	for (auto& neighbour : neighbours)
@@ -252,11 +241,11 @@ std::size_t AdjList::addNode(std::size_t currMaxNodeIndex)
 	nodeMap.insert({currMaxNodeIndex, adjList.size()});
 	if (graphType == GraphType::undirected)
 	{
-		degrees.emplace_back(std::size_t{0});
+		degrees.emplace_back(UndirectedDegree{});
 	}
 	else
 	{
-		degrees.emplace_back(Degree{});
+		degrees.emplace_back(DirectedDegree{});
 	}
 	adjList.emplace_back();
 
@@ -265,12 +254,22 @@ std::size_t AdjList::addNode(std::size_t currMaxNodeIndex)
 
 void AdjList::removeEdge(const EdgeCoord& edge)
 {
+	removeEdgeCore(edge);
+	if (graphType == GraphType::undirected)
+	{
+		removeEdgeCore(EdgeCoord{edge.target, edge.source});
+	}
+	constexpr auto degModifier = -1;
+	calculateDegrees(edge, degModifier);
+}
+
+void AdjList::removeEdgeCore(const EdgeCoord& edge)
+{
 	if (nodeMap.find(edge.source) == nodeMap.end())
 	{
 		throw std::invalid_argument(
 			std::string("No node with given source ID: ") + std::to_string(edge.source));
 	}
-
 	auto& neighbours = adjList[nodeMap.find(edge.source)->second];
 	std::ranges::remove_if(neighbours, [&edge](const auto& e) {
 		return e.first.target == edge.target;});

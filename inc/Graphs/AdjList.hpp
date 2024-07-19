@@ -1,48 +1,39 @@
 #pragma once
 
-// libraries
 #include <string>
 #include <map>
+#include <Graphs/Graph.hpp>
+#include <Graphs/Pixel_map.hpp>
 
-// Graph
-#include "Graph_matrix.h"
-#include "Pixel_map.h"
-#include "Graph.h"
-
-namespace Graph
+namespace Graphs
 {
-	/* Forward declaration */
-	class Matrix;
-
-	/*
-		Class representing a graph in the adjacency list form. To create an
-		object, it is required to load a graph from a .lst file.
-	*/
-	class List //: public Graph
+	class AdjList : public Graph
 	{
 	public:
 		/* Constructors */
-		List(std::string file_path);
+		AdjList(std::string);
 
-		List(Matrix& matrix);
-		List(Data::Pixel_map& map);
+		AdjList(Graph&);
+		AdjList(Data::Pixel_map&);
 
-		List(List& l) = delete;
-		List(List&& l) = delete;
+		AdjList(AdjList&) = delete;
+		AdjList(AdjList&&) = delete;
 
 		/* Basic interface */
-		void print();
 		void print_deg();
-		
-		void add_edge(uint32_t source, uint32_t destination);
-		void add_node();
 
-		void remove_edge(uint32_t source, uint32_t destination);
-		void remove_node(uint32_t node_id);
-
-		uint32_t get_nodes_amount();
-		uint32_t get_node_degree(uint32_t node);
 		uint32_t get_neighbour(uint32_t x, uint32_t y);
+
+		void show() const override;
+		uint32_t nodesAmount() const override;
+		uint32_t nodeDegree(NodeId) const override;
+		uint32_t weightOf(const EdgeInfo&) const override;
+		
+		void setEdge(const EdgeInfo&) override;
+		void addNode() override;
+		void removeNode(NodeId) override;
+		void removeEdge(const EdgeInfo&) override;
+
 
 		/* Coloring algorithms with permutations */
 		int32_t greedy_coloring(bool log = false);
@@ -50,7 +41,7 @@ namespace Graph
 		int32_t sl_coloring(bool log = false);
 
 		/* Destructor */
-		~List();
+		virtual ~AdjList();
 	private:
 		/* Adjacency list node structore */
 		struct Node

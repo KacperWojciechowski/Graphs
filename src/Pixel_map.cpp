@@ -1,5 +1,5 @@
 // this
-#include "Pixel_map.h"
+#include <Graphs/Pixel_map.hpp>
 
 // libraries
 #include <fstream>

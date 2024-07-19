@@ -1,24 +1,18 @@
 // this
-#include "Graph_list.h"
+#include <Graphs/AdjList.hpp>
+#include <Graphs/AdjMatrix.hpp>
 
-// libraries
 #include <fstream>
 #include <iostream>
 #include <time.h>
 #include <algorithm>
 #include <cstring>
 
-/*
-	Constructor loading the graph from .lst file. If file was not
-	found, returns a default empty object.
+#include <cassert>
 
-	Params:
-	file_path - string containing the graph file path
-
-	Return:
-	None
-*/
-Graph::List::List(std::string file_path)
+namespace Graphs
+{
+AdjList::AdjList(std::string file_path)
 	: degrees(nullptr),
 	nodes(nullptr)
 {
@@ -102,18 +96,17 @@ Graph::List::List(std::string file_path)
 	file.close();
 }
 
-Graph::List::List(Matrix& matrix)
+AdjList::AdjList(Graph& graph)
 	: degrees(nullptr),
 	nodes(nullptr)
 {
-	uint32_t amount = matrix.get_nodes_amount();
+	uint32_t amount = graph.nodesAmount();
 
 	this->nodes = new Node * [amount];
 	this->degrees = new uint32_t[amount];
 
 	Node* ptr;
 	Node** ptr2;
-	uint32_t value;
 
 	for (uint32_t i = 0; i < amount; i++)
 	{
@@ -121,7 +114,7 @@ Graph::List::List(Matrix& matrix)
 		ptr2 = &this->nodes[i];
 		for (uint32_t j = 0; j < amount; j++)
 		{
-			value = matrix.get_value(i, j);
+			auto value = graph.weightOf({i, j});
 			while (value > 0)
 			{
 				ptr = new Node;
@@ -137,7 +130,7 @@ Graph::List::List(Matrix& matrix)
 	}
 }
 
-Graph::List::List(Data::Pixel_map& map)
+AdjList::AdjList(Data::Pixel_map& map)
 	: nodes(nullptr),
 	degrees(nullptr)
 {
@@ -228,14 +221,13 @@ Graph::List::List(Data::Pixel_map& map)
 	}
 }
 
-void Graph::List::print()
+void AdjList::show() const
 {
 	std::cout << "Nodes amount = " << this->node_map.size() << std::endl;
 
 	std::cout << "{" << std::endl;
 	Node* ptr;
-	std::map<int, int>::iterator itr;
-	for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
+	for (auto itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
 	{
 		ptr = this->nodes[itr->second];
 		std::cout << itr->first << ": ";
@@ -249,7 +241,7 @@ void Graph::List::print()
 	std::cout << "}" << std::endl;
 }
 
-void Graph::List::print_deg()
+void AdjList::print_deg()
 {
 	std::map<int, int>::iterator itr;
 	for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
@@ -258,17 +250,17 @@ void Graph::List::print_deg()
 	}
 }
 
-uint32_t Graph::List::get_nodes_amount()
+uint32_t AdjList::nodesAmount() const
 {
 	return static_cast<uint32_t>(this->node_map.size());
 }
 
-uint32_t Graph::List::get_node_degree(uint32_t node)
+uint32_t AdjList::nodeDegree(NodeId node) const
 {
 	return this->degrees[this->node_map.find(node)->second];
 }
 
-uint32_t Graph::List::get_neighbour(uint32_t x, uint32_t y)
+uint32_t AdjList::get_neighbour(uint32_t x, uint32_t y)
 {
 	Node* ptr = this->nodes[this->node_map.find(x)->second];
 	for (uint32_t i = 0; i < y - 1; i++)
@@ -278,7 +270,7 @@ uint32_t Graph::List::get_neighbour(uint32_t x, uint32_t y)
 	return ptr->neighbour;
 }
 
-int32_t Graph::List::greedy_coloring_core(std::map<int, int>* map, bool log)
+int32_t AdjList::greedy_coloring_core(std::map<int, int>* map, bool log)
 {
 	if (map == nullptr) //sta�a kt�ra okre�la pointer wskazuj�cy na nulla
 	{
@@ -347,7 +339,7 @@ int32_t Graph::List::greedy_coloring_core(std::map<int, int>* map, bool log)
 }
 
 
-int32_t Graph::List::greedy_coloring(bool log)
+int32_t AdjList::greedy_coloring(bool log)
 {
 	std::vector<int> v;
 	std::map<int, int>::iterator itr;
@@ -377,7 +369,7 @@ int32_t Graph::List::greedy_coloring(bool log)
 // mapa s�u�y do tego by jedn� warto�� mapowa� na inn�. W tym wypadku po kolejno�ci wpis�w z mapy program iteruje po kolejno�ci wpis�w w mapie.
 // Mapa jest tak� nak�adk� na list� -  program porusza si� po mapie, a sama lista pozostaje niezmienna by jej indeks�w nie rozwali� przypadkiem.
 // Mapa zawiera w sobie klucz i warto�� - to s� pary.
-int32_t Graph::List::lf_coloring(bool log)
+int32_t AdjList::lf_coloring(bool log)
 {
 	size_t deg = 0; // zmienna przechowuj�a aktualnie rozpatrywany stopie�
 	size_t nodes_count = this->node_map.size();
@@ -436,7 +428,7 @@ int32_t Graph::List::lf_coloring(bool log)
 //WA�NE: Wpisuj�c wierzcho�ek do 'tmp' pomijamy go w dalszym przeszukiwaniu, efektywnie przeszukuj�c podgraf indukowany przez wierzcho�ki z wy��czeniem wierzcho�k�w w 'tmp'
 
 //SL w tym wydaniu po prostu pomija przy wyszukiwaniu w podgrafu ju� znalezione wierzcho�ki w poprzedniej iteracji, nie zmieniaj�c przy tym zapisu grafu w pami�ci.
-int32_t Graph::List::sl_coloring(bool log)
+int32_t AdjList::sl_coloring(bool log)
 {
 	if (log)
 	{
@@ -534,9 +526,9 @@ int32_t Graph::List::sl_coloring(bool log)
 	return this->greedy_coloring_core(&map, log); // przes�anie mapy do algorytmu greedy i zwr�cenie ilo�ci u�ytych kolor�w
 }
 
-void Graph::List::add_edge(uint32_t source, uint32_t destination)
+void AdjList::setEdge(const EdgeInfo& edge)
 {
-	uint32_t index = this->node_map.find(source)->second;
+	uint32_t index = this->node_map.find(edge.source)->second;
 	Node* ptr = this->nodes[index];
 	if (ptr != nullptr)
 	{
@@ -545,19 +537,19 @@ void Graph::List::add_edge(uint32_t source, uint32_t destination)
 			ptr = ptr->next;
 		}
 		ptr->next = new Node;
-		ptr->next->neighbour = destination;
+		ptr->next->neighbour = edge.destination;
 		ptr->next->next = nullptr;
 		this->degrees[index]++;
 	}
 	else
 	{
 		ptr = new Node;
-		ptr->neighbour = destination;
+		ptr->neighbour = edge.destination;
 		ptr->next = nullptr;
 		this->degrees[index]++;
 	}
 
-	index = this->node_map.find(destination)->second;
+	index = this->node_map.find(edge.destination)->second;
 	ptr = this->nodes[index];
 	if (ptr != nullptr)
 	{
@@ -566,27 +558,27 @@ void Graph::List::add_edge(uint32_t source, uint32_t destination)
 			ptr = ptr->next;
 		}
 		ptr->next = new Node;
-		ptr->next->neighbour = source;
+		ptr->next->neighbour = edge.source;
 		ptr->next->next = nullptr;
 		this->degrees[index]++;
 	}
 	else
 	{
 		ptr = new Node;
-		ptr->neighbour = source;
+		ptr->neighbour = edge.source;
 		ptr->next = nullptr;
 		this->degrees[index]++;
 	}
 }
 
-void Graph::List::remove_edge(uint32_t source, uint32_t destination)
+void AdjList::removeEdge(const EdgeInfo& edge)
 {
-	uint32_t index = this->node_map.find(source)->second;
+	uint32_t index = this->node_map.find(edge.source)->second;
 	Node* ptr = this->nodes[index];
 	Node* next;
 	if (ptr != nullptr)
 	{
-		while (ptr->next != nullptr && ptr->next->neighbour != destination)
+		while (ptr->next != nullptr && ptr->next->neighbour != edge.destination)
 		{
 			ptr = ptr->next;
 		}
@@ -599,11 +591,11 @@ void Graph::List::remove_edge(uint32_t source, uint32_t destination)
 		}
 	}
 	
-	index = this->node_map.find(destination)->second;
+	index = this->node_map.find(edge.destination)->second;
 	ptr = this->nodes[index];
 	if (ptr != nullptr)
 	{
-		while (ptr->next != nullptr && ptr->next->neighbour != source)
+		while (ptr->next != nullptr && ptr->next->neighbour != edge.source)
 		{
 			ptr = ptr->next;
 		}
@@ -617,7 +609,7 @@ void Graph::List::remove_edge(uint32_t source, uint32_t destination)
 	}
 }
 
-void Graph::List::add_node()
+void AdjList::addNode()
 {
 	uint32_t amount = static_cast<uint32_t>(this->node_map.size());
 	Node** ptr = new Node * [amount + static_cast<unsigned long long>(1)];
@@ -639,9 +631,9 @@ void Graph::List::add_node()
 	this->nodes = ptr;
 }
 
-void Graph::List::remove_node(uint32_t node_id)
+void AdjList::removeNode(NodeId node)
 {
-	std::map<int, int>::iterator itr = this->node_map.find(node_id);
+	std::map<int, int>::iterator itr = this->node_map.find(node);
 	if (itr != this->node_map.end())
 	{
 		Node* ptr = this->nodes[itr->second];
@@ -661,11 +653,11 @@ void Graph::List::remove_node(uint32_t node_id)
 			}
 		}
 
-		this->node_map.erase(node_id);
+		this->node_map.erase(node);
 	}
 }
 
-Graph::List::~List()
+AdjList::~AdjList()
 {
 	Node* ptr;
 	Node* next;
@@ -693,7 +685,24 @@ Graph::List::~List()
 	delete[] this->degrees;
 }
 
-void Graph::List::shuffle(std::vector<int>& v, bool log)
+uint32_t AdjList::weightOf(const EdgeInfo& edge) const
+{
+	auto source = this->node_map.find(edge.source);
+	auto destination = this->node_map.find(edge.destination);
+
+	assert(source != this->node_map.end() && destination != this->node_map.end());
+	while (auto currNeighbor = this->nodes[source->second])
+	{
+		if (currNeighbor->neighbour == edge.destination)
+		{
+			return 1;
+		}
+		currNeighbor = currNeighbor->next;
+	}
+	return 0;
+}
+
+void AdjList::shuffle(std::vector<int>& v, bool log)
 {
 	uint32_t count = v.size();
 	uint32_t index_a;
@@ -718,3 +727,5 @@ void Graph::List::shuffle(std::vector<int>& v, bool log)
 		std::cout << std::endl;
 	}
 }
+
+} // namespace Graphs

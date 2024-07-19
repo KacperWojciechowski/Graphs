@@ -1,5 +1,6 @@
 // this
-#include "Graph_matrix.h"
+#include <Graphs/AdjMatrix.hpp>
+#include <Graphs/AdjList.hpp>
 
 // libraries
 #include <iostream>
@@ -10,24 +11,9 @@
 #include <cstring>
 #include <cmath>
 
-/* 
-	Constructor loading the graph from file. Works with .mat and .GRAPHML files,
-	detects missing file and unsupportedd file format returning default empty graph.
-	The function automatically determines the size of the graph contained within file,
-	and creates sufficiently big matrix. 
-
-	Params:
-	file_path				- string containing the path to the graph file
-	throughtput_file_path	- string containing the path to the throughtput matrix file of the graph
-	name					- string containing the name of the graph. Will be overwritten in case of
-							  reading from .GRAPHML
-	type					- string containing the type of the graph (either "directed" or "undirected").
-							  Will be overwritten in case of reading from .GRAPHML
-
-	Return:
-	None
-*/
-Graph::Matrix::Matrix(std::string file_path, std::string throughtput_file_path, std::string name, std::string type)
+namespace Graphs
+{
+AdjMatrix::AdjMatrix(std::string file_path, std::string throughtput_file_path, std::string name, std::string type)
 	: matrix(nullptr),
 	  nodes_amount(0),
 	  graph_name(name),
@@ -219,12 +205,12 @@ Graph::Matrix::Matrix(std::string file_path, std::string throughtput_file_path, 
 	Return:
 	None
 */
-Graph::Matrix::Matrix(List& list)
+AdjMatrix::AdjMatrix(AdjList& list)
 	: throughtput(nullptr)
 {
 	// get vertices count and create sufficient matrix
 	// filling it with zeros
-	this->nodes_amount = list.get_nodes_amount();
+	this->nodes_amount = list.nodesAmount();
 	this->matrix = new uint32_t * [this->nodes_amount];
 	this->distance = new uint32_t[this->nodes_amount];
 	this->prev_node = new std::vector<uint32_t>[this->nodes_amount];
@@ -245,7 +231,7 @@ Graph::Matrix::Matrix(List& list)
 	// and save the edges
 	for (uint32_t i = 0; i < this->nodes_amount; i++)
 	{
-		neighbours = list.get_node_degree(i);
+		neighbours = list.nodeDegree(i);
 
 		for (uint32_t j = 0; j < neighbours; j++)
 		{
@@ -264,7 +250,7 @@ Graph::Matrix::Matrix(List& list)
 	Return:
 	None
 */
-void Graph::Matrix::saveGraphML(std::string file_path)
+void AdjMatrix::saveGraphML(std::string file_path)
 {
 	// opening output file
 	std::ofstream file(file_path);
@@ -323,7 +309,7 @@ void Graph::Matrix::saveGraphML(std::string file_path)
 	Return: 
 	value of Estrada index
 */
-float Graph::Matrix::estrada_index()
+float AdjMatrix::estrada_index()
 {
 	uint32_t* degrees = new uint32_t[this->nodes_amount];
 
@@ -373,14 +359,14 @@ float Graph::Matrix::estrada_index()
 	Return:
 	None
 */
-void Graph::Matrix::add_edge(uint32_t source, uint32_t destination)
+void AdjMatrix::setEdge(const EdgeInfo& edge)
 {
-	if (source < this->nodes_amount && destination < this->nodes_amount)
+	if (edge.source < this->nodes_amount && edge.destination < this->nodes_amount)
 	{
-		this->matrix[source][destination] = 1;
+		this->matrix[edge.source][edge.destination] = 1;
 		if (this->graph_type == "undirected")
 		{
-			this->matrix[destination][source] = 1;
+			this->matrix[edge.destination][edge.source] = 1;
 		}
 	}
 }
@@ -396,7 +382,7 @@ void Graph::Matrix::add_edge(uint32_t source, uint32_t destination)
 	Return:
 	None
 */
-void Graph::Matrix::add_node()
+void AdjMatrix::addNode()
 {
 	// increase the amount of vertices in the temporary variable
 	uint32_t amount = this->nodes_amount + 1;
@@ -450,14 +436,14 @@ void Graph::Matrix::add_node()
 	destination	- destination vertex of the edge
 
 */
-void Graph::Matrix::remove_edge(uint32_t source, uint32_t destination)
+void AdjMatrix::removeEdge(const EdgeInfo& edge)
 {
-	if (source < this->nodes_amount && destination < this->nodes_amount)
+	if (edge.source < this->nodes_amount && edge.destination < this->nodes_amount)
 	{
-		this->matrix[source][destination] = 0;
+		this->matrix[edge.source][edge.destination] = 0;
 		if (this->graph_type == "undirected")
 		{
-			this->matrix[destination][source] = 0;
+			this->matrix[edge.destination][edge.source] = 0;
 		}
 	}
 }
@@ -474,9 +460,9 @@ void Graph::Matrix::remove_edge(uint32_t source, uint32_t destination)
 	Return:
 	None
 */
-void Graph::Matrix::remove_node(uint32_t node_id)
+void AdjMatrix::removeNode(NodeId node)
 {
-	if (node_id < this->nodes_amount)
+	if (node < this->nodes_amount)
 	{
 		// save reduced nodes amount in temporary variable
 		uint32_t amount = this->nodes_amount - 1;
@@ -495,11 +481,11 @@ void Graph::Matrix::remove_node(uint32_t node_id)
 		// while skipping the column and row of deleted vertex
 		for (uint32_t i = 0; i < this->nodes_amount; i++)
 		{
-			if (i != node_id)
+			if (i != node)
 			{
 				for (uint32_t j = 0; j < this->nodes_amount; j++)
 				{
-					if (j != node_id)
+					if (j != node)
 					{
 						m[row][col] = this->matrix[i][j];
 						col++;
@@ -532,7 +518,7 @@ void Graph::Matrix::remove_node(uint32_t node_id)
 	Return:
 	None
 */
-void Graph::Matrix::print()
+void AdjMatrix::show() const
 {
 	// print basic information
 	std::cout << "Name = " << this->graph_name << std::endl;
@@ -552,16 +538,7 @@ void Graph::Matrix::print()
 	std::cout << "]" << std::endl;
 }
 
-/*
-	Function printing the throughtput matrix.
-
-	Params:
-	None
-
-	Return:
-	None
-*/
-void Graph::Matrix::print_throughtput()
+void AdjMatrix::print_throughtput()
 {
 	std::cout << "[" << std::endl;
 	for (uint32_t i = 0; i < this->nodes_amount; i++)
@@ -575,58 +552,22 @@ void Graph::Matrix::print_throughtput()
 	std::cout << "]" << std::endl;
 }
 
-/*
-	Function returning nodes count as a const value.
-
-	Params:
-	None
-
-	Return:
-	Amount of nodes in current graph
-*/
-const uint32_t Graph::Matrix::get_nodes_amount()
+uint32_t AdjMatrix::nodesAmount() const
 {
 	return this->nodes_amount;
 }
 
-
-/*
-	Function returning the value of adjacency matrix for given
-	coordinates. Automatically validates if coordinates are
-	out of bounds. In case of out of bounds indexes returns 0xFFFFFFFF.
-
-	Params:
-	x - row coordinate of the matrix
-	y - column coordinate of the matrix
-
-	Return:
-	Value of the connection between given vertices. Returns 0xFFFFFFFF
-	if coordinates were out of bounds.
-*/
-const uint32_t Graph::Matrix::get_value(uint32_t x, uint32_t y)
+uint32_t AdjMatrix::weightOf(const EdgeInfo& edge) const
 {
 	uint32_t ret = 0xFFFFFFFF;
-	if (x < this->nodes_amount && y < this->nodes_amount)
+	if (edge.source < this->nodes_amount && edge.destination < this->nodes_amount)
 	{
-		this->matrix[x][y] = 0;
+		this->matrix[edge.source][edge.destination] = 0;
 	}
 	return ret;
 }
 
-/*
-	Function transforming current graph into its line graph.
-	This function overwrites the initial graph, and causes reallocation
-	of memory during the creation of line graph's adjacency matrix.
-	Newly created line graph is contained within the same object.
-	Compatibile only with undirected graphs.
-
-	Params:
-	None
-
-	Return:
-	None
-*/
-void Graph::Matrix::change_to_line_graph()
+void AdjMatrix::change_to_line_graph()
 {
 	// gather all the edges from the adjacency matrix of initial graph
 	std::vector<coord> edges;
@@ -703,25 +644,7 @@ void Graph::Matrix::change_to_line_graph()
 	this->nodes_amount = size;
 }
 
-/*
-	Function provides the shortests paths between selected vertex and all other
-	vertices. Results are stored inside the class. Value 0xFFFFFFFF in the distance
-	array signifies that no path between given vertices exist. In case of several
-	paths found, the algorithm remembers only the first path found.
-
-	Params:
-	vertex	- vertex from which to search for the paths
-	log		- flag signaling whether to print logs during algorithm run
-
-	Return:
-	The duration of algorithm operations. Note that the duration is affected by
-	logs, so for true algorithm performance, it must be measured with logs turned
-	off by setting the log flag to false.
-
-	this->distance	- distance from selected vertex to all other vertices
-	this->prev_node - previous node in the path to given vertex
-*/
-int32_t Graph::Matrix::belman_ford(uint32_t vertex, bool log)
+int32_t AdjMatrix::belman_ford(uint32_t vertex, bool log)
 {
 	// set default values for the distances and previous vertices
 	for (uint32_t i = 0; i < this->nodes_amount; i++)
@@ -795,28 +718,7 @@ int32_t Graph::Matrix::belman_ford(uint32_t vertex, bool log)
 	return diff.count();
 }
 
-/*
-	Modified Belman-Fort algorithm finding the shortests paths with
-	additionally fulfilling the throughtput requirement. As a result, several
-	paths may be stored within the prev_node vectors, for all the previous
-	vertices fulfilling the minimum throughtput requirement.
-
-	Params:
-	searched_throughtput	- the minimal throughtput the path must fulfill
-	vertex					- the vertex to begin the search from
-	log						- flag signaling whether to print logs during run
-
-	Result:
-	The duration of algorithm operations. Note that the duration is affected by
-	logs, so for true algorithm performance, it must be measured with logs turned
-	off by setting the log flag to false.
-
-	this->distance	- array of distances from the beginning vertex to all other
-					  vertices
-	this->prev_node - array of vectors containing the possible paths fulfilling
-					  the minimal throughtput requirement
-*/
-int32_t Graph::Matrix::throughtput_belman_ford(uint32_t searched_throughtput, uint32_t vertex, bool log)
+int32_t AdjMatrix::throughtput_belman_ford(uint32_t searched_throughtput, uint32_t vertex, bool log)
 {
 	// set default values for the distances and previous vertices
 	for (uint32_t i = 0; i < this->nodes_amount; i++)
@@ -904,7 +806,7 @@ int32_t Graph::Matrix::throughtput_belman_ford(uint32_t searched_throughtput, ui
 /*
 	Destructor freeing the memory allocation
 */
-Graph::Matrix::~Matrix()
+AdjMatrix::~AdjMatrix()
 {
 	for (uint32_t i = 0; i < this->nodes_amount; i++)
 	{
@@ -913,15 +815,7 @@ Graph::Matrix::~Matrix()
 	delete[] this->matrix;
 }
 
-/*
-	Function searching for the line graph's vertex index. Created for
-	the purpose of function calculating the line graph of current graph.
-	If the vertex index was not found, function returns 0xFFFFFFFF.
-
-	Params:
-	edges - reference to the edges vector of the initial graph
-*/
-uint32_t Graph::Matrix::find_index(std::vector<coord>& edges, uint32_t x, uint32_t y)
+uint32_t AdjMatrix::find_index(std::vector<coord>& edges, uint32_t x, uint32_t y)
 {
 	uint32_t size = static_cast<uint32_t>(edges.size());
 
@@ -938,17 +832,8 @@ uint32_t Graph::Matrix::find_index(std::vector<coord>& edges, uint32_t x, uint32
 	}
 	return ret;
 }
+} // namespace Graphs
 
-/*
-	Generates a random weighted graph in given destination.
-
-	Params:
-	file_path		- string containing the path for the output file
-	nodes_amount	- size of the graph
-
-	Return:
-	None
-*/
 void Data::generate_weighted_graph(std::string file_path, uint32_t nodes_amount)
 {
 	std::ofstream file(file_path);
@@ -985,17 +870,6 @@ void Data::generate_weighted_graph(std::string file_path, uint32_t nodes_amount)
 	file.close();
 }
 
-/*
-	Generate throughtput matrix file based on the graph adjacency matrix file.
-
-	Params:
-	input_file_path		- adjacency matrix file path
-	output_file_path	- output throughtput matrix file path
-	nodes_amount		- number of vertices
-
-	Return:
-	None
-*/
 void Data::generate_throughtput(std::string input_file_path, std::string output_file_path, uint32_t nodes_amount)
 {
 	std::ofstream o_file(output_file_path);

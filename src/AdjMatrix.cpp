@@ -205,37 +205,27 @@ AdjMatrix::AdjMatrix(std::string file_path, std::string throughtput_file_path, s
 	Return:
 	None
 */
-AdjMatrix::AdjMatrix(AdjList& list)
+AdjMatrix::AdjMatrix(const Graph& graph)
 	: throughtput(nullptr)
 {
-	// get vertices count and create sufficient matrix
-	// filling it with zeros
-	this->nodes_amount = list.nodesAmount();
-	this->matrix = new uint32_t * [this->nodes_amount];
-	this->distance = new uint32_t[this->nodes_amount];
-	this->prev_node = new std::vector<uint32_t>[this->nodes_amount];
+	nodes_amount = graph.nodesAmount();
+	matrix = new uint32_t * [nodes_amount];
+	distance = new uint32_t[nodes_amount];
+	prev_node = new std::vector<uint32_t>[nodes_amount];
 
-	for (uint32_t i = 0; i < this->nodes_amount; i++)
+	for (uint32_t i = 0; i < nodes_amount; i++)
 	{
-		this->matrix[i] = new uint32_t[this->nodes_amount];
-		for (uint32_t j = 0; j < this->nodes_amount; j++)
+		matrix[i] = new uint32_t[nodes_amount];
+		for (uint32_t j = 0; j < nodes_amount; j++)
 		{
-			this->matrix[i][j] = 0;
+			matrix[i][j] = 0;
 		}
 	}
-
-	uint32_t neighbours;
-	uint32_t neighbour_id;
-
-	// iterate throug the neighbours of each vertex
-	// and save the edges
-	for (uint32_t i = 0; i < this->nodes_amount; i++)
+	for (uint32_t i = 0; i < nodes_amount; i++)
 	{
-		neighbours = list.nodeDegree(i);
-
-		for (uint32_t j = 0; j < neighbours; j++)
+		for (uint32_t j = 0; j < graph.nodeDegree(i); j++)
 		{
-			neighbour_id = list.get_neighbour(i, j);
+			if (list.get_neighbour(i, j);
 			this->matrix[i][neighbour_id - 1] = 1;
 		}
 	}
@@ -557,14 +547,20 @@ uint32_t AdjMatrix::nodesAmount() const
 	return this->nodes_amount;
 }
 
-uint32_t AdjMatrix::weightOf(const EdgeInfo& edge) const
+EdgeInfo AdjMatrix::findEdge(const EdgeInfo& edge) const
 {
-	uint32_t ret = 0xFFFFFFFF;
-	if (edge.source < this->nodes_amount && edge.destination < this->nodes_amount)
+	if (edge.source > this->nodes_amount or edge.destination > this->nodes_amount)
 	{
-		this->matrix[edge.source][edge.destination] = 0;
+		return {edge.source, edge.destination, std::nullopt};
 	}
-	return ret;
+	if (matrix[edge.source - 1][edge.destination - 1] == 0)
+	{
+		return {edge.source, edge.destination, std::nullopt};
+	}
+	else
+	{
+		return {edge.source, edge.destination, matrix[edge.source - 1][edge.destination - 1]};
+	}
 }
 
 void AdjMatrix::change_to_line_graph()

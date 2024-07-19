@@ -141,7 +141,7 @@ Data::Pixel_map::Pixel_map(std::string file_path)
 	x		- X coordinate of the pixel in the matrix
 	y		- Y coordinate of the pixel in the matrix
 */
-uint32_t Data::find_index(std::vector<Data::coord>& nodes, uint32_t x, uint32_t y)
+uint32_t Data::find_index(const std::vector<Data::coord>& nodes, uint32_t x, uint32_t y)
 {
 	uint32_t size = static_cast<uint32_t>(nodes.size());
 
@@ -196,7 +196,7 @@ void Data::Pixel_map::print_area_map()
 	Return:
 	rows count
 */
-uint32_t Data::Pixel_map::get_rows()
+uint32_t Data::Pixel_map::get_rows() const
 {
 	return this->rows;
 }
@@ -210,7 +210,7 @@ uint32_t Data::Pixel_map::get_rows()
 	Return:
 	columns count
 */
-uint32_t Data::Pixel_map::get_columns()
+uint32_t Data::Pixel_map::get_columns() const
 {
 	return this->columns;
 }
@@ -225,7 +225,7 @@ uint32_t Data::Pixel_map::get_columns()
 	Return:
 	value of the pixel
 */
-uint32_t Data::Pixel_map::get_field(uint32_t x, uint32_t y)
+uint32_t Data::Pixel_map::get_field(uint32_t x, uint32_t y) const
 {
 	return static_cast<uint32_t>(this->area_map[x][y]);
 }

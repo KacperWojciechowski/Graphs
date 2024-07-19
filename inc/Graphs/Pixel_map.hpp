@@ -18,7 +18,7 @@ namespace Data
 	void randomize_map(std::string file_path, uint32_t length, uint32_t width);
 
 	/* Function for searching the index of given pixel map node */
-	uint32_t find_index(std::vector<Data::coord>& nodes, uint32_t x, uint32_t y);
+	uint32_t find_index(const std::vector<Data::coord>& nodes, uint32_t x, uint32_t y);
 
 	/*
 		Class representing a map of binary pixels.
@@ -35,9 +35,9 @@ namespace Data
 		/* Interface */
 		void print_area_map();
 
-		uint32_t get_rows();
-		uint32_t get_columns();
-		uint32_t get_field(uint32_t x, uint32_t y);
+		uint32_t get_rows() const;
+		uint32_t get_columns() const;
+		uint32_t get_field(uint32_t x, uint32_t y) const;
 
 		/* Destructor */
 		~Pixel_map();

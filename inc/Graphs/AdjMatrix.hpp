@@ -13,20 +13,14 @@ namespace Data
 
 namespace Graphs
 {
-	/* Forward declaration */
 	class AdjList;
 
-	/*
-		Class representing a graph in adjacency matrix form. Does not support
-		multigraphs. Partially supports digraphs. Fully supports standard graphs
-		without loops.
-	*/
 	class AdjMatrix : public Graph
 	{
 	public:
 		/* Constructors */
 		AdjMatrix(std::string file_path, std::string throughtput_file_path, std::string name, std::string type);
-		AdjMatrix(AdjList& list);
+		AdjMatrix(const Graph& list);
 
 		AdjMatrix(AdjMatrix& m) = delete;
 		AdjMatrix(AdjMatrix&& m) = delete;
@@ -38,10 +32,9 @@ namespace Graphs
 
 		float estrada_index();
 
-		void show() const override;
 		uint32_t nodesAmount() const override;
 		uint32_t nodeDegree(NodeId) const override;
-		uint32_t weightOf(const EdgeInfo&) const override;
+		EdgeInfo findEdge(const EdgeInfo&) const override;
 
 		void setEdge(const EdgeInfo&) override;
 		void addNode() override;
@@ -57,6 +50,8 @@ namespace Graphs
 		virtual ~AdjMatrix();
 
 	private:
+		std::string show() const override;
+		
 		/* Custom data types */
 		struct coord
 		{

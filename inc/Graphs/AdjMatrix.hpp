@@ -13,14 +13,8 @@ namespace Data
 
 namespace Graphs
 {
-	/* Forward declaration */
 	class AdjList;
 
-	/*
-		Class representing a graph in adjacency matrix form. Does not support
-		multigraphs. Partially supports digraphs. Fully supports standard graphs
-		without loops.
-	*/
 	class AdjMatrix : public Graph
 	{
 	public:

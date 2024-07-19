@@ -172,14 +172,6 @@ std::string AdjList::show() const
 	return outStream.str();
 }
 
-void AdjList::print_deg()
-{
-	for (auto nodeMapping : nodeMap)
-	{
-		std::cout << nodeMapping.first << ": " << nodes[nodeMapping.second].size() << std::endl;
-	}
-}
-
 uint32_t AdjList::nodesAmount() const
 {
 	return static_cast<uint32_t>(this->nodeMap.size());

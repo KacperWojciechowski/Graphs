@@ -10,7 +10,6 @@ namespace Graphs
 	class AdjList : public Graph
 	{
 	public:
-		/* Constructors */
 		AdjList(std::string);
 
 		AdjList(const Graph&);
@@ -18,9 +17,6 @@ namespace Graphs
 
 		AdjList(AdjList&) = delete;
 		AdjList(AdjList&&) = delete;
-
-		/* Basic interface */
-		void print_deg();
 
 		uint32_t nodesAmount() const override;
 		uint32_t nodeDegree(NodeId) const override;

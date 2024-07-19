@@ -20,12 +20,11 @@ namespace Graphs
 	public:
 		friend std::ostream& operator<<(std::ostream& os, const Graph& g)
 		{
-			g.show();
+			os << g.show();
 			return os;
 		}
 
-		virtual void show() const = 0;
-		virtual uint32_t weightOf(const EdgeInfo&) const = 0;
+		virtual EdgeInfo findEdge(const EdgeInfo&) const = 0;
 		virtual uint32_t nodesAmount() const = 0;
 		virtual uint32_t nodeDegree(NodeId) const = 0;
 
@@ -35,5 +34,8 @@ namespace Graphs
 		virtual void removeEdge(const EdgeInfo&) = 0;
 
 		virtual ~Graph() = default;
+	
+	protected:
+		virtual std::string show() const = 0;
 	};
 }

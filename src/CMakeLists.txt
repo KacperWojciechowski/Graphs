@@ -1,4 +1,4 @@
-set(SOURCES Graph_list.cpp
+set(SOURCES AdjList.cpp
             Graph_matrix.cpp
             Pixel_map.cpp
             Benchmark.cpp)

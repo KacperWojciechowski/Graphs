@@ -2,13 +2,8 @@
 
 #include <string>
 #include <map>
-#include <Graphs/Graph.h>
-#include <Graphs/Pixel_map.h>
-
-namespace Graph
-{
-	class Matrix;
-}
+#include <Graphs/Graph.hpp>
+#include <Graphs/Pixel_map.hpp>
 
 namespace Graphs
 {
@@ -18,7 +13,7 @@ namespace Graphs
 		/* Constructors */
 		AdjList(std::string);
 
-		AdjList(::Graph::Matrix&);
+		AdjList(Graph&);
 		AdjList(Data::Pixel_map&);
 
 		AdjList(AdjList&) = delete;
@@ -26,18 +21,18 @@ namespace Graphs
 
 		/* Basic interface */
 		void print_deg();
-		
 
 		uint32_t get_neighbour(uint32_t x, uint32_t y);
 
-		virtual void show() const override;
-		virtual unsigned int nodesAmount() const override;
-		virtual unsigned int nodeDegree(NodeId) const override;
-
-		virtual void setEdge(EdgeInfo);
-		virtual void addNode();
-		virtual void removeNode(NodeId);
-		virtual void removeEdge(EdgeInfo);
+		void show() const override;
+		uint32_t nodesAmount() const override;
+		uint32_t nodeDegree(NodeId) const override;
+		uint32_t weightOf(const EdgeInfo&) const override;
+		
+		void setEdge(const EdgeInfo&) override;
+		void addNode() override;
+		void removeNode(NodeId) override;
+		void removeEdge(const EdgeInfo&) override;
 
 
 		/* Coloring algorithms with permutations */
@@ -46,7 +41,7 @@ namespace Graphs
 		int32_t sl_coloring(bool log = false);
 
 		/* Destructor */
-		~AdjList();
+		virtual ~AdjList();
 	private:
 		/* Adjacency list node structore */
 		struct Node

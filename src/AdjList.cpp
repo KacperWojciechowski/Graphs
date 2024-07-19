@@ -1,6 +1,6 @@
 // this
-#include <Graphs/AdjList.h>
-#include <Graphs/Graph_matrix.h>
+#include <Graphs/AdjList.hpp>
+#include <Graphs/AdjMatrix.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <cstring>
 
-using namespace Graph;
+#include <cassert>
 
 namespace Graphs
 {
@@ -96,18 +96,17 @@ AdjList::AdjList(std::string file_path)
 	file.close();
 }
 
-AdjList::AdjList(::Graph::Matrix& matrix)
+AdjList::AdjList(Graph& graph)
 	: degrees(nullptr),
 	nodes(nullptr)
 {
-	uint32_t amount = matrix.get_nodes_amount();
+	uint32_t amount = graph.nodesAmount();
 
 	this->nodes = new Node * [amount];
 	this->degrees = new uint32_t[amount];
 
 	Node* ptr;
 	Node** ptr2;
-	uint32_t value;
 
 	for (uint32_t i = 0; i < amount; i++)
 	{
@@ -115,7 +114,7 @@ AdjList::AdjList(::Graph::Matrix& matrix)
 		ptr2 = &this->nodes[i];
 		for (uint32_t j = 0; j < amount; j++)
 		{
-			value = matrix.get_value(i, j);
+			auto value = graph.weightOf({i, j});
 			while (value > 0)
 			{
 				ptr = new Node;
@@ -251,12 +250,12 @@ void AdjList::print_deg()
 	}
 }
 
-unsigned int AdjList::nodesAmount() const
+uint32_t AdjList::nodesAmount() const
 {
 	return static_cast<uint32_t>(this->node_map.size());
 }
 
-unsigned int AdjList::nodeDegree(NodeId node) const
+uint32_t AdjList::nodeDegree(NodeId node) const
 {
 	return this->degrees[this->node_map.find(node)->second];
 }
@@ -527,7 +526,7 @@ int32_t AdjList::sl_coloring(bool log)
 	return this->greedy_coloring_core(&map, log); // przes�anie mapy do algorytmu greedy i zwr�cenie ilo�ci u�ytych kolor�w
 }
 
-void AdjList::setEdge(EdgeInfo edge)
+void AdjList::setEdge(const EdgeInfo& edge)
 {
 	uint32_t index = this->node_map.find(edge.source)->second;
 	Node* ptr = this->nodes[index];
@@ -572,7 +571,7 @@ void AdjList::setEdge(EdgeInfo edge)
 	}
 }
 
-void AdjList::removeEdge(EdgeInfo edge)
+void AdjList::removeEdge(const EdgeInfo& edge)
 {
 	uint32_t index = this->node_map.find(edge.source)->second;
 	Node* ptr = this->nodes[index];
@@ -684,6 +683,23 @@ AdjList::~AdjList()
 	}
 	delete[] this->nodes;
 	delete[] this->degrees;
+}
+
+uint32_t AdjList::weightOf(const EdgeInfo& edge) const
+{
+	auto source = this->node_map.find(edge.source);
+	auto destination = this->node_map.find(edge.destination);
+
+	assert(source != this->node_map.end() && destination != this->node_map.end());
+	while (auto currNeighbor = this->nodes[source->second])
+	{
+		if (currNeighbor->neighbour == edge.destination)
+		{
+			return 1;
+		}
+		currNeighbor = currNeighbor->next;
+	}
+	return 0;
 }
 
 void AdjList::shuffle(std::vector<int>& v, bool log)

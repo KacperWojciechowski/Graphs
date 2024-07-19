@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "Benchmark.h"
+#include <Graphs/Benchmark.hpp>
 
-void Graph::Benchmark::run(Graph& graph, std::string identifier, std::string file_path, uint16_t iterations, Mode mode, bool bench_log, bool alg_log)
+void Graph::Benchmark::run(Graphs::Graph& graph, std::string identifier, std::string file_path, uint16_t iterations, Mode mode, bool bench_log, bool alg_log)
 {
 	std::fstream file;
 	switch (mode)
@@ -29,16 +29,16 @@ void Graph::Benchmark::run(Graph& graph, std::string identifier, std::string fil
 	file.close();
 }
 
-void Graph::Benchmark::color_benchmark(Graph& graph, std::string identifier, uint16_t iterations, std::fstream& file, bool bench_log, bool alg_log)
+void Graph::Benchmark::color_benchmark(Graphs::Graph& graph, std::string identifier, uint16_t iterations, std::fstream& file, bool bench_log, bool alg_log)
 {
 	for (uint16_t i = 0; i < iterations; i++)
 	{
 		file << identifier << ";";
 		file << i << ";";
 		
-		file << graph.greedy_coloring(alg_log) << ";";
-		file << graph.lf_coloring(alg_log) << ";";
-		file << graph.sl_coloring(alg_log) << std::endl;
+		//file << graph.greedy_coloring(alg_log) << ";";
+		//file << graph.lf_coloring(alg_log) << ";";
+		//file << graph.sl_coloring(alg_log) << std::endl;
 		if (bench_log)
 		{
 			std::cout << "    Iteration " << i + 1 << " done" << std::endl;

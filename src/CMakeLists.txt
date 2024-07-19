@@ -1,5 +1,5 @@
 set(SOURCES AdjList.cpp
-            Graph_matrix.cpp
+            AdjMatrix.cpp
             Pixel_map.cpp
             Benchmark.cpp)
 

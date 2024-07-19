@@ -1,31 +1,46 @@
 #pragma once
 
-#include "Graph_list.h"
-
+// libraries
 #include <stdint.h>
 #include <string>
-
 #include <vector>
 
+// Graph
+#include "Graph.h"
+#include "Graph_list.h"
+
+namespace Data
+{
+	void generate_weighted_graph(std::string file_path, uint32_t nodes_amount);
+	void generate_throughtput(std::string input_file_path, std::string output_file_path, uint32_t nodes_amount);
+}
 
 namespace Graph
 {
+	/* Forward declaration */
 	class List;
 
-	class Matrix
+	/*
+		Class representing a graph in adjacency matrix form. Does not support
+		multigraphs. Partially supports digraphs. Fully supports standard graphs
+		without loops.
+	*/
+	class Matrix //: public Graph
 	{
 	public:
-		Matrix(std::string file_path, std::string ng, std::string type);
+		/* Constructors */
+		Matrix(std::string file_path, std::string throughtput_file_path, std::string name, std::string type);
 		Matrix(List& list);
 
 		Matrix(Matrix& m) = delete;
 		Matrix(Matrix&& m) = delete;
 
+		/* Interface */
 		void print();
-		void printGraphML();
-		void zad_3_a();
-		void zad_3_d();
-		void zad_3_c();
+		void print_throughtput();
+		void saveGraphML(std::string file_path);
+
+		float estrada_index();
 
 		void add_edge(uint32_t source, uint32_t destination);
 		void add_node();
@@ -35,28 +50,34 @@ namespace Graph
 
 		const uint32_t get_nodes_amount();
 		const uint32_t get_value(uint32_t x, uint32_t y);
-		void save_graphml(std::string file_path);
 
 		void change_to_line_graph();
 
-        int belman_ford(uint32_t vertex, bool log);
-        int throughtput_belman_ford(uint32_t searched_throughtput, uint32_t vertex, bool log);
+		int32_t belman_ford(uint32_t vertex, bool log);
+		int32_t throughtput_belman_ford(uint32_t searched_throughtput, uint32_t vertex, bool log);
 
+		/* Destructor */
 		~Matrix();
 
 	private:
+		/* Custom data types */
 		struct coord
 		{
 			uint32_t x;
 			uint32_t y;
 		};
 
+		/* Private functions */
 		uint32_t find_index(std::vector<coord>& edges, uint32_t x, uint32_t y);
 
+		/* Private variables */
 		uint32_t nodes_amount;
 		uint32_t** matrix;
-		std::string nazwa_grafu;
-		std::string typ_grafu;
-	};
+		std::string graph_name;
+		std::string graph_type;
 
-}
+		uint32_t* distance;
+		std::vector<uint32_t>* prev_node;
+		uint32_t** throughtput;
+	};
+} // Graph

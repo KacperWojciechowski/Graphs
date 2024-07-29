@@ -1,161 +1,178 @@
 // this
-#include <Graphs/AdjList.hpp>
-#include <Graphs/AdjMatrix.hpp>
-
+#include <algorithm>
 #include <cstring>
 #include <fstream>
+#include <Graphs/AdjList.hpp>
+#include <Graphs/AdjMatrix.hpp>
 #include <iostream>
+#include <sstream>
 #include <time.h>
 
-#include <algorithm>
-#include <sstream>
+namespace
+{
+std::vector<Data::coord> extractPixelMapNodes(const Data::Pixel_map& map) {
+    std::vector<Data::coord> pixelMapNodes;
 
-namespace {
-std::vector<Data::coord> extractPixelMapNodes(const Data::Pixel_map &map) {
-  std::vector<Data::coord> pixelMapNodes;
-
-  for (uint32_t i = 0; i < map.get_rows(); i++) {
-    for (uint32_t j = 0; j < map.get_columns(); j++) {
-      if (map.get_field(i, j) == 0) {
-        pixelMapNodes.push_back({i, j});
-      }
+    for (uint32_t i = 0; i < map.get_rows(); i++)
+    {
+        for (uint32_t j = 0; j < map.get_columns(); j++)
+        {
+            if (map.get_field(i, j) == 0)
+            {
+                pixelMapNodes.push_back({i, j});
+            }
+        }
     }
-  }
 
-  return pixelMapNodes;
+    return pixelMapNodes;
 }
 
-void insertNeighborIfApplicable(auto checker, auto inserter,
-                                Data::coord coordsToInsert) {
-  if (checker()) // doesnt underflow
-  {
-    inserter(coordsToInsert);
-  }
+void insertNeighborIfApplicable(auto checker, auto inserter, Data::coord coordsToInsert) {
+    if (checker()) // doesnt underflow
+    {
+        inserter(coordsToInsert);
+    }
 }
 } // namespace
 
-namespace Graphs {
+namespace Graphs
+{
 AdjList::AdjList(std::string file_path) {
-  std::fstream file;
-  file.open(file_path, std::ios::in);
-
-  if (file.good()) {
-    std::string line;
-    size_t pos = 0;
-
-    {
-      auto amount = 0u;
-      // search through file to calculate the vertices count
-      while (!file.eof()) {
-        std::getline(file, line);
-        if (line != "") {
-          amount++;
-        }
-      }
-      nodes.resize(amount);
-    }
-
-    // reopen the file to reset its cursor position
-    // (seekg was not working here for undetermined reason)
-    file.close();
+    std::fstream file;
     file.open(file_path, std::ios::in);
 
-    // search through the file and load the whole list
-    for (uint32_t i = 0; i < nodes.size(); i++) {
-      std::getline(file, line);
-      // protection from empty lines in the file
-      if (line != "") {
-        // insert the vertex to the vertex map
-        this->nodeMap.insert(std::pair<uint32_t, uint32_t>(i + 1, i));
-        pos = line.find(' ');
-        auto &node = nodes[i];
+    if (file.good())
+    {
+        std::string line;
+        size_t pos = 0;
 
-        // search for spaces separating the neighbours
-        while (pos != std::string::npos) {
-          // cut off the unnecessary part of the line
-          line = line.substr(pos + 1);
-          node.emplace_back(std::stoi(line));
-          pos = line.find(' ');
+        {
+            auto amount = 0u;
+            // search through file to calculate the vertices count
+            while (!file.eof())
+            {
+                std::getline(file, line);
+                if (line != "")
+                {
+                    amount++;
+                }
+            }
+            nodes.resize(amount);
         }
-      }
+
+        // reopen the file to reset its cursor position
+        // (seekg was not working here for undetermined reason)
+        file.close();
+        file.open(file_path, std::ios::in);
+
+        // search through the file and load the whole list
+        for (uint32_t i = 0; i < nodes.size(); i++)
+        {
+            std::getline(file, line);
+            // protection from empty lines in the file
+            if (line != "")
+            {
+                // insert the vertex to the vertex map
+                this->nodeMap.insert(std::pair<uint32_t, uint32_t>(i + 1, i));
+                pos = line.find(' ');
+                auto& node = nodes[i];
+
+                // search for spaces separating the neighbours
+                while (pos != std::string::npos)
+                {
+                    // cut off the unnecessary part of the line
+                    line = line.substr(pos + 1);
+                    node.emplace_back(std::stoi(line));
+                    pos = line.find(' ');
+                }
+            }
+        }
     }
-  }
-  // if file was not found
-  else {
-    std::cout << "File not found" << std::endl;
-  }
-  file.close();
+    // if file was not found
+    else
+    {
+        std::cout << "File not found" << std::endl;
+    }
+    file.close();
 }
 
-AdjList::AdjList(const Graph &graph) {
-  nodes.resize(graph.nodesAmount());
+AdjList::AdjList(const Graph& graph) {
+    nodes.resize(graph.nodesAmount());
 
-  for (uint32_t i = 0; i < nodes.size(); i++) {
-    auto &node = nodes[i];
-    for (uint32_t j = 0; j < nodes.size(); j++) {
-      auto edge = graph.findEdge({i + 1, j + 1});
-      while (edge.weight.has_value() and edge.weight.value() > 0) {
-        node.emplace_back(j + 1);
-        edge.weight.value()--;
-      }
+    for (uint32_t i = 0; i < nodes.size(); i++)
+    {
+        auto& node = nodes[i];
+        for (uint32_t j = 0; j < nodes.size(); j++)
+        {
+            auto edge = graph.findEdge({i + 1, j + 1});
+            while (edge.weight.has_value() and edge.weight.value() > 0)
+            {
+                node.emplace_back(j + 1);
+                edge.weight.value()--;
+            }
+        }
+        nodeMap.insert(std::pair<uint32_t, uint32_t>(i + 1, i));
     }
-    nodeMap.insert(std::pair<uint32_t, uint32_t>(i + 1, i));
-  }
 }
 
-AdjList::AdjList(const Data::Pixel_map &map) {
-  auto pixelMapNodes = extractPixelMapNodes(map);
-  nodes.resize(pixelMapNodes.size());
+AdjList::AdjList(const Data::Pixel_map& map) {
+    auto pixelMapNodes = extractPixelMapNodes(map);
+    nodes.resize(pixelMapNodes.size());
 
-  for (uint32_t i = 0; i < pixelMapNodes.size(); i++) {
-    auto coord = pixelMapNodes[i];
-    auto &node = nodes[i];
-    nodeMap.insert(std::pair<uint32_t, uint32_t>(i + 1, i));
+    for (uint32_t i = 0; i < pixelMapNodes.size(); i++)
+    {
+        auto coord = pixelMapNodes[i];
+        auto& node = nodes[i];
+        nodeMap.insert(std::pair<uint32_t, uint32_t>(i + 1, i));
 
-    auto inserter = [&node, &pixelMapNodes](Data::coord coord) {
-      node.emplace_back(Data::find_index(pixelMapNodes, coord.x, coord.y) + 1);
-    };
-    auto leftChecker = [coord]() {
-      return coord.x - 1 < 0xFFFFFFFF;
-    }; // does not underflow
-    auto upChecker = [coord]() {
-      return coord.y - 1 < 0xFFFFFFFF;
-    }; // does not underflow
-    auto rightChecker = [coord, &map]() {
-      return coord.x + 1 < map.get_columns();
-    };
-    auto downChecker = [coord, &map]() { return coord.y + 1 < map.get_rows(); };
+        auto inserter = [&node, &pixelMapNodes](Data::coord coord) {
+            node.emplace_back(Data::find_index(pixelMapNodes, coord.x, coord.y) + 1);
+        };
+        auto leftChecker = [coord]() {
+            return coord.x - 1 < 0xFFFFFFFF;
+        }; // does not underflow
+        auto upChecker = [coord]() {
+            return coord.y - 1 < 0xFFFFFFFF;
+        }; // does not underflow
+        auto rightChecker = [coord, &map]() {
+            return coord.x + 1 < map.get_columns();
+        };
+        auto downChecker = [coord, &map]() {
+            return coord.y + 1 < map.get_rows();
+        };
 
-    insertNeighborIfApplicable(upChecker, inserter, {coord.x, coord.y - 1});
-    insertNeighborIfApplicable(leftChecker, inserter, {coord.x - 1, coord.y});
-    insertNeighborIfApplicable(rightChecker, inserter, {coord.x + 1, coord.y});
-    insertNeighborIfApplicable(downChecker, inserter, {coord.x, coord.y + 1});
+        insertNeighborIfApplicable(upChecker, inserter, {coord.x, coord.y - 1});
+        insertNeighborIfApplicable(leftChecker, inserter, {coord.x - 1, coord.y});
+        insertNeighborIfApplicable(rightChecker, inserter, {coord.x + 1, coord.y});
+        insertNeighborIfApplicable(downChecker, inserter, {coord.x, coord.y + 1});
 
-    std::ranges::sort(node);
-  }
+        std::ranges::sort(node);
+    }
 }
 
 std::string AdjList::show() const {
-  std::stringstream outStream;
-  outStream << "Nodes amount = " << nodeMap.size() << "\n{\n";
+    std::stringstream outStream;
+    outStream << "Nodes amount = " << nodeMap.size() << "\n{\n";
 
-  for (auto &nodeMapping : nodeMap) {
-    outStream << nodeMapping.first << ": ";
-    for (auto &neighbor : nodes[nodeMapping.second]) {
-      outStream << neighbor << ", ";
+    for (auto& nodeMapping : nodeMap)
+    {
+        outStream << nodeMapping.first << ": ";
+        for (auto& neighbor : nodes[nodeMapping.second])
+        {
+            outStream << neighbor << ", ";
+        }
+        outStream << "\n";
     }
-    outStream << "\n";
-  }
-  outStream << "}\n";
-  return outStream.str();
+    outStream << "}\n";
+    return outStream.str();
 }
 
 uint32_t AdjList::nodesAmount() const {
-  return static_cast<uint32_t>(this->nodeMap.size());
+    return static_cast<uint32_t>(this->nodeMap.size());
 }
 
 uint32_t AdjList::nodeDegree(NodeId node) const {
-  return nodes[nodeMap.find(node)->second].size();
+    return nodes[nodeMap.find(node)->second].size();
 }
 
 // int32_t AdjList::greedy_coloring_core(std::map<uint32_t, uint32_t>* map, bool
@@ -449,78 +466,81 @@ uint32_t AdjList::nodeDegree(NodeId node) const {
 // algorytmu greedy i zwr�cenie ilo�ci u�ytych kolor�w
 // }
 
-void AdjList::addNeighborAndSortRange(Neighbors &range, NodeId tgtNeighbor) {
-  range.emplace_back(tgtNeighbor);
-  std::ranges::sort(range);
+void AdjList::addNeighborAndSortRange(Neighbors& range, NodeId tgtNeighbor) {
+    range.emplace_back(tgtNeighbor);
+    std::ranges::sort(range);
 }
 
-void AdjList::setEdge(const EdgeInfo &edge) {
-  auto sourceNodeMapping = nodeMap.find(edge.source);
-  auto destinationNodeMapping = nodeMap.find(edge.destination);
+void AdjList::setEdge(const EdgeInfo& edge) {
+    auto sourceNodeMapping = nodeMap.find(edge.source);
+    auto destinationNodeMapping = nodeMap.find(edge.destination);
 
-  if (sourceNodeMapping == nodeMap.end() or
-      destinationNodeMapping == nodeMap.end()) {
-    return;
-  }
+    if (sourceNodeMapping == nodeMap.end() or destinationNodeMapping == nodeMap.end())
+    {
+        return;
+    }
 
-  addNeighborAndSortRange(nodes[sourceNodeMapping->second], edge.destination);
-  addNeighborAndSortRange(nodes[destinationNodeMapping->second], edge.source);
+    addNeighborAndSortRange(nodes[sourceNodeMapping->second], edge.destination);
+    addNeighborAndSortRange(nodes[destinationNodeMapping->second], edge.source);
 }
 
-void AdjList::removeNeighborFromRange(Neighbors &range, NodeId tgtNeighbor) {
-  std::ranges::remove_if(
-      range, [tgtNeighbor](auto &neighbor) { return neighbor == tgtNeighbor; });
+void AdjList::removeNeighborFromRange(Neighbors& range, NodeId tgtNeighbor) {
+    std::ranges::remove_if(range, [tgtNeighbor](auto& neighbor) {
+        return neighbor == tgtNeighbor;
+    });
 }
 
-void AdjList::removeEdge(const EdgeInfo &edge) {
-  auto sourceNodeMapping = nodeMap.find(edge.source);
-  auto destinationNodeMapping = nodeMap.find(edge.destination);
+void AdjList::removeEdge(const EdgeInfo& edge) {
+    auto sourceNodeMapping = nodeMap.find(edge.source);
+    auto destinationNodeMapping = nodeMap.find(edge.destination);
 
-  if (sourceNodeMapping == nodeMap.end() or
-      destinationNodeMapping == nodeMap.end()) {
-    return;
-  }
+    if (sourceNodeMapping == nodeMap.end() or destinationNodeMapping == nodeMap.end())
+    {
+        return;
+    }
 
-  removeNeighborFromRange(nodes[sourceNodeMapping->second], edge.destination);
-  removeNeighborFromRange(nodes[destinationNodeMapping->second], edge.source);
+    removeNeighborFromRange(nodes[sourceNodeMapping->second], edge.destination);
+    removeNeighborFromRange(nodes[destinationNodeMapping->second], edge.source);
 }
 
 void AdjList::addNode() {
-  auto highestId = nodeMap.rbegin()->first;
+    auto highestId = nodeMap.rbegin()->first;
 
-  nodes.emplace_back();
-  nodeMap.insert(
-      std::pair<uint32_t, uint32_t>(highestId + 1, nodes.size() - 1));
+    nodes.emplace_back();
+    nodeMap.insert(std::pair<uint32_t, uint32_t>(highestId + 1, nodes.size() - 1));
 }
 
 void AdjList::removeNode(NodeId node) {
-  auto nodeMapping = nodeMap.find(node);
+    auto nodeMapping = nodeMap.find(node);
 
-  if (nodeMapping == nodeMap.end()) {
-    return;
-  }
+    if (nodeMapping == nodeMap.end())
+    {
+        return;
+    }
 
-  std::ranges::remove_if(nodes, [this, &nodeMapping](auto &neighbors) {
-    return neighbors == nodes[nodeMapping->second];
-  });
-  nodeMap.erase(nodeMapping);
+    std::ranges::remove_if(nodes, [this, &nodeMapping](auto& neighbors) {
+        return neighbors == nodes[nodeMapping->second];
+    });
+    nodeMap.erase(nodeMapping);
 }
 
-EdgeInfo AdjList::findEdge(const EdgeInfo &edge) const {
-  auto source = nodeMap.find(edge.source);
-  auto destination = nodeMap.find(edge.destination);
+EdgeInfo AdjList::findEdge(const EdgeInfo& edge) const {
+    auto source = nodeMap.find(edge.source);
+    auto destination = nodeMap.find(edge.destination);
 
-  if (source == this->nodeMap.end() or destination == this->nodeMap.end()) {
-    return {edge.source, edge.destination, std::nullopt};
-  }
+    if (source == this->nodeMap.end() or destination == this->nodeMap.end())
+    {
+        return {edge.source, edge.destination, std::nullopt};
+    }
 
-  auto neighbor = std::ranges::find(nodes[edge.source], edge.destination);
+    auto neighbor = std::ranges::find(nodes[edge.source], edge.destination);
 
-  if (neighbor == std::end(nodes[edge.source])) {
-    return {edge.source, edge.destination, std::nullopt};
-  }
+    if (neighbor == std::end(nodes[edge.source]))
+    {
+        return {edge.source, edge.destination, std::nullopt};
+    }
 
-  return {edge.source, edge.destination, 1};
+    return {edge.source, edge.destination, 1};
 }
 
 // void AdjList::shuffle(std::vector<int>& v, bool log)

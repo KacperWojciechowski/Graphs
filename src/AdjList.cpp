@@ -175,111 +175,15 @@ uint32_t AdjList::nodeDegree(NodeId node) const {
     return nodes[nodeMap.find(node)->second].size();
 }
 
-// int32_t AdjList::greedy_coloring_core(std::map<uint32_t, uint32_t>* map, bool
-// log)
-// {
-// 	if (map == nullptr) //sta�a kt�ra okre�la pointer wskazuj�cy na nulla
-// 	{
-// 		map = &(this->nodeMap);//bierze map� zaszyt� z samej
-// implementacji stdmap - map� w�z��w
-// 	}
-// 	uint32_t nodes_count = static_cast<uint32_t>(map->size()); // pobiera
-// ilo�� wierzccho�k�w 	int32_t* nodes_colors = new int32_t[nodes_count]; //
-// tablica kolor�w wierzcho�k�w 	bool* colors_taken = new
-// bool[nodes_count]; // tablica u�ytych kolor�w
+std::vector<NodeId> AdjList::getNeighborsOf(NodeId node) const {
+    auto nodeMapping = nodeMap.find(node);
+    if (nodeMapping == nodeMap.end())
+    {
+        return {};
+    }
 
-// 	for (uint32_t i = 0; i < nodes_count; i++) // dla wszystkich
-// wierzccho�k�w ustawia -1 jako kolor
-// 	{
-// 		nodes_colors[i] = -1;
-// 	}
-
-// 	std::map<int, int>::iterator itr = map->begin();
-// 	nodes_colors[itr->second] = 0; // dla pierwszego wierzcho�ka ustawia
-// kolor 0 	uint32_t color; 	Node* ptr;
-
-// 	//iteruje przez map� wierzccho�k�w
-// 	for (++itr; itr != map->end(); itr++)
-// 	{
-// 			for (uint32_t i = 0; i < nodes_count; i++) // dla
-// ka�dego wierzcho�ka zapisanie wszystkich kolor�ow jako dost�pnych
-// 			{
-// 				colors_taken[i] = false;
-// 			}
-// 		ptr = this->nodes[itr->second]; // we wska�niku zapisanie
-// odniesienia do aktualnego wierzcho�ka
-
-// 		//nodes to jest lista.  Itr->second to warto�� iindexu zapisana
-// w danym wpisie listy. 		while (ptr != nullptr)// iteracja po
-// s�siadacch wierzcho�ka
-// 		{
-// 			if (nodes_colors[ptr->neighbour-1] > -1) // je�eli
-// s�siad ma kolor r�ny od -1 to zaznacza kolor s�siada jako zaj�ty
-// 			{
-// 				colors_taken[nodes_colors[ptr->neighbour-1]] =
-// true;
-// 			}
-
-// 			ptr = ptr->next; // przej�ie do nast�pnego s�siada
-// 		}
-
-// 		for (color = 0; colors_taken[color] == true; color++); //
-// wyszukiwanie najmniejszego dost�pnego koloru
-// nodes_colors[itr->second] = color; // pokolorowanie wierzcho�ka
-// 	}
-
-// 	int32_t max = -1;
-
-// 	//wypisanie kolor�w dla poszczeg�lnych wierzcho�k�w
-
-// 	for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
-// 	{
-// 		if (log)
-// 		{
-// 			std::cout << "Node " << itr->second + 1 << " has color "
-// << nodes_colors[itr->second] << std::endl;
-// 		}
-// 		if (nodes_colors[itr->second] > max) max =
-// nodes_colors[itr->second];
-// 	}
-// 	if (log)
-// 	{
-// 		std::cout << "Amount of colors used: " << max + 1 << std::endl;
-// 	}
-
-// 	delete[] nodes_colors;
-// 	delete[] colors_taken;
-
-// 	return max + 1; // return zwraca ilo�� u�ytych kolor�w
-// }
-
-// int32_t AdjList::greedy_coloring(bool log)
-// {
-// 	std::vector<int> v;
-// 	std::map<int, int>::iterator itr;
-
-// 	if (log)
-// 	{
-// 		std::cout << "Greedy coloring" << std::endl;
-// 	}
-
-// 	for (itr = this->node_map.begin(); itr != this->node_map.end(); itr++)
-// 	{
-// 		v.push_back(itr->second); // wpisuje wierzcho�ki do wektora
-// permutacji
-// 	}
-// 	shuffle(v, log); // wygeneruj permutacje
-
-// 	std::map<int, int> map; // wpisz do mapy w nowej kolejnosci
-
-// 	size_t count = v.size();
-// 	for (size_t i = 0; i < count; i++)
-// 	{
-// 		map.insert(std::pair<int, int>(i, v[i]));
-// 	}
-// 	return this->greedy_coloring_core(&map, log); // przeslij do greedy
-// coloring core
-// }
+    return nodes[nodeMapping->second];
+}
 
 // // algorytmy LF i SL  tworz� mapy posegregowane w odpowiedniaj kolejno�ci po
 // kt�rych p�niej iteruje greedy. Mapa to lista z wierzcho�k�w posegregowana
@@ -543,29 +447,12 @@ EdgeInfo AdjList::findEdge(const EdgeInfo& edge) const {
     return {edge.source, edge.destination, 1};
 }
 
-// void AdjList::shuffle(std::vector<int>& v, bool log)
-// {
-// 	uint32_t count = v.size();
-// 	uint32_t index_a;
-// 	uint32_t index_b;
-// 	srand(time(NULL));
-// 	uint32_t val;
-// 	for (uint32_t i = 0; i < count; i++)
-// 	{
-// 		index_a = rand() % count;
-// 		index_b = rand() % count;
-// 		val = v[index_a];
-// 		v[index_a] = v[index_b];
-// 		v[index_b] = val;
-// 	}
-// 	if (log)
-// 	{
-// 		std::cout << "shuffle" << std::endl;
-// 		for (uint32_t i = 0; i < count; i++)
-// 		{
-// 			std::cout << v[i] << " ";
-// 		}
-// 		std::cout << std::endl;
-// 	}
-// }
+std::vector<NodeId> AdjList::getNodeIds() const {
+    std::vector<NodeId> nodeIds;
+    for (const auto& nodeMapping : nodeMap)
+    {
+        nodeIds.push_back(nodeMapping.first);
+    }
+    return nodeIds;
+}
 } // namespace Graphs

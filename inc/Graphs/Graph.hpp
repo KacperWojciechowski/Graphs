@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <iostream>
 #include <optional>
+#include <vector>
 
 namespace Graphs
 {
@@ -31,6 +32,8 @@ class Graph
     virtual void addNode() = 0;
     virtual void removeNode(NodeId) = 0;
     virtual void removeEdge(const EdgeInfo&) = 0;
+    virtual std::vector<NodeId> getNodeIds() const = 0;
+    virtual std::vector<NodeId> getNeighborsOf(NodeId) const = 0;
 
     virtual ~Graph() = default;
 

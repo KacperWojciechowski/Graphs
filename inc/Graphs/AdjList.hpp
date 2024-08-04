@@ -27,12 +27,9 @@ class AdjList : public Graph
     void removeNode(NodeId) override;
     void removeEdge(const EdgeInfo&) override;
 
-    /* Coloring algorithms with permutations */
-    int32_t greedy_coloring(bool log = false);
-    int32_t lf_coloring(bool log = false);
-    int32_t sl_coloring(bool log = false);
+    virtual std::vector<NodeId> getNodeIds() const override;
+    virtual std::vector<NodeId> getNeighborsOf(NodeId) const override;
 
-    /* Destructor */
     virtual ~AdjList() = default;
 
     private:
@@ -42,10 +39,8 @@ class AdjList : public Graph
 
     void removeNeighborFromRange(Neighbors& range, NodeId tgtNeighbor);
     void addNeighborAndSortRange(Neighbors& range, NodeId tgtNeighbor);
-    void shuffle(std::vector<int>& v, bool log = false);
-    int32_t greedy_coloring_core(std::map<int, int>* map, bool log = false);
 
     std::vector<Neighbors> nodes;
-    std::map<uint32_t, uint32_t> nodeMap;
+    std::map<NodeId, uint32_t> nodeMap;
 };
 } // namespace Graphs

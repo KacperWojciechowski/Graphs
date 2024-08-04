@@ -39,6 +39,8 @@ class AdjMatrix : public Graph
     void addNode() override;
     void removeNode(NodeId) override;
     void removeEdge(const EdgeInfo&) override;
+    std::vector<NodeId> getNodeIds() const override;
+    std::vector<NodeId> getNeighborsOf(NodeId) const override;
 
     void change_to_line_graph();
 

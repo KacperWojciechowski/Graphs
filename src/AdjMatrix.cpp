@@ -8,6 +8,8 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <numeric>
+#include <sstream>
 #include <string>
 
 namespace Graphs
@@ -215,15 +217,7 @@ AdjMatrix::AdjMatrix(const Graph& graph)
         matrix[i] = new uint32_t[nodes_amount];
         for (uint32_t j = 0; j < nodes_amount; j++)
         {
-            matrix[i][j] = 0;
-        }
-    }
-    for (uint32_t i = 0; i < nodes_amount; i++)
-    {
-        for (uint32_t j = 0; j < graph.nodeDegree(i); j++)
-        {
-                        if (list.get_neighbour(i, j);
-			this->matrix[i][neighbour_id - 1] = 1;
+            matrix[i][j] = graph.findEdge({i, j}).weight.value_or(0);
         }
     }
 }
@@ -488,34 +482,24 @@ void AdjMatrix::removeNode(NodeId node) {
     }
 }
 
-/*
-        Function printing the information regarding current graph
-        such as graph name, graph type, number of vertices and
-        full adjacency matrix
+std::string AdjMatrix::show() const {
+    std::stringstream out;
 
-        Params:
-        None
+    out << "Name = " << this->graph_name;
+    out << "\nType = " << this->graph_type;
+    out << "\nNodes amount = " << this->nodes_amount << "\n";
 
-        Return:
-        None
-*/
-void AdjMatrix::show() const {
-    // print basic information
-    std::cout << "Name = " << this->graph_name << std::endl;
-    std::cout << "Type = " << this->graph_type << std::endl;
-    std::cout << "Nodes amount = " << this->nodes_amount << std::endl;
-
-    // print adjacency matrix
-    std::cout << "[" << std::endl;
+    out << "[\n";
     for (uint32_t i = 0; i < this->nodes_amount; i++)
     {
         for (uint32_t j = 0; j < this->nodes_amount; j++)
         {
-            std::cout << this->matrix[i][j] << ", ";
+            out << this->matrix[i][j] << ", ";
         }
-        std::cout << std::endl;
+        out << "\n";
     }
-    std::cout << "]" << std::endl;
+    out << "]\n";
+    return out.str();
 }
 
 void AdjMatrix::print_throughtput() {
@@ -548,6 +532,24 @@ EdgeInfo AdjMatrix::findEdge(const EdgeInfo& edge) const {
     {
         return {edge.source, edge.destination, matrix[edge.source - 1][edge.destination - 1]};
     }
+}
+
+std::vector<NodeId> AdjMatrix::getNodeIds() const {
+    std::vector<NodeId> ids(this->nodes_amount);
+    std::iota(ids.begin(), ids.end(), 1);
+    return ids;
+}
+
+std::vector<NodeId> AdjMatrix::getNeighborsOf(NodeId node) const {
+    std::vector<NodeId> neighbors;
+    for (uint32_t i = 0; i < this->nodes_amount; i++)
+    {
+        if (this->matrix[node - 1][i] != 0)
+        {
+            neighbors.push_back(i);
+        }
+    }
+    return neighbors;
 }
 
 void AdjMatrix::change_to_line_graph() {

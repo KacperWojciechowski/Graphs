@@ -3,10 +3,11 @@
 #include <Graphs/AdjMatrix.hpp>
 
 // libraries
-#include <algoithm>
+#include <algorithm>
 #include <cassert>
 #include <filesystem>
 #include <fstream>
+#include <ranges>
 #include <regex>
 #include <sstream>
 #include <string>
@@ -27,22 +28,29 @@ uint32_t findNodesCount(const std::string& fileContent, const std::regex& nodeRe
     return nodesCount;
 }
 
-auto findEdgeInFileContent(const std::string& fileContent,
-                           const std::regex& edgeRegex,
-                           std::string::const_iterator itr) {
+struct EdgeParsingResult
+{
+    bool result;
+    EdgeInfo edge;
+    std::string::const_iterator nextItr;
+};
+
+EdgeParsingResult findEdgeInFileContent(const std::string& fileContent,
+                                        const std::regex& edgeRegex,
+                                        const std::string::const_iterator itr) {
     std::smatch match;
     if (std::regex_search(itr, fileContent.cend(), match, edgeRegex))
     {
         constexpr uint32_t defaultWeight = 1;
         auto source = static_cast<uint32_t>(std::stoi(match[1].str()));
         auto target = static_cast<uint32_t>(std::stoi(match[2].str()));
-        constexpr bool success = true;
-        EdgeInfo edge = {source, target, defaultWeight};
-        return std::tie(success, edge, match.suffix().first);
+
+        return {
+            true, {source, target, defaultWeight},
+             match.suffix().first
+        };
     }
-    constexpr bool fail = false;
-    EdgeInfo noEdge = {};
-    return std::tie(fail, noEdge, itr);
+    return {false, {}, itr};
 }
 } // namespace
 
@@ -50,11 +58,12 @@ void AdjMatrix::resizeMatrixToFitNodes(uint32_t nodesCount) {
     assert(nodesCount > matrix.size());
 
     auto nodesAmountDiff = nodesCount - matrix.size();
-    auto maxNodeId = nodeIndexMapping.rbegin()->first;
+    auto maxNodeItr = nodeIndexMapping.rbegin();
+    auto maxNodeId = maxNodeItr != nodeIndexMapping.rend() ? maxNodeItr->first : 0;
 
-    for (uint32_t i = 0; i < nodesAmountDiff; i++)
+    for (uint32_t i = 1; i <= nodesAmountDiff; i++)
     {
-        nodeIndexMapping[maxNodeId->first + i] = matrix.size() + i;
+        nodeIndexMapping.insert(std::make_pair(maxNodeId + i, matrix.size() + i));
     }
 
     matrix.resize(nodesCount);
@@ -72,7 +81,7 @@ void AdjMatrix::buildFromMatFile(const std::string& filePath) {
     }
 
     auto parseLine = [](const auto& line) {
-        std::vector<Row> row;
+        Row row;
         std::stringstream stream(line);
         std::string value;
 
@@ -84,6 +93,7 @@ void AdjMatrix::buildFromMatFile(const std::string& filePath) {
         return row;
     };
 
+    NodeId nodeId = 0;
     while (not file.eof())
     {
         std::string line;
@@ -94,6 +104,7 @@ void AdjMatrix::buildFromMatFile(const std::string& filePath) {
             continue;
         }
         matrix.emplace_back(parseLine(line));
+        nodeIndexMapping.insert(std::make_pair(nodeId++, matrix.size() - 1));
     }
 }
 
@@ -105,8 +116,8 @@ void AdjMatrix::buildFromGraphMLFile(const std::string& filePath) {
         throw std::runtime_error("Error opening file");
     }
 
-    std::regex nodeRegex(R"<node id=\"n([0 - 9]*)\"/>");
-    std::regex edgeRegex(R"<edge source=\"n([0 - 9]*)\" target=\"n([0-9]*)\"/>");
+    std::regex nodeRegex("<node id=\"n([0-9]*)\"/>");
+    std::regex edgeRegex("<edge source=\"n([0-9]*)\" target=\"n([0-9]*)\"\\/>");
 
     auto fileContent = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
 
@@ -114,7 +125,7 @@ void AdjMatrix::buildFromGraphMLFile(const std::string& filePath) {
     resizeMatrixToFitNodes(nodesCount);
 
     auto itr = fileContent.cbegin();
-    while (true)
+    while (itr != fileContent.cend())
     {
         auto [result, edge, nextItr] = findEdgeInFileContent(fileContent, edgeRegex, itr);
 
@@ -133,14 +144,14 @@ void AdjMatrix::buildFromGraphMLFile(const std::string& filePath) {
 
 AdjMatrix::AdjMatrix(std::string filePath) {
     std::filesystem::path path(filePath);
-    const auto& extension = path.extension();
-    assert(extension == "mat" or extension == "GRAPHML");
+    const auto& extension = path.extension().string();
+    assert(extension == ".mat" or extension == ".GRAPHML");
 
-    if (extension == "mat")
+    if (extension == ".mat")
     {
         buildFromMatFile(filePath);
     }
-    else if (extension == "GRAPHML")
+    else if (extension == ".GRAPHML")
     {
         buildFromGraphMLFile(filePath);
     }
@@ -159,15 +170,22 @@ AdjMatrix::AdjMatrix(const Graph& graph) {
     }
 }
 
-/*
-        Function that exports current graph into .GRAPHML file.
+uint32_t AdjMatrix::nodeDegree(NodeId node) const {
+    if (node >= matrix.size())
+    {
+        return 0;
+    }
 
-        Params:
-        file_path - destination file path
+    uint32_t degree = 0;
+    std::ranges::for_each(matrix[node], [&degree](auto elem) {
+        if (elem != 0)
+        {
+            degree++;
+        }
+    });
+    return degree;
+}
 
-        Return:
-        None
-*/
 /*void AdjMatrix::saveGraphML(std::string file_path) {
     // opening output file
     std::ofstream file(file_path);
@@ -276,9 +294,9 @@ void AdjMatrix::addNodes(uint32_t nodesCount) {
 }
 
 void AdjMatrix::removeEdge(const EdgeInfo& edge) {
-    if (edge.source < this->nodes_amount && edge.destination < this->nodes_amount)
+    if (edge.source < matrix.size() and edge.destination < matrix.size())
     {
-        this->matrix[edge.source][edge.destination] = 0;
+        matrix[edge.source][edge.destination] = 0;
     }
 }
 
@@ -291,8 +309,8 @@ void AdjMatrix::removeNode(NodeId node) {
     auto nodeIndex = nodeIndexMapping[node];
 
     constexpr uint32_t offset = 1;
-    std::ranges::subrange(nodeIndexMapping.begin() + node + offset, nodeIndexMapping.end())
-        | std::ranges::transform([nodeIndex](auto elem) {
+    std::ranges::subrange(std::next(nodeIndexMapping.begin(), node + offset), nodeIndexMapping.end())
+        | std::views::transform([nodeIndex](auto elem) {
               return std::pair(elem.first, elem.second - 1);
           });
 
@@ -333,7 +351,7 @@ std::string AdjMatrix::show() const {
 }*/
 
 uint32_t AdjMatrix::nodesAmount() const {
-    return this->nodes_amount;
+    return matrix.size();
 }
 
 EdgeInfo AdjMatrix::findEdge(const EdgeInfo& edge) const {
@@ -349,11 +367,15 @@ EdgeInfo AdjMatrix::findEdge(const EdgeInfo& edge) const {
         return {edge.source, edge.destination, std::nullopt};
     }
     const auto& weight = matrix[sourceIterator->second][destinationIterator->second];
-    return {edge.source, edge.destination, weight == 0 ? std::nullopt : weight};
+    return {edge.source, edge.destination, weight == 0 ? std::nullopt : std::make_optional(weight)};
 }
 
 std::vector<NodeId> AdjMatrix::getNodeIds() const {
-    return nodeIndexMapping | std::views::keys;
+    std::vector<NodeId> nodeIds;
+    nodeIndexMapping | std::views::keys | std::views::transform([&nodeIds](auto elem) {
+        return nodeIds.emplace_back(elem);
+    });
+    return nodeIds;
 }
 
 std::vector<NodeId> AdjMatrix::getNeighborsOf(NodeId node) const {

@@ -105,8 +105,8 @@ void AdjMatrix::buildFromGraphMLFile(const std::string& filePath) {
         throw std::runtime_error("Error opening file");
     }
 
-    std::regex nodeRegex("<node id=\"n([0-9]*)\"/>");
-    std::regex edgeRegex("<edge source=\"n([0-9]*)\" target=\"n([0-9]*)\"/>");
+    std::regex nodeRegex(R"<node id=\"n([0 - 9]*)\"/>");
+    std::regex edgeRegex(R"<edge source=\"n([0 - 9]*)\" target=\"n([0-9]*)\"/>");
 
     auto fileContent = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
 
@@ -134,13 +134,13 @@ void AdjMatrix::buildFromGraphMLFile(const std::string& filePath) {
 AdjMatrix::AdjMatrix(std::string filePath) {
     std::filesystem::path path(filePath);
     const auto& extension = path.extension();
-    assert(extension == ".mat" or extension == ".GRAPHML");
+    assert(extension == "mat" or extension == "GRAPHML");
 
-    if (extension == ".mat")
+    if (extension == "mat")
     {
         buildFromMatFile(filePath);
     }
-    else if (extension == ".GRAPHML")
+    else if (extension == "GRAPHML")
     {
         buildFromGraphMLFile(filePath);
     }
@@ -305,15 +305,11 @@ void AdjMatrix::removeNode(NodeId node) {
 
 std::string AdjMatrix::show() const {
     std::stringstream out;
-
-    out << "Name = " << this->graph_name;
-    out << "\nType = " << this->graph_type;
-    out << "\nNodes amount = " << this->nodes_amount << "\n";
-
+    out << "\nNodes amount = " << matrix.size() << "\n";
     out << "[\n";
-    for (uint32_t i = 0; i < this->nodes_amount; i++)
+    for (uint32_t i = 0; i < matrix.size(); i++)
     {
-        for (uint32_t j = 0; j < this->nodes_amount; j++)
+        for (uint32_t j = 0; j < matrix[i].size(); j++)
         {
             out << this->matrix[i][j] << ", ";
         }
@@ -323,7 +319,7 @@ std::string AdjMatrix::show() const {
     return out.str();
 }
 
-void AdjMatrix::print_throughtput() {
+/*void AdjMatrix::print_throughtput() {
     std::cout << "[" << std::endl;
     for (uint32_t i = 0; i < this->nodes_amount; i++)
     {
@@ -334,38 +330,37 @@ void AdjMatrix::print_throughtput() {
         std::cout << std::endl;
     }
     std::cout << "]" << std::endl;
-}
+}*/
 
 uint32_t AdjMatrix::nodesAmount() const {
     return this->nodes_amount;
 }
 
 EdgeInfo AdjMatrix::findEdge(const EdgeInfo& edge) const {
-    if (edge.source > this->nodes_amount or edge.destination > this->nodes_amount)
+    auto sourceIterator = std::ranges::find_if(nodeIndexMapping, [edge](const auto& elem) {
+        return elem.first == edge.source;
+    });
+    auto destinationIterator = std::ranges::find_if(nodeIndexMapping, [edge](const auto& elem) {
+        return elem.first == edge.destination;
+    });
+
+    if (sourceIterator == nodeIndexMapping.end() or destinationIterator == nodeIndexMapping.end())
     {
         return {edge.source, edge.destination, std::nullopt};
     }
-    if (matrix[edge.source - 1][edge.destination - 1] == 0)
-    {
-        return {edge.source, edge.destination, std::nullopt};
-    }
-    else
-    {
-        return {edge.source, edge.destination, matrix[edge.source - 1][edge.destination - 1]};
-    }
+    const auto& weight = matrix[sourceIterator->second][destinationIterator->second];
+    return {edge.source, edge.destination, weight == 0 ? std::nullopt : weight};
 }
 
 std::vector<NodeId> AdjMatrix::getNodeIds() const {
-    std::vector<NodeId> ids(this->nodes_amount);
-    std::iota(ids.begin(), ids.end(), 1);
-    return ids;
+    return nodeIndexMapping | std::views::keys;
 }
 
 std::vector<NodeId> AdjMatrix::getNeighborsOf(NodeId node) const {
     std::vector<NodeId> neighbors;
-    for (uint32_t i = 0; i < this->nodes_amount; i++)
+    for (uint32_t i = 0; i < matrix[node].size(); i++)
     {
-        if (this->matrix[node - 1][i] != 0)
+        if (matrix[node][i] != 0)
         {
             neighbors.push_back(i);
         }
@@ -373,7 +368,7 @@ std::vector<NodeId> AdjMatrix::getNeighborsOf(NodeId node) const {
     return neighbors;
 }
 
-void AdjMatrix::change_to_line_graph() {
+/*void AdjMatrix::change_to_line_graph() {
     // gather all the edges from the adjacency matrix of initial graph
     std::vector<coord> edges;
     for (uint32_t i = 0; i < this->nodes_amount; i++)
@@ -447,9 +442,9 @@ void AdjMatrix::change_to_line_graph() {
     // and save new size of the graph
     this->matrix = m;
     this->nodes_amount = size;
-}
+}*/
 
-int32_t AdjMatrix::belman_ford(uint32_t vertex, bool log) {
+/*int32_t AdjMatrix::belman_ford(uint32_t vertex, bool log) {
     // set default values for the distances and previous vertices
     for (uint32_t i = 0; i < this->nodes_amount; i++)
     {
@@ -524,9 +519,9 @@ int32_t AdjMatrix::belman_ford(uint32_t vertex, bool log) {
         std::cout << "Duration: " << diff.count() << " us" << std::endl;
     }
     return diff.count();
-}
+}*/
 
-int32_t AdjMatrix::throughtput_belman_ford(uint32_t searched_throughtput, uint32_t vertex, bool log) {
+/*int32_t AdjMatrix::throughtput_belman_ford(uint32_t searched_throughtput, uint32_t vertex, bool log) {
     // set default values for the distances and previous vertices
     for (uint32_t i = 0; i < this->nodes_amount; i++)
     {
@@ -613,20 +608,9 @@ int32_t AdjMatrix::throughtput_belman_ford(uint32_t searched_throughtput, uint32
     }
 
     return diff.count();
-}
+}*/
 
-/*
-        Destructor freeing the memory allocation
-*/
-AdjMatrix::~AdjMatrix() {
-    for (uint32_t i = 0; i < this->nodes_amount; i++)
-    {
-        delete[] this->matrix[i];
-    }
-    delete[] this->matrix;
-}
-
-uint32_t AdjMatrix::find_index(std::vector<coord>& edges, uint32_t x, uint32_t y) {
+/*uint32_t AdjMatrix::find_index(std::vector<coord>& edges, uint32_t x, uint32_t y) {
     uint32_t size = static_cast<uint32_t>(edges.size());
 
     uint32_t ret = 0xFFFFFFFF;
@@ -641,10 +625,10 @@ uint32_t AdjMatrix::find_index(std::vector<coord>& edges, uint32_t x, uint32_t y
         }
     }
     return ret;
-}
+}*/
 } // namespace Graphs
 
-void Data::generate_weighted_graph(std::string file_path, uint32_t nodes_amount) {
+/*void Data::generate_weighted_graph(std::string file_path, uint32_t nodes_amount) {
     std::ofstream file(file_path);
 
     srand(time(NULL));
@@ -716,4 +700,4 @@ void Data::generate_throughtput(std::string input_file_path, std::string output_
     }
     o_file.close();
     i_file.close();
-}
+}*/

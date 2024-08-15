@@ -1,16 +1,18 @@
 // this
 #include <algorithm>
+#include <cassert>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <Graphs/AdjList.hpp>
 #include <Graphs/AdjMatrix.hpp>
 #include <iostream>
+#include <regex>
 #include <sstream>
-#include <time.h>
 
 namespace
 {
-std::vector<Data::coord> extractPixelMapNodes(const Data::Pixel_map& map) {
+/*std::vector<Data::coord> extractPixelMapNodes(const Data::Pixel_map& map) {
     std::vector<Data::coord> pixelMapNodes;
 
     for (uint32_t i = 0; i < map.get_rows(); i++)
@@ -25,7 +27,7 @@ std::vector<Data::coord> extractPixelMapNodes(const Data::Pixel_map& map) {
     }
 
     return pixelMapNodes;
-}
+}*/
 
 void insertNeighborIfApplicable(auto checker, auto inserter, Data::coord coordsToInsert) {
     if (checker()) // doesnt underflow
@@ -37,63 +39,46 @@ void insertNeighborIfApplicable(auto checker, auto inserter, Data::coord coordsT
 
 namespace Graphs
 {
-AdjList::AdjList(std::string file_path) {
-    std::fstream file;
-    file.open(file_path, std::ios::in);
+void AdjList::buildFromLstFile(const std::string& filePath) {
+    std::ifstream file(filePath);
 
-    if (file.good())
+    if (not file.good())
     {
-        std::string line;
-        size_t pos = 0;
-
-        {
-            auto amount = 0u;
-            // search through file to calculate the vertices count
-            while (!file.eof())
-            {
-                std::getline(file, line);
-                if (line != "")
-                {
-                    amount++;
-                }
-            }
-            nodes.resize(amount);
-        }
-
-        // reopen the file to reset its cursor position
-        // (seekg was not working here for undetermined reason)
-        file.close();
-        file.open(file_path, std::ios::in);
-
-        // search through the file and load the whole list
-        for (uint32_t i = 0; i < nodes.size(); i++)
-        {
-            std::getline(file, line);
-            // protection from empty lines in the file
-            if (line != "")
-            {
-                // insert the vertex to the vertex map
-                this->nodeMap.insert(std::pair<uint32_t, uint32_t>(i + 1, i));
-                pos = line.find(' ');
-                auto& node = nodes[i];
-
-                // search for spaces separating the neighbours
-                while (pos != std::string::npos)
-                {
-                    // cut off the unnecessary part of the line
-                    line = line.substr(pos + 1);
-                    node.emplace_back(std::stoi(line));
-                    pos = line.find(' ');
-                }
-            }
-        }
+        throw std::runtime_error("Error opening file");
     }
-    // if file was not found
-    else
+
+    auto fileContent = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+
+    std::regex nodeRegex("[0-9]*: ([]+))");
+    std::smatch nodeMatch;
+
+    auto parseLine = [](const std::string& line) {
+        AdjList::Neighbors neighbors;
+        std::stringstream stream(line);
+        std::string value;
+
+        while (std::getline(stream, value, ' '))
+        {
+            neighbors.emplace_back(static_cast<uint32_t>(std::stoi(value)));
+        }
+        return neighbors;
+    };
+
+    using regItr = std::sregex_iterator;
+
+    for (auto itr = regItr(fileContent.begin(), fileContent.end(), nodeRegex); itr != regItr(); ++itr)
     {
-        std::cout << "File not found" << std::endl;
+        std::smatch match = *itr;
+        nodes.emplace_back(parseLine(match.str()));
     }
-    file.close();
+}
+
+AdjList::AdjList(std::string filePath) {
+    auto extension = std::filesystem::path(filePath).extension().string();
+
+    assert(extension == "lst");
+
+    buildFromLstFile(filePath);
 }
 
 AdjList::AdjList(const Graph& graph) {
@@ -115,7 +100,7 @@ AdjList::AdjList(const Graph& graph) {
     }
 }
 
-AdjList::AdjList(const Data::Pixel_map& map) {
+/*AdjList::AdjList(const Data::Pixel_map& map) {
     auto pixelMapNodes = extractPixelMapNodes(map);
     nodes.resize(pixelMapNodes.size());
 
@@ -148,7 +133,7 @@ AdjList::AdjList(const Data::Pixel_map& map) {
 
         std::ranges::sort(node);
     }
-}
+}*/
 
 std::string AdjList::show() const {
     std::stringstream outStream;
@@ -385,7 +370,7 @@ void AdjList::setEdge(const EdgeInfo& edge) {
     }
 
     addNeighborAndSortRange(nodes[sourceNodeMapping->second], edge.destination);
-    addNeighborAndSortRange(nodes[destinationNodeMapping->second], edge.source);
+    // addNeighborAndSortRange(nodes[destinationNodeMapping->second], edge.source);
 }
 
 void AdjList::removeNeighborFromRange(Neighbors& range, NodeId tgtNeighbor) {
@@ -404,14 +389,16 @@ void AdjList::removeEdge(const EdgeInfo& edge) {
     }
 
     removeNeighborFromRange(nodes[sourceNodeMapping->second], edge.destination);
-    removeNeighborFromRange(nodes[destinationNodeMapping->second], edge.source);
 }
 
-void AdjList::addNode() {
+void AdjList::addNodes(uint32_t nodesAmount) {
     auto highestId = nodeMap.rbegin()->first;
 
-    nodes.emplace_back();
-    nodeMap.insert(std::pair<uint32_t, uint32_t>(highestId + 1, nodes.size() - 1));
+    for (uint32_t i = 1; i <= nodesAmount; i++)
+    {
+        nodeMap[highestId + i] = nodes.size() + i;
+    }
+    nodes.resize(nodes.size() + nodesAmount);
 }
 
 void AdjList::removeNode(NodeId node) {

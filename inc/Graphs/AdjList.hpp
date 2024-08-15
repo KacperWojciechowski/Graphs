@@ -13,7 +13,7 @@ class AdjList : public Graph
     AdjList(std::string);
 
     AdjList(const Graph&);
-    AdjList(const Data::Pixel_map&);
+    // AdjList(const Data::Pixel_map&);
 
     AdjList(AdjList&) = delete;
     AdjList(AdjList&&) = delete;
@@ -23,7 +23,7 @@ class AdjList : public Graph
     EdgeInfo findEdge(const EdgeInfo&) const override;
 
     void setEdge(const EdgeInfo&) override;
-    void addNode() override;
+    void addNodes(uint32_t) override;
     void removeNode(NodeId) override;
     void removeEdge(const EdgeInfo&) override;
 
@@ -37,8 +37,9 @@ class AdjList : public Graph
 
     using Neighbors = std::vector<uint32_t>;
 
-    void removeNeighborFromRange(Neighbors& range, NodeId tgtNeighbor);
-    void addNeighborAndSortRange(Neighbors& range, NodeId tgtNeighbor);
+    void buildFromLstFile(const std::string&);
+    void removeNeighborFromRange(Neighbors&, NodeId);
+    void addNeighborAndSortRange(Neighbors&, NodeId);
 
     std::vector<Neighbors> nodes;
     std::map<NodeId, uint32_t> nodeMap;

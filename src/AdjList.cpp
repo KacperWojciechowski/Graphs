@@ -404,14 +404,16 @@ void AdjList::removeEdge(const EdgeInfo& edge) {
     }
 
     removeNeighborFromRange(nodes[sourceNodeMapping->second], edge.destination);
-    removeNeighborFromRange(nodes[destinationNodeMapping->second], edge.source);
 }
 
-void AdjList::addNode() {
+void AdjList::addNodes(uint32_t nodesAmount) {
     auto highestId = nodeMap.rbegin()->first;
 
-    nodes.emplace_back();
-    nodeMap.insert(std::pair<uint32_t, uint32_t>(highestId + 1, nodes.size() - 1));
+    for (uint32_t i = 1; i <= nodesAmount; i++)
+    {
+        nodeMap[highestId + i] = nodes.size() + i;
+    }
+    nodes.resize(nodes.size() + nodesAmount);
 }
 
 void AdjList::removeNode(NodeId node) {

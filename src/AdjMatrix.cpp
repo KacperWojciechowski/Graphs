@@ -3,219 +3,156 @@
 #include <Graphs/AdjMatrix.hpp>
 
 // libraries
-#include <chrono>
-#include <cmath>
-#include <cstring>
+#include <algoithm>
+#include <cassert>
+#include <filesystem>
 #include <fstream>
-#include <iostream>
-#include <numeric>
+#include <regex>
 #include <sstream>
 #include <string>
 
 namespace Graphs
 {
-AdjMatrix::AdjMatrix(std::string file_path, std::string throughtput_file_path, std::string name, std::string type)
-    : matrix(nullptr)
-    , nodes_amount(0)
-    , graph_name(name)
-    , graph_type(type)
-    , distance(nullptr)
-    , prev_node(nullptr)
-    , throughtput(nullptr) {
-    std::ifstream file(file_path);
-
-    if (file.good())
+namespace
+{
+uint32_t findNodesCount(const std::string& fileContent, const std::regex& nodeRegex) {
+    std::smatch match;
+    uint32_t nodesCount = 0;
+    auto it = fileContent.cbegin();
+    while (std::regex_search(it, fileContent.cend(), match, nodeRegex))
     {
-        // if opened file extension is .mat
-        if (file_path.find(".mat", 0) != std::string::npos)
-        {
-            std::string line;
-            uint32_t vertexes = 0;
-
-            // read a line from file
-            std::getline(file, line);
-
-            // reset offset and current position
-            std::size_t offset = 0;
-            std::size_t pos = 0;
-
-            // count the amount of vertices
-            while (true)
-            {
-                // search for next space character from the offset position
-                pos = line.find(' ', offset);
-
-                // if such character was found, then it means the line contains next
-                // vertex
-                if (pos != std::string::npos)
-                {
-                    vertexes++;
-                    offset = pos + 1;
-                }
-                // if space was not found, this means there is only one more vertex left
-                else
-                {
-                    vertexes++;
-                    break;
-                }
-            }
-
-            // save the vertices amount and create adjacency matrix
-            this->nodes_amount = vertexes;
-            this->matrix = new uint32_t*[this->nodes_amount];
-            for (uint32_t i = 0; i < this->nodes_amount; i++)
-            {
-                this->matrix[i] = new uint32_t[this->nodes_amount];
-            }
-
-            // create arrays for the SSP functions
-            this->distance = new uint32_t[this->nodes_amount];
-            this->prev_node = new std::vector<uint32_t>[this->nodes_amount];
-
-            // move to the beginnig of the file for matrix load
-            file.seekg(std::ios_base::beg);
-
-            // read the matrix
-            uint32_t temp;
-            for (uint32_t i = 0; i < this->nodes_amount; i++)
-            {
-                for (uint32_t j = 0; j < this->nodes_amount; j++)
-                {
-                    file >> temp;
-                    this->matrix[i][j] = temp;
-                }
-            }
-        }
-        // file is in GraphML format
-        else if (file_path.find(".GRAPHML") != std::string::npos)
-        {
-            std::string line;
-
-            // search for graph ID
-            std::getline(file, line);
-            std::size_t pos = line.find("graph id=");
-
-            // skip any unneeded header lines
-            while (pos == std::string::npos)
-            {
-                std::getline(file, line);
-                pos = line.find("graph id=");
-            }
-
-            // search for edge type
-            std::size_t pos2 = line.find("edgedefault=");
-
-            // save type and ID data
-            this->graph_name = line.substr(pos + 10, pos2 - 2 - (pos + 10));
-            pos = line.find("\">");
-            this->graph_type = line.substr(pos2 + 13, pos - (pos2 + 13));
-
-            // search for node marker
-            std::getline(file, line);
-            pos = line.find("node");
-
-            // count the amount of nodes in the file
-            while (pos != std::string::npos)
-            {
-                this->nodes_amount++;
-                std::getline(file, line);
-                pos = line.find("node");
-            }
-
-            // create adjacency matrix and fill it with zeros
-            this->matrix = new uint32_t*[this->nodes_amount];
-            for (uint32_t i = 0; i < this->nodes_amount; i++)
-            {
-                this->matrix[i] = new uint32_t[this->nodes_amount];
-                for (uint32_t j = 0; j < this->nodes_amount; j++)
-                {
-                    this->matrix[i][j] = 0;
-                }
-            }
-
-            // search for edge marker
-            pos = line.find("edge");
-
-            std::string id1;
-            std::string id2;
-
-            // extract edge info
-            while (pos != std::string::npos)
-            {
-                // find and extract the source and target nodes IDs
-                pos = line.find("source=");
-                pos2 = line.find("\" target=");
-
-                id1 = line.substr(pos + 9, pos2 - (pos + 9));
-                pos = line.find("\"/>");
-                id2 = line.substr(pos2 + 11, pos - (pos2 + 11));
-
-                // input the connection into matrix
-                this->matrix[atoi(id1.c_str())][atoi(id2.c_str())] = 1;
-
-                // search for next edge marker
-                std::getline(file, line);
-                pos = line.find("edge");
-            }
-        }
-        // if given file extension is unsupported
-        else
-        {
-            std::cout << "Unsupported file format" << std::endl;
-        }
-
-        // open and read the throughtput file format
-        std::ifstream thr_file(throughtput_file_path);
-        uint32_t value;
-
-        // open the throughtput matrix file
-        if (thr_file.good())
-        {
-            // create sufficiently big matrix
-            this->throughtput = new uint32_t*[this->nodes_amount];
-            for (uint32_t i = 0; i < this->nodes_amount; i++)
-            {
-                this->throughtput[i] = new uint32_t[this->nodes_amount];
-
-                // load the row
-                for (uint32_t j = 0; j < this->nodes_amount; j++)
-                {
-                    thr_file >> value;
-                    this->throughtput[i][j] = value;
-                }
-            }
-        }
-        thr_file.close();
+        nodesCount++;
+        it = match.suffix().first;
     }
-    // if file is missing
-    else
-    {
-        std::cout << "File missing" << std::endl;
-    }
-    file.close();
+    return nodesCount;
 }
 
-/*
-        Create a matrix object based on Graph::List object.
-
-        Params:
-        list - reference to the List object from which to create the
-                   matrix
-
-        Return:
-        None
-*/
-AdjMatrix::AdjMatrix(const Graph& graph)
-    : throughtput(nullptr) {
-    nodes_amount = graph.nodesAmount();
-    matrix = new uint32_t*[nodes_amount];
-    distance = new uint32_t[nodes_amount];
-    prev_node = new std::vector<uint32_t>[nodes_amount];
-
-    for (uint32_t i = 0; i < nodes_amount; i++)
+auto findEdgeInFileContent(const std::string& fileContent,
+                           const std::regex& edgeRegex,
+                           std::string::const_iterator itr) {
+    std::smatch match;
+    if (std::regex_search(itr, fileContent.cend(), match, edgeRegex))
     {
-        matrix[i] = new uint32_t[nodes_amount];
-        for (uint32_t j = 0; j < nodes_amount; j++)
+        constexpr uint32_t defaultWeight = 1;
+        auto source = static_cast<uint32_t>(std::stoi(match[1].str()));
+        auto target = static_cast<uint32_t>(std::stoi(match[2].str()));
+        constexpr bool success = true;
+        EdgeInfo edge = {source, target, defaultWeight};
+        return std::tie(success, edge, match.suffix().first);
+    }
+    constexpr bool fail = false;
+    EdgeInfo noEdge = {};
+    return std::tie(fail, noEdge, itr);
+}
+} // namespace
+
+void AdjMatrix::resizeMatrixToFitNodes(uint32_t nodesCount) {
+    assert(nodesCount > matrix.size());
+
+    auto nodesAmountDiff = nodesCount - matrix.size();
+    auto maxNodeId = nodeIndexMapping.rbegin()->first;
+
+    for (uint32_t i = 0; i < nodesAmountDiff; i++)
+    {
+        nodeIndexMapping[maxNodeId->first + i] = matrix.size() + i;
+    }
+
+    matrix.resize(nodesCount);
+    for (auto& row : matrix)
+    {
+        row.resize(nodesCount);
+    }
+}
+
+void AdjMatrix::buildFromMatFile(const std::string& filePath) {
+    std::ifstream file(filePath);
+    if (not file.good())
+    {
+        throw std::runtime_error("Error opening file");
+    }
+
+    auto parseLine = [](const auto& line) {
+        std::vector<Row> row;
+        std::stringstream stream(line);
+        std::string value;
+
+        while (std::getline(stream, value, ' '))
+        {
+            row.emplace_back(std::stoi(value));
+        }
+
+        return row;
+    };
+
+    while (not file.eof())
+    {
+        std::string line;
+        std::getline(file, line);
+
+        if (line.empty())
+        {
+            continue;
+        }
+        matrix.emplace_back(parseLine(line));
+    }
+}
+
+void AdjMatrix::buildFromGraphMLFile(const std::string& filePath) {
+    std::ifstream file(filePath);
+
+    if (not file.good())
+    {
+        throw std::runtime_error("Error opening file");
+    }
+
+    std::regex nodeRegex("<node id=\"n([0-9]*)\"/>");
+    std::regex edgeRegex("<edge source=\"n([0-9]*)\" target=\"n([0-9]*)\"/>");
+
+    auto fileContent = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+
+    auto nodesCount = findNodesCount(fileContent, nodeRegex);
+    resizeMatrixToFitNodes(nodesCount);
+
+    auto itr = fileContent.cbegin();
+    while (true)
+    {
+        auto [result, edge, nextItr] = findEdgeInFileContent(fileContent, edgeRegex, itr);
+
+        if (not result)
+        {
+            break;
+        }
+
+        if (edge.weight.has_value())
+        {
+            matrix[edge.source][edge.destination] = edge.weight.value();
+        }
+        itr = nextItr;
+    }
+}
+
+AdjMatrix::AdjMatrix(std::string filePath) {
+    std::filesystem::path path(filePath);
+    const auto& extension = path.extension();
+    assert(extension == ".mat" or extension == ".GRAPHML");
+
+    if (extension == ".mat")
+    {
+        buildFromMatFile(filePath);
+    }
+    else if (extension == ".GRAPHML")
+    {
+        buildFromGraphMLFile(filePath);
+    }
+}
+
+AdjMatrix::AdjMatrix(const Graph& graph) {
+    auto nodesAmount = graph.nodesAmount();
+    resizeMatrixToFitNodes(nodesAmount);
+
+    for (uint32_t i = 0; i < matrix.size(); i++)
+    {
+        for (uint32_t j = 0; j < matrix[i].size(); j++)
         {
             matrix[i][j] = graph.findEdge({i, j}).weight.value_or(0);
         }
@@ -231,7 +168,7 @@ AdjMatrix::AdjMatrix(const Graph& graph)
         Return:
         None
 */
-void AdjMatrix::saveGraphML(std::string file_path) {
+/*void AdjMatrix::saveGraphML(std::string file_path) {
     // opening output file
     std::ofstream file(file_path);
 
@@ -276,7 +213,7 @@ void AdjMatrix::saveGraphML(std::string file_path) {
     file << " </graph>\n";
     file << "</graphml>";
     file.close();
-}
+}*/
 
 /*	Function calculates the Estrada index for the graph
         given the equation:
@@ -289,7 +226,7 @@ void AdjMatrix::saveGraphML(std::string file_path) {
         Return:
         value of Estrada index
 */
-float AdjMatrix::estrada_index() {
+/*float AdjMatrix::estrada_index() {
     uint32_t* degrees = new uint32_t[this->nodes_amount];
 
     // calculating degrees
@@ -325,160 +262,44 @@ float AdjMatrix::estrada_index() {
 
     // return Estrada index value
     return index;
-}
+}*/
 
-/*
-        Add an edge between two given vertices. Function validates if
-        given vertices IDs are in range.
-
-        Params:
-        source		- source vertice
-        destination - destination vertice
-
-        Return:
-        None
-*/
 void AdjMatrix::setEdge(const EdgeInfo& edge) {
-    if (edge.source < this->nodes_amount && edge.destination < this->nodes_amount)
+    if (edge.source < matrix.size() && edge.destination < matrix.size())
     {
         this->matrix[edge.source][edge.destination] = 1;
-        if (this->graph_type == "undirected")
-        {
-            this->matrix[edge.destination][edge.source] = 1;
-        }
     }
 }
 
-/*
-        Add a vertex to the graph. Due to creating the matrix to the specific
-        size, adding a vertex forces reallocation of the structure. Added vertex
-        is initially isolated.
-
-        Params:
-        None
-
-        Return:
-        None
-*/
-void AdjMatrix::addNode() {
-    // increase the amount of vertices in the temporary variable
-    uint32_t amount = this->nodes_amount + 1;
-
-    // create sufficiently big matrix
-    uint32_t** m = new uint32_t*[amount];
-
-    for (uint32_t i = 0; i < amount; i++)
-    {
-        m[i] = new uint32_t[amount];
-    }
-
-    // move and fit the current matrix into the new one
-    for (uint32_t i = 0; i < this->nodes_amount; i++)
-    {
-        for (uint32_t j = 0; j < this->nodes_amount; j++)
-        {
-            std::memcpy(m[i], this->matrix[i], this->nodes_amount * sizeof(uint32_t));
-        }
-        // free memory allocated by the previous matrix row
-        delete[] this->matrix[i];
-    }
-
-    // fill last column and row with zeros
-    for (uint32_t i = 0; i < amount; i++)
-    {
-        m[i][amount - 1] = 0;
-        if (i == amount - 1)
-        {
-            for (uint32_t j = 0; j < amount - 1; j++)
-            {
-                m[i][j] = 0;
-            }
-        }
-    }
-
-    // free the remains of unused allocated memory
-    delete[] this->matrix;
-
-    // increase the nodes amount and overwrite the address of previous matrix
-    this->nodes_amount++;
-    this->matrix = m;
+void AdjMatrix::addNodes(uint32_t nodesCount) {
+    resizeMatrixToFitNodes(matrix.size() + nodesCount);
 }
 
-/*
-        Removing the edge between two nodes. Function verifies is the vertices
-        indexes are within range.
-
-        Params:
-        source		- source vertex of the edge
-        destination	- destination vertex of the edge
-
-*/
 void AdjMatrix::removeEdge(const EdgeInfo& edge) {
     if (edge.source < this->nodes_amount && edge.destination < this->nodes_amount)
     {
         this->matrix[edge.source][edge.destination] = 0;
-        if (this->graph_type == "undirected")
-        {
-            this->matrix[edge.destination][edge.source] = 0;
-        }
     }
 }
 
-/*
-        Removing the node along with all its edges. The function
-        validates if the vertex id is within range. Removal of a vertex
-        causes renumeration of subsequent verticies and reallocating
-        the matrix.
-
-        Params:
-        node_id - id of the node to remove
-
-        Return:
-        None
-*/
 void AdjMatrix::removeNode(NodeId node) {
-    if (node < this->nodes_amount)
+    if (node >= matrix.size())
     {
-        // save reduced nodes amount in temporary variable
-        uint32_t amount = this->nodes_amount - 1;
+        return;
+    }
 
-        // prepare shrunken matrix
-        uint32_t** m = new uint32_t*[amount];
-        for (uint32_t i = 0; i < amount; i++)
-        {
-            m[i] = new uint32_t[amount];
-        }
+    auto nodeIndex = nodeIndexMapping[node];
 
-        uint32_t row = 0;
-        uint32_t col = 0;
+    constexpr uint32_t offset = 1;
+    std::ranges::subrange(nodeIndexMapping.begin() + node + offset, nodeIndexMapping.end())
+        | std::ranges::transform([nodeIndex](auto elem) {
+              return std::pair(elem.first, elem.second - 1);
+          });
 
-        // rewrite the values from old matrix to the new one
-        // while skipping the column and row of deleted vertex
-        for (uint32_t i = 0; i < this->nodes_amount; i++)
-        {
-            if (i != node)
-            {
-                for (uint32_t j = 0; j < this->nodes_amount; j++)
-                {
-                    if (j != node)
-                    {
-                        m[row][col] = this->matrix[i][j];
-                        col++;
-                    }
-                }
-                col = 0;
-                row++;
-            }
-            // free already moved row
-            delete[] this->matrix[i];
-        }
-        // free the rest of the matrix
-        delete[] this->matrix;
-
-        // overwrite the pointer with the addres of new matrix
-        // and save new vertices count
-        this->matrix = m;
-        this->nodes_amount = amount;
+    matrix.erase(matrix.begin() + nodeIndex);
+    for (auto& row : matrix)
+    {
+        row.erase(row.begin() + nodeIndex);
     }
 }
 

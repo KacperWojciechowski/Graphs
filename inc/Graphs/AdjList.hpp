@@ -23,7 +23,7 @@ class AdjList : public Graph
     EdgeInfo findEdge(const EdgeInfo&) const override;
 
     void setEdge(const EdgeInfo&) override;
-    void addNode() override;
+    void addNodes(uint32_t) override;
     void removeNode(NodeId) override;
     void removeEdge(const EdgeInfo&) override;
 

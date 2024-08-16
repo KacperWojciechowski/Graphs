@@ -370,7 +370,7 @@ void AdjList::setEdge(const EdgeInfo& edge) {
     }
 
     addNeighborAndSortRange(nodes[sourceNodeMapping->second], edge.destination);
-    // addNeighborAndSortRange(nodes[destinationNodeMapping->second], edge.source);
+    // TODO: addNeighborAndSortRange(nodes[destinationNodeMapping->second], edge.source);
 }
 
 void AdjList::removeNeighborFromRange(Neighbors& range, NodeId tgtNeighbor) {

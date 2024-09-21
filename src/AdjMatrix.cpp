@@ -16,7 +16,8 @@ namespace Graphs
 {
 namespace
 {
-uint32_t findNodesCount(const std::string& fileContent, const std::regex& nodeRegex) {
+uint32_t findNodesCount(const std::string& fileContent, const std::regex& nodeRegex)
+{
     std::smatch match;
     uint32_t nodesCount = 0;
     auto it = fileContent.cbegin();
@@ -37,7 +38,8 @@ struct EdgeParsingResult
 
 EdgeParsingResult findEdgeInFileContent(const std::string& fileContent,
                                         const std::regex& edgeRegex,
-                                        const std::string::const_iterator itr) {
+                                        const std::string::const_iterator itr)
+{
     std::smatch match;
     if (std::regex_search(itr, fileContent.cend(), match, edgeRegex))
     {
@@ -54,7 +56,8 @@ EdgeParsingResult findEdgeInFileContent(const std::string& fileContent,
 }
 } // namespace
 
-void AdjMatrix::resizeMatrixToFitNodes(uint32_t nodesCount) {
+void AdjMatrix::resizeMatrixToFitNodes(uint32_t nodesCount)
+{
     assert(nodesCount > matrix.size());
 
     auto nodesAmountDiff = nodesCount - matrix.size();
@@ -157,7 +160,8 @@ AdjMatrix::AdjMatrix(std::string filePath) {
     }
 }*/
 
-AdjMatrix::AdjMatrix(const Graph& graph) {
+AdjMatrix::AdjMatrix(const Graph& graph)
+{
     auto nodesAmount = graph.nodesAmount();
     resizeMatrixToFitNodes(nodesAmount);
 
@@ -170,7 +174,8 @@ AdjMatrix::AdjMatrix(const Graph& graph) {
     }
 }
 
-uint32_t AdjMatrix::nodeDegree(NodeId node) const {
+uint32_t AdjMatrix::nodeDegree(NodeId node) const
+{
     if (node >= matrix.size())
     {
         return 0;
@@ -282,7 +287,8 @@ uint32_t AdjMatrix::nodeDegree(NodeId node) const {
     return index;
 }*/
 
-void AdjMatrix::setEdge(const EdgeInfo& edge) {
+void AdjMatrix::setEdge(const EdgeInfo& edge)
+{
     if (edge.source < matrix.size() && edge.destination < matrix.size())
     {
         if (edge.weight.has_value())
@@ -296,18 +302,21 @@ void AdjMatrix::setEdge(const EdgeInfo& edge) {
     }
 }
 
-void AdjMatrix::addNodes(uint32_t nodesCount) {
+void AdjMatrix::addNodes(uint32_t nodesCount)
+{
     resizeMatrixToFitNodes(matrix.size() + nodesCount);
 }
 
-void AdjMatrix::removeEdge(const EdgeInfo& edge) {
+void AdjMatrix::removeEdge(const EdgeInfo& edge)
+{
     if (edge.source < matrix.size() and edge.destination < matrix.size())
     {
         matrix[edge.source][edge.destination] = 0;
     }
 }
 
-void AdjMatrix::removeNode(NodeId node) {
+void AdjMatrix::removeNode(NodeId node)
+{
     if (node >= matrix.size())
     {
         return;
@@ -331,7 +340,8 @@ void AdjMatrix::removeNode(NodeId node) {
     nodeIndexMapping.erase(nodeIndex);
 }
 
-std::string AdjMatrix::show() const {
+std::string AdjMatrix::show() const
+{
     std::stringstream out;
     out << "\nNodes amount = " << matrix.size() << "\n";
     out << "[\n";
@@ -360,11 +370,13 @@ std::string AdjMatrix::show() const {
     std::cout << "]" << std::endl;
 }*/
 
-uint32_t AdjMatrix::nodesAmount() const {
+uint32_t AdjMatrix::nodesAmount() const
+{
     return matrix.size();
 }
 
-EdgeInfo AdjMatrix::findEdge(const EdgeInfo& edge) const {
+EdgeInfo AdjMatrix::findEdge(const EdgeInfo& edge) const
+{
     auto sourceIterator = std::ranges::find_if(nodeIndexMapping, [edge](const auto& elem) {
         return elem.first == edge.source;
     });
@@ -380,7 +392,8 @@ EdgeInfo AdjMatrix::findEdge(const EdgeInfo& edge) const {
     return {edge.source, edge.destination, weight == 0 ? std::nullopt : std::make_optional(weight)};
 }
 
-std::vector<NodeId> AdjMatrix::getNodeIds() const {
+std::vector<NodeId> AdjMatrix::getNodeIds() const
+{
     std::vector<NodeId> nodeIds;
     nodeIndexMapping | std::views::keys | std::views::transform([&nodeIds](auto elem) {
         return nodeIds.emplace_back(elem);
@@ -388,7 +401,8 @@ std::vector<NodeId> AdjMatrix::getNodeIds() const {
     return nodeIds;
 }
 
-std::vector<NodeId> AdjMatrix::getNeighborsOf(NodeId node) const {
+std::vector<NodeId> AdjMatrix::getNeighborsOf(NodeId node) const
+{
     std::vector<NodeId> neighbors;
     for (uint32_t i = 0; i < matrix[node].size(); i++)
     {

@@ -15,10 +15,11 @@ using ColoringResult = std::vector<ColoringInfo>;
 template <bool isVerbose>
 class GreedyColoring : public AlgorithmFunctor
 {
-    public:
+public:
     template <class T = void, Verbose<isVerbose, T> = nullptr>
     GreedyColoring(std::shared_ptr<ColoringResult> resultContainer, std::ostream& out = std::cout)
-        : result(std::move(resultContainer)), outStream{out} {
+        : result(std::move(resultContainer)), outStream{out}
+    {
         if (not result)
         {
             log("Coloring result cannot be null");
@@ -28,7 +29,8 @@ class GreedyColoring : public AlgorithmFunctor
 
     template <class T = void, NotVerbose<isVerbose, T> = nullptr>
     GreedyColoring(std::shared_ptr<ColoringResult> resultContainer)
-        : result(std::move(resultContainer)), outStream(std::cout /*unused*/) {
+        : result(std::move(resultContainer)), outStream(std::cout /*unused*/)
+    {
         if (not result)
         {
             throw std::invalid_argument{"Coloring result cannot be null"};
@@ -37,7 +39,7 @@ class GreedyColoring : public AlgorithmFunctor
 
     void operator()(const Graphs::Graph&) override;
 
-    private:
+private:
     template <class... Args, class T = void, Verbose<isVerbose, T> = nullptr>
     void log(std::string, Args...) const;
 

@@ -13,7 +13,7 @@ namespace Graph
 {
 class Benchmark
 {
-    public:
+public:
     enum class Mode
     {
         append = 0,

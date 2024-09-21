@@ -17,7 +17,8 @@
         Return:
         None
 */
-void Data::randomize_map(std::string file_path, uint32_t length, uint32_t width) {
+void Data::randomize_map(std::string file_path, uint32_t length, uint32_t width)
+{
     std::fstream file;
     file.open(file_path, std::ios::out);
     srand(static_cast<unsigned int>(time(NULL)));
@@ -57,7 +58,8 @@ void Data::randomize_map(std::string file_path, uint32_t length, uint32_t width)
         None
 */
 Data::Pixel_map::Pixel_map(std::string file_path)
-    : area_map(nullptr), rows(0), columns(0) {
+    : area_map(nullptr), rows(0), columns(0)
+{
     std::ifstream file(file_path, std::ios::in);
     if (file.good())
     {
@@ -136,7 +138,8 @@ Data::Pixel_map::Pixel_map(std::string file_path)
    field in the pixel map x		- X coordinate of the pixel in the
    matrix y		- Y coordinate of the pixel in the matrix
 */
-uint32_t Data::find_index(const std::vector<Data::coord>& nodes, uint32_t x, uint32_t y) {
+uint32_t Data::find_index(const std::vector<Data::coord>& nodes, uint32_t x, uint32_t y)
+{
     uint32_t size = static_cast<uint32_t>(nodes.size());
 
     // default value for the return
@@ -163,7 +166,8 @@ uint32_t Data::find_index(const std::vector<Data::coord>& nodes, uint32_t x, uin
         Return:
         None
 */
-void Data::Pixel_map::print_area_map() {
+void Data::Pixel_map::print_area_map()
+{
     std::cout << "[" << std::endl;
     for (uint32_t i = 0; i < this->rows; i++)
     {
@@ -189,7 +193,8 @@ void Data::Pixel_map::print_area_map() {
         Return:
         rows count
 */
-uint32_t Data::Pixel_map::get_rows() const {
+uint32_t Data::Pixel_map::get_rows() const
+{
     return this->rows;
 }
 
@@ -202,7 +207,8 @@ uint32_t Data::Pixel_map::get_rows() const {
         Return:
         columns count
 */
-uint32_t Data::Pixel_map::get_columns() const {
+uint32_t Data::Pixel_map::get_columns() const
+{
     return this->columns;
 }
 
@@ -216,14 +222,16 @@ uint32_t Data::Pixel_map::get_columns() const {
         Return:
         value of the pixel
 */
-uint32_t Data::Pixel_map::get_field(uint32_t x, uint32_t y) const {
+uint32_t Data::Pixel_map::get_field(uint32_t x, uint32_t y) const
+{
     return static_cast<uint32_t>(this->area_map[x][y]);
 }
 
 /*
         Destructor cleaning up the memory allocation
 */
-Data::Pixel_map::~Pixel_map() {
+Data::Pixel_map::~Pixel_map()
+{
     for (uint32_t i = 0; i < this->rows; i++)
     {
         delete[] this->area_map[i];

@@ -6,7 +6,8 @@
 #include <iostream>
 #include <ranges>
 
-int main() {
+int main()
+{
     /*auto result = std::make_shared<Graphs::Algorithm::ColoringResult>();
     auto algorithm = Graphs::Algorithm::GreedyColoring<false>{result};
 

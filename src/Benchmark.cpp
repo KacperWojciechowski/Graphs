@@ -7,7 +7,8 @@ void Graph::Benchmark::run(Graphs::Graph& graph,
                            uint16_t iterations,
                            Mode mode,
                            bool bench_log,
-                           bool alg_log) {
+                           bool alg_log)
+{
     std::fstream file;
     switch (mode)
     {
@@ -33,12 +34,9 @@ void Graph::Benchmark::run(Graphs::Graph& graph,
     file.close();
 }
 
-void Graph::Benchmark::color_benchmark(Graphs::Graph& graph,
-                                       std::string identifier,
-                                       uint16_t iterations,
-                                       std::fstream& file,
-                                       bool bench_log,
-                                       bool alg_log) {
+void Graph::Benchmark::color_benchmark(
+    Graphs::Graph& graph, std::string identifier, uint16_t iterations, std::fstream& file, bool bench_log, bool alg_log)
+{
     for (uint16_t i = 0; i < iterations; i++)
     {
         file << identifier << ";";

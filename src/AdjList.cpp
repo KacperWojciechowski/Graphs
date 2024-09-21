@@ -29,7 +29,8 @@ namespace
     return pixelMapNodes;
 }*/
 
-void insertNeighborIfApplicable(auto checker, auto inserter, Data::coord coordsToInsert) {
+void insertNeighborIfApplicable(auto checker, auto inserter, Data::coord coordsToInsert)
+{
     if (checker()) // doesnt underflow
     {
         inserter(coordsToInsert);
@@ -39,7 +40,8 @@ void insertNeighborIfApplicable(auto checker, auto inserter, Data::coord coordsT
 
 namespace Graphs
 {
-void AdjList::buildFromLstFile(const std::string& filePath) {
+void AdjList::buildFromLstFile(const std::string& filePath)
+{
     std::ifstream file(filePath);
 
     if (not file.good())
@@ -73,7 +75,8 @@ void AdjList::buildFromLstFile(const std::string& filePath) {
     }
 }
 
-AdjList::AdjList(std::string filePath) {
+AdjList::AdjList(std::string filePath)
+{
     auto extension = std::filesystem::path(filePath).extension().string();
 
     assert(extension == "lst");
@@ -81,7 +84,8 @@ AdjList::AdjList(std::string filePath) {
     buildFromLstFile(filePath);
 }
 
-AdjList::AdjList(const Graph& graph) {
+AdjList::AdjList(const Graph& graph)
+{
     nodes.resize(graph.nodesAmount());
 
     for (uint32_t i = 0; i < nodes.size(); i++)
@@ -135,7 +139,8 @@ AdjList::AdjList(const Graph& graph) {
     }
 }*/
 
-std::string AdjList::show() const {
+std::string AdjList::show() const
+{
     std::stringstream outStream;
     outStream << "Nodes amount = " << nodeMap.size() << "\n{\n";
 
@@ -152,15 +157,18 @@ std::string AdjList::show() const {
     return outStream.str();
 }
 
-uint32_t AdjList::nodesAmount() const {
+uint32_t AdjList::nodesAmount() const
+{
     return static_cast<uint32_t>(this->nodeMap.size());
 }
 
-uint32_t AdjList::nodeDegree(NodeId node) const {
+uint32_t AdjList::nodeDegree(NodeId node) const
+{
     return nodes[nodeMap.find(node)->second].size();
 }
 
-std::vector<NodeId> AdjList::getNeighborsOf(NodeId node) const {
+std::vector<NodeId> AdjList::getNeighborsOf(NodeId node) const
+{
     auto nodeMapping = nodeMap.find(node);
     if (nodeMapping == nodeMap.end())
     {
@@ -355,12 +363,14 @@ std::vector<NodeId> AdjList::getNeighborsOf(NodeId node) const {
 // algorytmu greedy i zwr�cenie ilo�ci u�ytych kolor�w
 // }
 
-void AdjList::addNeighborAndSortRange(Neighbors& range, NodeId tgtNeighbor) {
+void AdjList::addNeighborAndSortRange(Neighbors& range, NodeId tgtNeighbor)
+{
     range.emplace_back(tgtNeighbor);
     std::ranges::sort(range);
 }
 
-void AdjList::setEdge(const EdgeInfo& edge) {
+void AdjList::setEdge(const EdgeInfo& edge)
+{
     auto sourceNodeMapping = nodeMap.find(edge.source);
     auto destinationNodeMapping = nodeMap.find(edge.destination);
 
@@ -373,13 +383,15 @@ void AdjList::setEdge(const EdgeInfo& edge) {
     // TODO: addNeighborAndSortRange(nodes[destinationNodeMapping->second], edge.source);
 }
 
-void AdjList::removeNeighborFromRange(Neighbors& range, NodeId tgtNeighbor) {
+void AdjList::removeNeighborFromRange(Neighbors& range, NodeId tgtNeighbor)
+{
     std::ranges::remove_if(range, [tgtNeighbor](auto& neighbor) {
         return neighbor == tgtNeighbor;
     });
 }
 
-void AdjList::removeEdge(const EdgeInfo& edge) {
+void AdjList::removeEdge(const EdgeInfo& edge)
+{
     auto sourceNodeMapping = nodeMap.find(edge.source);
     auto destinationNodeMapping = nodeMap.find(edge.destination);
 
@@ -391,7 +403,8 @@ void AdjList::removeEdge(const EdgeInfo& edge) {
     removeNeighborFromRange(nodes[sourceNodeMapping->second], edge.destination);
 }
 
-void AdjList::addNodes(uint32_t nodesAmount) {
+void AdjList::addNodes(uint32_t nodesAmount)
+{
     auto highestId = nodeMap.rbegin()->first;
 
     for (uint32_t i = 1; i <= nodesAmount; i++)
@@ -401,7 +414,8 @@ void AdjList::addNodes(uint32_t nodesAmount) {
     nodes.resize(nodes.size() + nodesAmount);
 }
 
-void AdjList::removeNode(NodeId node) {
+void AdjList::removeNode(NodeId node)
+{
     auto nodeMapping = nodeMap.find(node);
 
     if (nodeMapping == nodeMap.end())
@@ -415,7 +429,8 @@ void AdjList::removeNode(NodeId node) {
     nodeMap.erase(nodeMapping);
 }
 
-EdgeInfo AdjList::findEdge(const EdgeInfo& edge) const {
+EdgeInfo AdjList::findEdge(const EdgeInfo& edge) const
+{
     auto source = nodeMap.find(edge.source);
     auto destination = nodeMap.find(edge.destination);
 
@@ -434,7 +449,8 @@ EdgeInfo AdjList::findEdge(const EdgeInfo& edge) const {
     return {edge.source, edge.destination, 1};
 }
 
-std::vector<NodeId> AdjList::getNodeIds() const {
+std::vector<NodeId> AdjList::getNodeIds() const
+{
     std::vector<NodeId> nodeIds;
     for (const auto& nodeMapping : nodeMap)
     {

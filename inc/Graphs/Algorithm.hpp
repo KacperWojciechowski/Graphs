@@ -7,7 +7,7 @@ namespace Graphs::Algorithm
 using Permutation = std::vector<NodeId>;
 class AlgorithmFunctor
 {
-    public:
+public:
     virtual void operator()(const Graphs::Graph&) = 0;
     virtual ~AlgorithmFunctor() = default;
 };

@@ -26,7 +26,7 @@ uint32_t find_index(const std::vector<Data::coord>& nodes, uint32_t x, uint32_t 
 */
 class Pixel_map
 {
-    public:
+public:
     /* Constructors */
     Pixel_map(std::string file_path);
     Pixel_map(Pixel_map& p) = delete;
@@ -42,7 +42,7 @@ class Pixel_map
     /* Destructor */
     ~Pixel_map();
 
-    private:
+private:
     /* Private variables */
     uint8_t** area_map;
 

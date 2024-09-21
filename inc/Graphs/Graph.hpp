@@ -19,7 +19,8 @@ struct EdgeInfo
 class Graph
 {
 public:
-    friend std::ostream& operator<<(std::ostream& os, const Graph& g) {
+    friend std::ostream& operator<<(std::ostream& os, const Graph& g)
+    {
         os << g.show();
         return os;
     }
@@ -29,7 +30,8 @@ public:
     virtual uint32_t nodeDegree(NodeId) const = 0;
 
     virtual void setEdge(const EdgeInfo&) = 0;
-    virtual void setEdges(const std::vector<EdgeInfo>& edges) {
+    virtual void setEdges(const std::vector<EdgeInfo>& edges)
+    {
         for (const auto& edge : edges)
         {
             setEdge(edge);

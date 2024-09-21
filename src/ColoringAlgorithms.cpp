@@ -9,14 +9,16 @@ namespace Graphs::Algorithm
 {
 namespace
 {
-Permutation prepareNodePermutationForGreedyColoring(const Graph& graph) {
+Permutation prepareNodePermutationForGreedyColoring(const Graph& graph)
+{
     auto nodeIds = graph.getNodeIds();
     std::shuffle(nodeIds.begin(), nodeIds.end(), std::random_device{});
     return nodeIds;
 }
 
 ColorId
-findAvailableColorForCurrentNode(const Graph& graph, ColoringResult& coloring, ColoringResult::iterator currentNode) {
+findAvailableColorForCurrentNode(const Graph& graph, ColoringResult& coloring, ColoringResult::iterator currentNode)
+{
     auto isNeighbor = [&graph, &currentNode](auto neighbor) {
         static auto neighbors = graph.getNeighborsOf(currentNode->first);
 
@@ -41,7 +43,8 @@ findAvailableColorForCurrentNode(const Graph& graph, ColoringResult& coloring, C
     return neighborsCount + 1;
 }
 
-ColoringResult resizeAndInitializeResultStructure(const Permutation& nodes) {
+ColoringResult resizeAndInitializeResultStructure(const Permutation& nodes)
+{
     auto result = ColoringResult{};
     result.resize(nodes.size());
     for (std::size_t i = 0; i < nodes.size(); i++)
@@ -55,7 +58,8 @@ ColoringResult resizeAndInitializeResultStructure(const Permutation& nodes) {
 
 template <>
 template <class... Args, class T, Verbose<verbose, T>>
-void GreedyColoring<verbose>::log(std::string formatString, Args... args) const {
+void GreedyColoring<verbose>::log(std::string formatString, Args... args) const
+{
     if constexpr (sizeof...(args) == 0)
     {
         outStream << formatString;
@@ -66,7 +70,8 @@ void GreedyColoring<verbose>::log(std::string formatString, Args... args) const 
     }
 }
 
-std::vector<std::pair<NodeId, ColorId>> createColoringTable(const Permutation& nodes) {
+std::vector<std::pair<NodeId, ColorId>> createColoringTable(const Permutation& nodes)
+{
     std::vector<std::pair<NodeId, ColorId>> coloring;
     for (const auto& nodeId : nodes)
     {
@@ -76,7 +81,8 @@ std::vector<std::pair<NodeId, ColorId>> createColoringTable(const Permutation& n
 }
 
 template <>
-void GreedyColoring<verbose>::operator()(const Graphs::Graph& graph) {
+void GreedyColoring<verbose>::operator()(const Graphs::Graph& graph)
+{
     log("Greedy coloring graph with {} nodes\n", graph.nodesAmount());
 
     auto nodes = prepareNodePermutationForGreedyColoring(graph);
@@ -105,7 +111,8 @@ void GreedyColoring<verbose>::operator()(const Graphs::Graph& graph) {
 }
 
 template <>
-void GreedyColoring<notVerbose>::operator()(const Graphs::Graph& graph) {
+void GreedyColoring<notVerbose>::operator()(const Graphs::Graph& graph)
+{
     auto nodes = prepareNodePermutationForGreedyColoring(graph);
     *result = resizeAndInitializeResultStructure(nodes);
     result->front().second = 0;

@@ -18,12 +18,14 @@ constexpr Graphs::NodeId thirdNodeId = 2;
 
 namespace Graphs
 {
-TEST(AdjMatrixTest, constructorCreatesAnEmptyGraph) {
+TEST(AdjMatrixTest, constructorCreatesAnEmptyGraph)
+{
     AdjMatrix graph;
     EXPECT_EQ(graph.nodesAmount(), 0);
 }
 
-TEST(AdjMatrixTest, addingNodesIncreasesNodesAmount) {
+TEST(AdjMatrixTest, addingNodesIncreasesNodesAmount)
+{
     AdjMatrix graph;
     graph.addNodes(oneNode);
     EXPECT_EQ(graph.nodesAmount(), 1);
@@ -31,7 +33,8 @@ TEST(AdjMatrixTest, addingNodesIncreasesNodesAmount) {
     EXPECT_EQ(graph.nodesAmount(), 4);
 }
 
-TEST(AdjMatrixTest, removingNodesDecreasesNodesAmount) {
+TEST(AdjMatrixTest, removingNodesDecreasesNodesAmount)
+{
     AdjMatrix graph;
     graph.addNodes(fourNodes);
     graph.removeNode(thirdNodeId);
@@ -40,7 +43,8 @@ TEST(AdjMatrixTest, removingNodesDecreasesNodesAmount) {
     EXPECT_EQ(graph.nodesAmount(), 2);
 }
 
-TEST(AdjMatrixText, removingNodeWhichHasBeenAlreadyRemovedDoesNotThrowAndDoesNotRemoveAnyNodes) {
+TEST(AdjMatrixText, removingNodeWhichHasBeenAlreadyRemovedDoesNotThrowAndDoesNotRemoveAnyNodes)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.removeNode(thirdNodeId);
@@ -49,7 +53,8 @@ TEST(AdjMatrixText, removingNodeWhichHasBeenAlreadyRemovedDoesNotThrowAndDoesNot
     EXPECT_EQ(graph.nodesAmount(), 3);
 }
 
-TEST(AdjMatrixTest, removingNodeRemovesAllEdgesConnectedToIt) {
+TEST(AdjMatrixTest, removingNodeRemovesAllEdgesConnectedToIt)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdge({firstNodeId, thirdNodeId});
@@ -58,7 +63,8 @@ TEST(AdjMatrixTest, removingNodeRemovesAllEdgesConnectedToIt) {
     EXPECT_EQ(graph.nodeDegree(firstNodeId), 0);
 }
 
-TEST(AdjMatrixTest, addingEdgeIncreasesNodeDegree) {
+TEST(AdjMatrixTest, addingEdgeIncreasesNodeDegree)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     EXPECT_EQ(graph.nodeDegree(firstNodeId), 0);
@@ -66,7 +72,8 @@ TEST(AdjMatrixTest, addingEdgeIncreasesNodeDegree) {
     EXPECT_EQ(graph.nodeDegree(firstNodeId), 1);
 }
 
-TEST(AdjMatrixTest, removingEdgeDecreasesNodeDegree) {
+TEST(AdjMatrixTest, removingEdgeDecreasesNodeDegree)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdge({firstNodeId, thirdNodeId});
@@ -76,7 +83,8 @@ TEST(AdjMatrixTest, removingEdgeDecreasesNodeDegree) {
     EXPECT_EQ(graph.nodeDegree(firstNodeId), 1);
 }
 
-TEST(AdjMatrixTest, removingEdgeWhichHasBeenAlreadyRemovedDoesNotThrowAndDoesNotRemoveAnyEdges) {
+TEST(AdjMatrixTest, removingEdgeWhichHasBeenAlreadyRemovedDoesNotThrowAndDoesNotRemoveAnyEdges)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdge({firstNodeId, thirdNodeId});
@@ -88,7 +96,8 @@ TEST(AdjMatrixTest, removingEdgeWhichHasBeenAlreadyRemovedDoesNotThrowAndDoesNot
     EXPECT_EQ(graph.nodeDegree(firstNodeId), 1);
 }
 
-TEST(AdjMatrixTest, getNeighborsOfReturnsCorrectNeighbors) {
+TEST(AdjMatrixTest, getNeighborsOfReturnsCorrectNeighbors)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdge({firstNodeId, thirdNodeId});
@@ -96,7 +105,8 @@ TEST(AdjMatrixTest, getNeighborsOfReturnsCorrectNeighbors) {
     EXPECT_THAT(graph.getNeighborsOf(firstNodeId), ElementsAre(secondNodeId, thirdNodeId));
 }
 
-TEST(AdjMatrixTest, findEdgeReturnsCorrectEdgeInfo) {
+TEST(AdjMatrixTest, findEdgeReturnsCorrectEdgeInfo)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdge({firstNodeId, thirdNodeId, 5});
@@ -105,21 +115,24 @@ TEST(AdjMatrixTest, findEdgeReturnsCorrectEdgeInfo) {
     EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 5);
 }
 
-TEST(AdjMatrixTest, findEdgeReturnsEmptyWeightIfEdgeDoesNotExist) {
+TEST(AdjMatrixTest, findEdgeReturnsEmptyWeightIfEdgeDoesNotExist)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdge({firstNodeId, thirdNodeId, 5});
     EXPECT_EQ(graph.findEdge({firstNodeId, secondNodeId}).weight, std::nullopt);
 }
 
-TEST(AdjMatrixTest, setEdgeAppliesDefaultWeightWhenNoWeightIsGiven) {
+TEST(AdjMatrixTest, setEdgeAppliesDefaultWeightWhenNoWeightIsGiven)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdge({firstNodeId, thirdNodeId});
     EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 1);
 }
 
-TEST(AdjMatrixTest, setEdgeUpdatesWeightWhenEdgeAlreadyExists) {
+TEST(AdjMatrixTest, setEdgeUpdatesWeightWhenEdgeAlreadyExists)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdge({firstNodeId, thirdNodeId, 5});
@@ -128,7 +141,8 @@ TEST(AdjMatrixTest, setEdgeUpdatesWeightWhenEdgeAlreadyExists) {
     EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 10);
 }
 
-TEST(AdjMatrixTest, canSetMultipleEdgesAtOnce) {
+TEST(AdjMatrixTest, canSetMultipleEdgesAtOnce)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdges({
@@ -139,7 +153,8 @@ TEST(AdjMatrixTest, canSetMultipleEdgesAtOnce) {
     EXPECT_EQ(graph.findEdge({firstNodeId, secondNodeId}).weight, 10);
 }
 
-TEST(AdjMatrixTest, canSetMultipleEdgesAtOnceWithDefaultWeight) {
+TEST(AdjMatrixTest, canSetMultipleEdgesAtOnceWithDefaultWeight)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdges({
@@ -150,7 +165,8 @@ TEST(AdjMatrixTest, canSetMultipleEdgesAtOnceWithDefaultWeight) {
     EXPECT_EQ(graph.findEdge({firstNodeId, secondNodeId}).weight, 1);
 }
 
-TEST(AdjMatrixTest, canUpdateMultipleEdges) {
+TEST(AdjMatrixTest, canUpdateMultipleEdges)
+{
     AdjMatrix graph;
     graph.addNodes(4);
     graph.setEdges({
@@ -167,14 +183,16 @@ TEST(AdjMatrixTest, canUpdateMultipleEdges) {
     EXPECT_EQ(graph.findEdge({firstNodeId, secondNodeId}).weight, 5);
 }
 
-TEST(AdjMatrixTest, settingEdgeBetweenNonexistantNodesDoesNotDoAnything) {
+TEST(AdjMatrixTest, settingEdgeBetweenNonexistantNodesDoesNotDoAnything)
+{
     AdjMatrix graph;
     graph.addNodes(1);
     EXPECT_NO_THROW(graph.setEdge({firstNodeId, thirdNodeId}));
     EXPECT_EQ(graph.nodeDegree(firstNodeId), 0);
 }
 
-TEST(AdjMatrixTest, fetchingInformationForNonexistantEdgeDoesNotThrowAndReturnsEmptyWeight) {
+TEST(AdjMatrixTest, fetchingInformationForNonexistantEdgeDoesNotThrowAndReturnsEmptyWeight)
+{
     AdjMatrix graph;
     graph.addNodes(1);
     EXPECT_NO_THROW(graph.findEdge({firstNodeId, thirdNodeId}));

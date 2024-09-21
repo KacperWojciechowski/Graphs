@@ -1,36 +1,186 @@
+#include <gmock/gmock.h>
 #include <Graphs/AdjMatrix.hpp>
 #include <gtest/gtest.h>
 #include <string>
 
 using namespace testing;
 
-const std::string matFile = "../test/sample/adjMat.mat";
-const std::string graphmlFile = "../test/sample/GraphML.GRAPHML";
+namespace
+{
+constexpr uint32_t oneNode = 1;
+constexpr uint32_t threeNodes = 3;
+constexpr uint32_t fourNodes = 4;
+
+constexpr Graphs::NodeId firstNodeId = 0;
+constexpr Graphs::NodeId secondNodeId = 1;
+constexpr Graphs::NodeId thirdNodeId = 2;
+} // namespace
 
 namespace Graphs
 {
-TEST(AdjMatrixTest, createFromMatFile) {
-    AdjMatrix adjMatrix(matFile);
-    ASSERT_EQ(6, adjMatrix.nodesAmount());
-    ASSERT_EQ(4, adjMatrix.nodeDegree(0));
-    ASSERT_EQ(2, adjMatrix.nodeDegree(1));
-    ASSERT_EQ(4, adjMatrix.nodeDegree(2));
-    ASSERT_EQ(0, adjMatrix.nodeDegree(3));
-    ASSERT_EQ(3, adjMatrix.nodeDegree(4));
-    ASSERT_EQ(1, adjMatrix.nodeDegree(5));
+TEST(AdjMatrixTest, constructorCreatesAnEmptyGraph) {
+    AdjMatrix graph;
+    EXPECT_EQ(graph.nodesAmount(), 0);
 }
 
-TEST(AdjMatrixTest, createFromGraphMLFile) {
-    AdjMatrix adjMatrix(graphmlFile);
-    ASSERT_EQ(9, adjMatrix.nodesAmount());
-    ASSERT_EQ(2, adjMatrix.nodeDegree(0));
-    ASSERT_EQ(2, adjMatrix.nodeDegree(1));
-    ASSERT_EQ(2, adjMatrix.nodeDegree(2));
-    ASSERT_EQ(2, adjMatrix.nodeDegree(3));
-    ASSERT_EQ(2, adjMatrix.nodeDegree(4));
-    ASSERT_EQ(2, adjMatrix.nodeDegree(5));
-    ASSERT_EQ(3, adjMatrix.nodeDegree(6));
-    ASSERT_EQ(3, adjMatrix.nodeDegree(7));
-    ASSERT_EQ(4, adjMatrix.nodeDegree(8));
+TEST(AdjMatrixTest, addingNodesIncreasesNodesAmount) {
+    AdjMatrix graph;
+    graph.addNodes(oneNode);
+    EXPECT_EQ(graph.nodesAmount(), 1);
+    graph.addNodes(threeNodes);
+    EXPECT_EQ(graph.nodesAmount(), 4);
 }
+
+TEST(AdjMatrixTest, removingNodesDecreasesNodesAmount) {
+    AdjMatrix graph;
+    graph.addNodes(fourNodes);
+    graph.removeNode(thirdNodeId);
+    EXPECT_EQ(graph.nodesAmount(), 3);
+    graph.removeNode(firstNodeId);
+    EXPECT_EQ(graph.nodesAmount(), 2);
+}
+
+TEST(AdjMatrixText, removingNodeWhichHasBeenAlreadyRemovedDoesNotThrowAndDoesNotRemoveAnyNodes) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.removeNode(thirdNodeId);
+    EXPECT_EQ(graph.nodesAmount(), 3);
+    EXPECT_NO_THROW(graph.removeNode(thirdNodeId));
+    EXPECT_EQ(graph.nodesAmount(), 3);
+}
+
+TEST(AdjMatrixTest, removingNodeRemovesAllEdgesConnectedToIt) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdge({firstNodeId, thirdNodeId});
+    graph.setEdge({thirdNodeId, firstNodeId});
+    graph.removeNode(thirdNodeId);
+    EXPECT_EQ(graph.nodeDegree(firstNodeId), 0);
+}
+
+TEST(AdjMatrixTest, addingEdgeIncreasesNodeDegree) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    EXPECT_EQ(graph.nodeDegree(firstNodeId), 0);
+    graph.setEdge({firstNodeId, thirdNodeId});
+    EXPECT_EQ(graph.nodeDegree(firstNodeId), 1);
+}
+
+TEST(AdjMatrixTest, removingEdgeDecreasesNodeDegree) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdge({firstNodeId, thirdNodeId});
+    graph.setEdge({firstNodeId, secondNodeId});
+    EXPECT_EQ(graph.nodeDegree(firstNodeId), 2);
+    graph.removeEdge({firstNodeId, thirdNodeId});
+    EXPECT_EQ(graph.nodeDegree(firstNodeId), 1);
+}
+
+TEST(AdjMatrixTest, removingEdgeWhichHasBeenAlreadyRemovedDoesNotThrowAndDoesNotRemoveAnyEdges) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdge({firstNodeId, thirdNodeId});
+    graph.setEdge({firstNodeId, secondNodeId});
+    EXPECT_EQ(graph.nodeDegree(firstNodeId), 2);
+    graph.removeEdge({firstNodeId, thirdNodeId});
+    EXPECT_EQ(graph.nodeDegree(firstNodeId), 1);
+    EXPECT_NO_THROW(graph.removeEdge({firstNodeId, thirdNodeId}));
+    EXPECT_EQ(graph.nodeDegree(firstNodeId), 1);
+}
+
+TEST(AdjMatrixTest, getNeighborsOfReturnsCorrectNeighbors) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdge({firstNodeId, thirdNodeId});
+    graph.setEdge({firstNodeId, secondNodeId});
+    EXPECT_THAT(graph.getNeighborsOf(firstNodeId), ElementsAre(secondNodeId, thirdNodeId));
+}
+
+TEST(AdjMatrixTest, findEdgeReturnsCorrectEdgeInfo) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdge({firstNodeId, thirdNodeId, 5});
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).source, firstNodeId);
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).destination, thirdNodeId);
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 5);
+}
+
+TEST(AdjMatrixTest, findEdgeReturnsEmptyWeightIfEdgeDoesNotExist) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdge({firstNodeId, thirdNodeId, 5});
+    EXPECT_EQ(graph.findEdge({firstNodeId, secondNodeId}).weight, std::nullopt);
+}
+
+TEST(AdjMatrixTest, setEdgeAppliesDefaultWeightWhenNoWeightIsGiven) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdge({firstNodeId, thirdNodeId});
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 1);
+}
+
+TEST(AdjMatrixTest, setEdgeUpdatesWeightWhenEdgeAlreadyExists) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdge({firstNodeId, thirdNodeId, 5});
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 5);
+    graph.setEdge({firstNodeId, thirdNodeId, 10});
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 10);
+}
+
+TEST(AdjMatrixTest, canSetMultipleEdgesAtOnce) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdges({
+        {firstNodeId,  thirdNodeId,  5},
+        {firstNodeId, secondNodeId, 10}
+    });
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 5);
+    EXPECT_EQ(graph.findEdge({firstNodeId, secondNodeId}).weight, 10);
+}
+
+TEST(AdjMatrixTest, canSetMultipleEdgesAtOnceWithDefaultWeight) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdges({
+        {firstNodeId,  thirdNodeId},
+        {firstNodeId, secondNodeId}
+    });
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 1);
+    EXPECT_EQ(graph.findEdge({firstNodeId, secondNodeId}).weight, 1);
+}
+
+TEST(AdjMatrixTest, canUpdateMultipleEdges) {
+    AdjMatrix graph;
+    graph.addNodes(4);
+    graph.setEdges({
+        {firstNodeId,  thirdNodeId,  5},
+        {firstNodeId, secondNodeId, 10}
+    });
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 5);
+    EXPECT_EQ(graph.findEdge({firstNodeId, secondNodeId}).weight, 10);
+    graph.setEdges({
+        {firstNodeId,  thirdNodeId, 10},
+        {firstNodeId, secondNodeId,  5}
+    });
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, 10);
+    EXPECT_EQ(graph.findEdge({firstNodeId, secondNodeId}).weight, 5);
+}
+
+TEST(AdjMatrixTest, settingEdgeBetweenNonexistantNodesDoesNotDoAnything) {
+    AdjMatrix graph;
+    graph.addNodes(1);
+    EXPECT_NO_THROW(graph.setEdge({firstNodeId, thirdNodeId}));
+    EXPECT_EQ(graph.nodeDegree(firstNodeId), 0);
+}
+
+TEST(AdjMatrixTest, fetchingInformationForNonexistantEdgeDoesNotThrowAndReturnsEmptyWeight) {
+    AdjMatrix graph;
+    graph.addNodes(1);
+    EXPECT_NO_THROW(graph.findEdge({firstNodeId, thirdNodeId}));
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).weight, std::nullopt);
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).source, firstNodeId);
+    EXPECT_EQ(graph.findEdge({firstNodeId, thirdNodeId}).destination, thirdNodeId);
+}
+
 } // namespace Graphs

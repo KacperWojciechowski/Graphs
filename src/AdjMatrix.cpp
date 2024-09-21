@@ -61,7 +61,7 @@ void AdjMatrix::resizeMatrixToFitNodes(uint32_t nodesCount) {
     auto maxNodeItr = nodeIndexMapping.rbegin();
     auto maxNodeId = maxNodeItr != nodeIndexMapping.rend() ? maxNodeItr->first : 0;
 
-    for (uint32_t i = 1; i <= nodesAmountDiff; i++)
+    for (uint32_t i = 0; i < nodesAmountDiff; i++)
     {
         nodeIndexMapping.insert(std::make_pair(maxNodeId + i, matrix.size() + i));
     }
@@ -73,7 +73,7 @@ void AdjMatrix::resizeMatrixToFitNodes(uint32_t nodesCount) {
     }
 }
 
-void AdjMatrix::buildFromMatFile(const std::string& filePath) {
+/*void AdjMatrix::buildFromMatFile(const std::string& filePath) {
     std::ifstream file(filePath);
     if (not file.good())
     {
@@ -106,9 +106,9 @@ void AdjMatrix::buildFromMatFile(const std::string& filePath) {
         matrix.emplace_back(parseLine(line));
         nodeIndexMapping.insert(std::make_pair(nodeId++, matrix.size() - 1));
     }
-}
+}*/
 
-void AdjMatrix::buildFromGraphMLFile(const std::string& filePath) {
+/*void AdjMatrix::buildFromGraphMLFile(const std::string& filePath) {
     std::ifstream file(filePath);
 
     if (not file.good())
@@ -155,7 +155,7 @@ AdjMatrix::AdjMatrix(std::string filePath) {
     {
         buildFromGraphMLFile(filePath);
     }
-}
+}*/
 
 AdjMatrix::AdjMatrix(const Graph& graph) {
     auto nodesAmount = graph.nodesAmount();
@@ -285,7 +285,14 @@ uint32_t AdjMatrix::nodeDegree(NodeId node) const {
 void AdjMatrix::setEdge(const EdgeInfo& edge) {
     if (edge.source < matrix.size() && edge.destination < matrix.size())
     {
-        this->matrix[edge.source][edge.destination] = 1;
+        if (edge.weight.has_value())
+        {
+            this->matrix[edge.source][edge.destination] = edge.weight.value();
+        }
+        else
+        {
+            this->matrix[edge.source][edge.destination] = 1;
+        }
     }
 }
 
@@ -306,19 +313,22 @@ void AdjMatrix::removeNode(NodeId node) {
         return;
     }
 
-    auto nodeIndex = nodeIndexMapping[node];
+    auto nodeIndex = nodeIndexMapping.find(node);
+    if (nodeIndex == nodeIndexMapping.end())
+    {
+        return;
+    }
 
-    constexpr uint32_t offset = 1;
-    std::ranges::subrange(std::next(nodeIndexMapping.begin(), node + offset), nodeIndexMapping.end())
-        | std::views::transform([nodeIndex](auto elem) {
-              return std::pair(elem.first, elem.second - 1);
-          });
+    std::ranges::subrange(std::next(nodeIndex, 1), nodeIndexMapping.end()) | std::views::transform([](auto elem) {
+        return std::pair(elem.first, elem.second - 1);
+    });
 
-    matrix.erase(matrix.begin() + nodeIndex);
+    matrix.erase(matrix.begin() + nodeIndex->second);
     for (auto& row : matrix)
     {
-        row.erase(row.begin() + nodeIndex);
+        row.erase(row.begin() + nodeIndex->second);
     }
+    nodeIndexMapping.erase(nodeIndex);
 }
 
 std::string AdjMatrix::show() const {
@@ -387,6 +397,14 @@ std::vector<NodeId> AdjMatrix::getNeighborsOf(NodeId node) const {
             neighbors.push_back(i);
         }
     }
+    for (uint32_t i = 0; i < matrix.size(); i++)
+    {
+        if (matrix[i][node] != 0 and neighbors.end() == std::find(neighbors.begin(), neighbors.end(), i))
+        {
+            neighbors.push_back(i);
+        }
+    }
+    std::ranges::sort(neighbors);
     return neighbors;
 }
 

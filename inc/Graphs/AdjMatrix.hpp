@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <Graphs/Graph.hpp>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -15,9 +16,11 @@ namespace Graphs
 {
 class AdjMatrix : public Graph
 {
-    public:
-    AdjMatrix(std::string);
+public:
+    AdjMatrix() = default;
     AdjMatrix(const Graph&);
+
+    AdjMatrix(std::string);
 
     AdjMatrix(AdjMatrix&) = delete;
     AdjMatrix(AdjMatrix&&) = delete;
@@ -35,7 +38,7 @@ class AdjMatrix : public Graph
 
     virtual ~AdjMatrix() = default;
 
-    private:
+private:
     std::string show() const override;
     void buildFromMatFile(const std::string&);
     void buildFromGraphMLFile(const std::string&);

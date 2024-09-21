@@ -7,10 +7,10 @@
 #include <ranges>
 
 int main() {
-    auto result = std::make_shared<Graphs::Algorithm::ColoringResult>();
+    /*auto result = std::make_shared<Graphs::Algorithm::ColoringResult>();
     auto algorithm = Graphs::Algorithm::GreedyColoring<false>{result};
 
-    auto graph = Graphs::AdjList("../BenchmarkSamples/chrom_num_3/1.lst");
+    //auto graph = Graphs::AdjList("../BenchmarkSamples/chrom_num_3/1.lst");
 
     algorithm(graph);
 
@@ -23,5 +23,5 @@ int main() {
     auto graph2 = Graphs::AdjMatrix("../BenchmarkSamples/1.mat");
     graph2.nodeDegree(0);
 
-    return 0;
+    return 0;*/
 }

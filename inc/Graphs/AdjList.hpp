@@ -9,10 +9,11 @@ namespace Graphs
 {
 class AdjList : public Graph
 {
-    public:
-    AdjList(std::string);
-
+public:
+    AdjList() = default;
     AdjList(const Graph&);
+
+    AdjList(std::string);
     // AdjList(const Data::Pixel_map&);
 
     AdjList(AdjList&) = delete;
@@ -32,7 +33,7 @@ class AdjList : public Graph
 
     virtual ~AdjList() = default;
 
-    private:
+private:
     std::string show() const override;
 
     using Neighbors = std::vector<uint32_t>;

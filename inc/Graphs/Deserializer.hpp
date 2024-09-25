@@ -1,8 +1,8 @@
 #pragma once
 
+#include <fstream>
 #include <Graphs/AdjList.hpp>
 #include <Graphs/AdjMatrix.hpp>
-#include <string>
 #include <type_traits>
 
 namespace Graphs
@@ -13,9 +13,9 @@ template <typename T, typename Guard = std::enable_if_t<std::is_base_of_v<Graph,
 class Deserializer
 {
 public:
-    static T deserializeLstFile(const std::string& filePath);
-    static T deserializeMatFile(const std::string& filePath);
-    static T deserializeGraphMlFile(const std::string& filePath);
+    static T deserializeLstFile(std::ifstream& filePath);
+    static T deserializeMatFile(std::ifstream& filePath);
+    static T deserializeGraphMlFile(std::ifstream& filePath);
 };
 
 template class Deserializer<AdjList>;

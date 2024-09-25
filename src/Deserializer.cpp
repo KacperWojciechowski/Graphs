@@ -1,5 +1,4 @@
 #include <filesystem>
-#include <fstream>
 #include <Graphs/Deserializer.hpp>
 #include <iostream>
 #include <regex>
@@ -66,20 +65,11 @@ T parseContentIntoGraphRepresentation(const std::string& content)
 namespace Graphs
 {
 template <typename T, typename Guard>
-T Deserializer<T, Guard>::deserializeLstFile(const std::string& filePath)
+T Deserializer<T, Guard>::deserializeLstFile(std::ifstream& file)
 {
-    std::filesystem::path path(filePath);
-    if (path.extension().string() != ".lst")
-    {
-        std::cerr << "[Deserializer] Invalid file extension";
-        return T();
-    }
-
-    std::ifstream file(filePath);
-
     if (not file.good())
     {
-        std::cerr << "[Deserializer] Error opening file";
+        std::cerr << "[Deserializer] Error when accessing file";
     }
 
     auto fileContent = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());

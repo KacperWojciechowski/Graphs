@@ -9,7 +9,8 @@
 
 int main()
 {
-    auto result = Graphs::Deserializer<Graphs::AdjMatrix>::deserializeLstFile("../sample/adjList.lst");
+    std::ifstream file("../sample/adjList.lst");
+    auto result = Graphs::Deserializer<Graphs::AdjMatrix>::deserializeLstFile(file);
     std::cout << result;
 
     /*auto result = std::make_shared<Graphs::Algorithm::ColoringResult>();

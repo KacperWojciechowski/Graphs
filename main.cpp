@@ -3,11 +3,15 @@
 #include <Graphs/AdjList.hpp>
 #include <Graphs/AdjMatrix.hpp>
 #include <Graphs/ColoringAlgorithms.hpp>
+#include <Graphs/Deserializer.hpp>
 #include <iostream>
 #include <ranges>
 
 int main()
 {
+    auto result = Graphs::Deserializer<Graphs::AdjMatrix>::deserializeLstFile("../sample/adjList.lst");
+    std::cout << result;
+
     /*auto result = std::make_shared<Graphs::Algorithm::ColoringResult>();
     auto algorithm = Graphs::Algorithm::GreedyColoring<false>{result};
 

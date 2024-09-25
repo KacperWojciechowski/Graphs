@@ -13,12 +13,17 @@ struct EdgeInfo
 {
     NodeId source;
     NodeId destination;
-    std::optional<uint32_t> weight;
+    std::optional<int32_t> weight;
 };
 
 class GraphReader
 {
 public:
+    friend std::ostream& operator<<(std::ostream& os, const GraphReader& g)
+    {
+        os << g.show();
+        return os;
+    }
     virtual EdgeInfo findEdge(const EdgeInfo&) const = 0;
     virtual uint32_t nodesAmount() const = 0;
     virtual uint32_t nodeDegree(NodeId) const = 0;
@@ -26,6 +31,9 @@ public:
     virtual std::vector<NodeId> getNeighborsOf(NodeId) const = 0;
 
     virtual ~GraphReader() = default;
+
+protected:
+    virtual std::string show() const = 0;
 };
 
 class GraphWriter
@@ -48,14 +56,6 @@ class Graph : public GraphReader,
               public GraphWriter
 {
 public:
-    friend std::ostream& operator<<(std::ostream& os, const Graph& g)
-    {
-        os << g.show();
-        return os;
-    }
     virtual ~Graph() = default;
-
-protected:
-    virtual std::string show() const = 0;
 };
 } // namespace Graphs

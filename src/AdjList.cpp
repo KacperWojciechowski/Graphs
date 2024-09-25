@@ -29,61 +29,17 @@ namespace
     return pixelMapNodes;
 }*/
 
-void insertNeighborIfApplicable(auto checker, auto inserter, Data::coord coordsToInsert)
+/*void insertNeighborIfApplicable(auto checker, auto inserter, Data::coord coordsToInsert)
 {
     if (checker()) // doesnt underflow
     {
         inserter(coordsToInsert);
     }
-}
+}*/
 } // namespace
 
 namespace Graphs
 {
-void AdjList::buildFromLstFile(const std::string& filePath)
-{
-    std::ifstream file(filePath);
-
-    if (not file.good())
-    {
-        throw std::runtime_error("Error opening file");
-    }
-
-    auto fileContent = std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
-
-    std::regex nodeRegex("[0-9]*: ([]+))");
-    std::smatch nodeMatch;
-
-    auto parseLine = [](const std::string& line) {
-        AdjList::Neighbors neighbors;
-        std::stringstream stream(line);
-        std::string value;
-
-        while (std::getline(stream, value, ' '))
-        {
-            neighbors.emplace_back(static_cast<uint32_t>(std::stoi(value)));
-        }
-        return neighbors;
-    };
-
-    using regItr = std::sregex_iterator;
-
-    for (auto itr = regItr(fileContent.begin(), fileContent.end(), nodeRegex); itr != regItr(); ++itr)
-    {
-        std::smatch match = *itr;
-        nodes.emplace_back(parseLine(match.str()));
-    }
-}
-
-AdjList::AdjList(std::string filePath)
-{
-    auto extension = std::filesystem::path(filePath).extension().string();
-
-    assert(extension == "lst");
-
-    buildFromLstFile(filePath);
-}
-
 AdjList::AdjList(const Graph& graph)
 {
     nodes.resize(graph.nodesAmount());
@@ -405,11 +361,11 @@ void AdjList::removeEdge(const EdgeInfo& edge)
 
 void AdjList::addNodes(uint32_t nodesAmount)
 {
-    auto highestId = nodeMap.rbegin()->first;
+    auto highestId = nodeMap.empty() ? 0 : nodeMap.rbegin()->first;
 
-    for (uint32_t i = 1; i <= nodesAmount; i++)
+    for (uint32_t i = 0; i < nodesAmount; i++)
     {
-        nodeMap[highestId + i] = nodes.size() + i;
+        nodeMap.insert({highestId + i, nodes.size() + i});
     }
     nodes.resize(nodes.size() + nodesAmount);
 }

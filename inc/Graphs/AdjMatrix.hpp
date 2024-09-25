@@ -20,10 +20,8 @@ public:
     AdjMatrix() = default;
     AdjMatrix(const Graph&);
 
-    AdjMatrix(std::string);
-
-    AdjMatrix(AdjMatrix&) = delete;
-    AdjMatrix(AdjMatrix&&) = delete;
+    AdjMatrix(AdjMatrix&) = default;
+    AdjMatrix(AdjMatrix&&) = default;
 
     uint32_t nodesAmount() const override;
     uint32_t nodeDegree(NodeId) const override;

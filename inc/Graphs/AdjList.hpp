@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Graphs/Graph.hpp>
-#include <Graphs/Pixel_map.hpp>
 #include <map>
 #include <string>
 
@@ -12,12 +11,8 @@ class AdjList : public Graph
 public:
     AdjList() = default;
     AdjList(const Graph&);
-
-    AdjList(std::string);
-    // AdjList(const Data::Pixel_map&);
-
-    AdjList(AdjList&) = delete;
-    AdjList(AdjList&&) = delete;
+    AdjList(AdjList&) = default;
+    AdjList(AdjList&&) = default;
 
     uint32_t nodesAmount() const override;
     uint32_t nodeDegree(NodeId) const override;
